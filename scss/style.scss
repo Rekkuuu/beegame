@@ -96,8 +96,6 @@ body.dark-mode {
 }
 
 #offlineTicks {
-  width: calc(100vw - 16px - max(300px, 30vw));
-  margin-left: min(300px, 30vw);
   top: 21px;
   position: absolute;
   text-align: right;

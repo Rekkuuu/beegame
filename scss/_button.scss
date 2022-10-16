@@ -30,9 +30,11 @@ body:not(.dark-mode) {
   button.btn {
     background-color: #e9e9ed;
     border-color: #8f8f9d;
-    &:hover,
-    &:active {
+    &:hover {
       background-color: #ccc;
+    }
+    &:active {
+      background-color: #a5a5a5;
     }
     &:disabled {
       background-color: #999;
@@ -46,9 +48,11 @@ body.dark-mode {
   button.btn {
     background-color: #e9e9ed;
     border-color: #8f8f9d;
-    &:hover,
-    &:active {
+    &:hover {
       background-color: #d8d8d8;
+    }
+    &:active {
+      background-color: #a9a9a9;
     }
     &:disabled {
       background-color: #808080;

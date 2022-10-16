@@ -99,8 +99,6 @@ body.dark-mode #donateToFlowerGod:disabled #recomended {
 }
 
 #offlineTicks {
-  width: calc(100vw - 16px - max(300px, 30vw));
-  margin-left: min(300px, 30vw);
   top: 21px;
   position: absolute;
   text-align: right;
@@ -137,8 +135,11 @@ body:not(.dark-mode) button.btn {
   background-color: #e9e9ed;
   border-color: #8f8f9d;
 }
-body:not(.dark-mode) button.btn:hover, body:not(.dark-mode) button.btn:active {
+body:not(.dark-mode) button.btn:hover {
   background-color: #ccc;
+}
+body:not(.dark-mode) button.btn:active {
+  background-color: #a5a5a5;
 }
 body:not(.dark-mode) button.btn:disabled {
   background-color: #999;
@@ -150,8 +151,11 @@ body.dark-mode button.btn {
   background-color: #e9e9ed;
   border-color: #8f8f9d;
 }
-body.dark-mode button.btn:hover, body.dark-mode button.btn:active {
+body.dark-mode button.btn:hover {
   background-color: #d8d8d8;
+}
+body.dark-mode button.btn:active {
+  background-color: #a9a9a9;
 }
 body.dark-mode button.btn:disabled {
   background-color: #808080;
