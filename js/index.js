@@ -249,13 +249,13 @@ const updateResources = (diff) => {
     tmp.honeyProd = getHoneyProduction();
     tmp.flowerEff = 0;
     if (p.flowers + tmp.flowerProd != 0 && tmp.flowerConsumption != 0)
-        tmp.flowerEff = Math.min(1, p.flowers + tmp.flowerProd / tmp.flowerConsumption);
+        tmp.flowerEff = Math.min(1, (p.flowers + tmp.flowerProd) / tmp.flowerConsumption);
     tmp.flowerProd = tmp.flowerProd - tmp.flowerConsumption * tmp.flowerEff;
     tmp.pollenProd *= tmp.flowerEff;
     tmp.nectarProd *= tmp.flowerEff;
     tmp.nectarEff = 0;
     if (p.nectar + tmp.nectarProd != 0 && tmp.nectarConsumption != 0)
-        tmp.nectarEff = Math.min(1, p.nectar + tmp.nectarProd / tmp.nectarConsumption);
+        tmp.nectarEff = Math.min(1, (p.nectar + tmp.nectarProd) / tmp.nectarConsumption);
     tmp.honeyProd *= tmp.nectarEff;
     p.flowers += tmp.flowerProd * diff;
     p.pollen += tmp.pollenProd * diff;
