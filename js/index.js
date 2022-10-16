@@ -301,10 +301,10 @@ const updateOfflineTicks = (diff) => {
     else {
         d.offlineTicks.style.display = "none";
     }
-    if (p.offlineTime > 0) {
+    if (p.offlineTime > 1) {
         let ticksLeft = Math.max(0, Math.min(tmp.usedTime, p.offlineTime));
-        p.offlineTime -= ticksLeft * diff;
-        tmp.gameSpeedFormTicks = ticksLeft;
+        p.offlineTime -= Math.max(0, ticksLeft - 1) * diff;
+        tmp.gameSpeedFormTicks = Math.max(1, ticksLeft);
     }
     else {
         tmp.gameSpeedFormTicks = 1;
@@ -318,12 +318,12 @@ const updateTmp = () => {
     if (d.offlineTicksSpeed10.checked)
         tmp.usedTime *= 10;
     if (!d.offlineTicksSpeed5.checked && !d.offlineTicksSpeed10.checked)
-        tmp.usedTime = 0;
+        tmp.usedTime = 1;
     tmp.usedTime = Math.max(0, Math.min(p.offlineTime, tmp.usedTime));
-    if (tmp.usedTime < 0.001)
-        tmp.usedTime = 0;
-    if (p.offlineTime < 0.001)
-        p.offlineTime = 0;
+    if (tmp.usedTime < 1)
+        tmp.usedTime = 0; // ouch
+    if (p.offlineTime < 1)
+        p.offlineTime = 0; // ouch
     if (tmp.totalTributes < tributeMilestones[0])
         tmp.m0e = 1; // flowers mult
     else
