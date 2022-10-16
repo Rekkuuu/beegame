@@ -304,7 +304,7 @@ const updateOfflineTicks = (diff) => {
     if (p.offlineTime > 0) {
         let ticksLeft = Math.max(0, Math.min(tmp.usedTime, p.offlineTime));
         p.offlineTime -= ticksLeft * diff;
-        tmp.gameSpeedFormTicks = 1 + ticksLeft;
+        tmp.gameSpeedFormTicks = ticksLeft;
     }
     else {
         tmp.gameSpeedFormTicks = 1;
