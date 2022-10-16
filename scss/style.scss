@@ -1,0 +1,62 @@
+body {
+  margin: 0;
+}
+* {
+  box-sizing: border-box;
+}
+div {
+  width: max-content;
+}
+button {
+  padding: 0;
+  padding-left: 3px;
+  padding-right: 3px;
+  margin-left: 1px;
+}
+.smallgap {
+  margin-bottom: 8px;
+  /* margin-bottom: 36px; */
+  /* background: #000; */
+}
+.mediumgap {
+  margin-bottom: 15px;
+}
+.biggap {
+  margin-bottom: 21px;
+}
+.lighttext {
+  color: gray;
+}
+.w10 {
+  width: 25px;
+  display: inline-block;
+}
+
+#donateToFlowerGod {
+  & :not(:disabled) #recomended {
+    color: #f00;
+  }
+  &:disabled #recomended {
+    color: #d66;
+  }
+}
+a {
+  text-decoration: none;
+}
+#ticksLeft {
+  min-width: 200px;
+  display: inline-block;
+}
+#main div {
+  width: 100%;
+}
+.t {
+  td,
+  tr {
+    margin: 0;
+    padding: 0;
+  }
+  td {
+    padding-right: 3px;
+  }
+}

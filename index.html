@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script defer src="js/dom.js"></script>
+    <script defer src="js/saving.js"></script>
+    <script defer src="js/player.js"></script>
+    <script defer src="js/index.js"></script>
+    <script defer src="js/clickevents.js"></script>
+    <script defer src="js/init.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>bee game</title>
+    <style>
+
+    </style>
+  </head>
+  <body>
+    <div id="main" style="padding:8px;width:calc(100vw - 17px)">
+      <div class="smallgap">
+         <span id="flowerswrapper">flowers: <span id="flowers"></span> <span id="totalflowers" class="lighttext"></span> <span id="flowersPS"></span> <button id="slowBuyFlowerField" title="certainly not a quicker way to buy a flower field">+</button><br /></span>
+         <span id="pollenwrapper">pollen: <span id="pollen"></span> <span id="totalpollen" class="lighttext"></span> <span id="pollenPS"></span><br /></span>
+         <span id="nectarwrapper">nectar: <span id="nectar"></span> <span id="totalnectar" class="lighttext"></span> <span id="nectarPS"></span><br /></span>
+         <span id="honeywrapper">honey:  <span id="honey"></span> <span id="totalhoney" class="lighttext"></span> <span id="honeyPS"></span><br></span>
+        <span id="moneywrapper" title="you sell 1% of your current honey per second">money:  <span id="money"></span> <span id="totalmoney" class="lighttext"></span> <span id="moneyPS"></span><input id="honeyCheckBox" type="checkbox" title="sell honey"> </span></span><br>
+        
+      </div>
+      <div id="beeswrapper" class="mediumgap">
+      free bees: <span id="freeBees">2/3</span> <button id="quickBuyBee" title="quick buy bee">+</button><span id="quickbuyhivewrapper">/<button id="quickBuyHive" title="quick buy hive">+</button></span><br />
+        <span id="beesWrapper">
+          <table cellspacing=0 class="t">
+            <tr id="foragerbeeswrapper">
+              <td><span id="foragerbeestext">├</span> </td>
+              <td><span id="foragerbeestextunderline">forager bees: <span id="foragerBees"></span></span></td>
+              <td><button id="set0ForagerBees" >0</button><button id="minusForagerBees">-</button><button id="plusForagerBees">+</button><button id="maxForagerBees" >max</button></span></td>
+            </tr>
+            <tr id="honeybeeswrapper">
+              <td><span id="honeybeestext">└</span> </td>
+              <td><span id="honeybeestextunderline">honey bees: <span id="honeyBees"></span></span></td>
+              <td><button id="set0HoneyBees">0</button><button id="minusHoneyBees">-</button><button id="plusHoneyBees">+</button><button id="maxHoneyBees">max</button></span></td>
+            </tr>
+          </table>
+        </span>
+      </div>
+      <span id="flowerfieldwrapper"><button  id="buyFlowerField">buy a flower field for <span id="flowerFieldPrice"></span>$ [<span id="flowerFields"></span>]</button>
+      <div id="flowerFieldsEffect" class="smallgap" title="except the starting 10 flower fields">
+        each flower field multiplies flower and pollen production by 1.01x
+      </div></span>
+      <button id="buyBee">buy a bee for <span id="beePrice"></span> honey [<span id="bees"></span>]</button> <br />
+      <div id="beesEffect" class="smallgap" title="2nd effect starts at 1 bee (gives worker space after buying first bee)">each bee multiplies nectar production by 1.01x & every 5th also adds a worker space </div>
+      <span id="hivewrapper">
+        <button id="buyHive">expand hive upgrade for <span id="hivePrice"></span> pollen [<span id="hives"></span>]</button> <br />
+        <div id="hivesEffect" class="biggap">each hive multiplies honey production by 1.01x & adds some worker space</div>
+      </span>
+      <div id="sacrificeWrapper" class="biggap">
+        <div class="mediumgap"><span id="neededBeesToSacrifice"></span> <span id="reqBeesToSacTitle" class="lighttext" title="starts at 5 bees to sacrifice"> +1 bee per tribute per 20 tributes [<span id="totalBeesToSacrificeFromTributes"></span>]</span></div>
+        
+        <span id="pollengodwrapper"><button id="donateToPollenGod">sacrifice all your <b>pollen</b> and yourself to Pollen God for <span id="pollenGodTributesToGet"></span>, [<span id="pollenGodTributesAfterSacrifice"></span>] </button> <span class="lighttext">next tribute at <span id="nextPollenGodTribute"></span> highest pollen</span><br>
+          <div class="smallgap">each tribute multiplies pollen production by 1.03x & adds 1 forager bee space </div></span>
+        <span id="nectargodwrapper"><button id="donateToNectarGod">sacrifice all your <b>nectar</b> and yourself to Nectar God for <span id="nectarGodTributesToGet"></span>, [<span id="nectarGodTributesAfterSacrifice"></span>] </button> <span class="lighttext">next tribute at <span id="nextNectarGodTribute"></span> highest nectar</span><br>
+          <div class="smallgap">each tribute multiplies nectar production by 1.03x & adds 1 honey bee space </div></span>
+        <span id="honeygodwrapper"><button id="donateToHoneyGod">sacrifice all your <b>honey</b> and yourself to Honey God for <span id="honeyGodTributesToGet"></span>, [<span id="honeyGodTributesAfterSacrifice"></span>]  </button> <span class="lighttext">next tribute at <span id="nextHoneyGodTribute"></span> highest honey</span><br>
+          <div class="smallgap">each tribute multiplies honey production by 1.03x & multiplies bees bought by 1.03x</div></span>
+        <span id="flowergodwrapper"><button id="donateToFlowerGod"><span id="recomended">(recomended) </span>sacrifice all your <b>flowers</b> and yourself to Flower God for <span id="flowerGodTributesToGet"></span>, [<span id="flowerGodTributesAfterSacrifice"></span>] </button> <span class="lighttext">next tribute at <span id="nextFlowerGodTribute"></span> highest flowers</span><br>
+          <div class="smallgap" title="free flower fields dont increase flower field price">each tribute gives 1 free flower field & multiplies flower produciton by 1.03x </div></span>
+        <span id="capitalistgodwrapper"><button id="donateToCapitalistGod">sacrifice all your <b>money</b> and yourself to Capitalist God for <span id="capitalistGodTributesToGet"></span>, [<span id="capitalistGodTributesAfterSacrifice"></span>] </button> <span class="lighttext">next tribute at <span id="nextCapitalistGodTribute"></span> highest money</span><br>
+          <div class="mediumgap">each tribute flower field and hive price by 1.03x & multiplies worker space by 1.03x</div></span>
+      </div>
+      <div id="tributeswrapper">
+        <div>tribute milestones [<span id="totalTributes"></span><span id="totalNamelessTributes"><!-- todo: make it nameless tributes + the ones from tribute eff  --></span>]:</div>
+        <div id="m0t" title="~1.00662x per tribute"><span id="m0c" class="w10">2</span><span id="m0"></span> <span id="m0d">1.02x flower production for every 2 free bee and for every 2 tributes</span>  <span id="m0e" class="lighttext"></span></div>
+        <div id="m1t" title="~1.00995x per tribute"><span id="m1c" class="w10">5</span><span id="m1"></span> <span id="m1d">bee price divided by 1.02x for every 2 tributes</span>  <span id="m1e" class="lighttext"></span></div>
+        <div id="m2t" title="~1.00662x per tribute, includes bees and other resources"><span id="m2c" class="w10">10</span><span id="m2"></span> <span id="m2d">sacrifice requirement divided by 1.02 for every 2 tributes</span>  <span id="m2e" class="lighttext"></span></div>
+        <div id="m3t" title="free bees also get multiplied by honey god tribute"><span id="m3c" class="w10">15</span><span id="m3"></span> <span id="m3d">1 bee for every 5 tributes</span>  <span id="m3e" class="lighttext"></span></div>
+        <div id="m4t" title="sweet!"><span id="m4c" class="w10">20</span><span id="m4"></span> <span id="m4d">1.02x honey production per tribute</span>  <span id="m4e" class="lighttext"></span></div>
+        <div id="m5t" title="multiplies itself and free tributes&#10;does not count towards bees required to sacrifice & tribute milesotnes"><span id="m5c" class="w10">30</span><span id="m5"></span> <span id="m5d">1.02x tribute efficiency for every 10 tributes</span>  <span id="m5e" class="lighttext"></span></div> 
+        <div id="m6t" title=""><span id="m6c" class="w10">45</span><span id="m6"></span> <span id="m6d">1.02x nectar prod for every tribute</span>  <span id="m6e" class="lighttext"></span></div> 
+        <div id="m7t" title="~1.00662x per tribute"><span id="m7c" class="w10">60</span><span id="m7"></span> <span id="m7d">1.02x honey price multiplier per 3 tributes</span>  <span id="m7e" class="lighttext"></span></div> 
+        <div id="m8t" title="~1.00396x per tribute"><span id="m8c" class="w10">75</span><span id="m8"></span> <span id="m8d">1.02x time speed multiplier per 5 tributes</span>  <span id="m8e" class="lighttext"></span></div> 
+        <div id="m9t" title="get royal jelly based on total produced resources"><span id="m9c" class="w10">100</span><span id="m9"></span> <span id="m9d">unlocks royal jelly</span>  <span id="m9e" class="lighttext"></span></div> 
+        <div id="m10t" title="get both god's tributes when sacrificing to either one&#10;their max tributes rised to 30&#10;stronger tribute effects 1.02x -> 1.04x & any other bonus 1 -> 2"><span id="m10c" class="w10">110</span><span id="m10"></span> <span id="m10d">combine a pair of gods (all of these will be added in future updates)  </span>  <span id="m10e" class="lighttext"></span></div> 
+        <div id="m11t" title="get both god's tributes when sacrificing to either one&#10;their max tributes rised to 30&#10;stronger tribute effects 1.02x -> 1.04x & any other bonus 1 -> 2"><span id="m11c" class="w10">130</span><span id="m11"></span> <span id="m11d">combine another pair of gods</span>  <span id="m11e" class="lighttext"></span></div> 
+        <div id="m12t" title="chosen god's max tributes rised to 40&#10;stronger tribute effects 1.02x -> 1.05x & any other bonus 1 -> 3"><span id="m12c" class="w10">160</span><span id="m12"></span> <span id="m12d">turn one god into a higher god</span>  <span id="m12e" class="lighttext"></span></div> 
+        <div id="m13t" title=""><span id="m13c" class="w10">200</span><span id="m13"></span> <span id="m13d">challenges</span>  <span id="m13e" class="lighttext"></span></div> 
+
+        <!-- <div title="~1.068x for multiple of 10 of flowers"><span class="w10">1</span> <span id="m0"></span> 1.02x flower production for every multiple of 2 of flowers  <span id="m0effect" class="lighttext"></span></div>
+        <div title="~1.00995x per tribute"><span class="w10">3</span> <span id="m1"></span> bee price divided by 1.02x for every 2 tributes  <span id="m1effect" class="lighttext"></span></div>
+        <div title="~1.00662x per tribute, includes bees and other resources"><span class="w10">6</span> <span id="m2"></span> sacrifice requirement divided by 1.02 for every 3 tributes  <span id="m2effect" class="lighttext"></span></div>
+        <div title="free bees also get multiplied by honey god tribute"><span class="w10">10</span> <span id="m3"></span> 1 bee for every 5 tributes  <span id="m3effect" class="lighttext"></span></div>
+        <div title="at 10 tributes ~1.01516x less resources required per OoM of them to sacrifice&#10;at 15 tributes ~1.01783x less per OoM of required resources&#10;at 100 tributes ~1.03025x "><span class="w10">15</span> <span id="m4"></span> sacrifice requirement formula 1.02x better every log10 of tributes <span id="m4effect" class="lighttext"></span></div>
+        <div title="~1.00198x per tribute, only does not count towards this effect and bees required per tribute"><span class="w10">20</span> <span id="m5"></span> 1.02x tribute efficiency for every 10 tributes  <span id="m5effect" class="lighttext"></span></div> 
+        <div title="sweet!"><span class="w10">25</span> <span id="m6"></span> 1.02x honey production per tribute <span id="m6effect" class="lighttext"></span></div>
+        <div title="combine both Gods' effects"><span class="w10">30</span> <span id="m7"></span> TBA: combine gods</div> -->
+        </div>
+      <br>
+      <div id="flowerpsstatwrapper"><div class="lighttext">flower field</div>
+      <div class="lighttext smallgap" >└ makes <span id="flowerPSStat"></span></div></div>
+      <div id="foragerstatwrapper"><div class="lighttext">forager bee</div>
+      <div class="lighttext">├ consumes <span id="flowerConsumptionStat"></span></div>
+      <div class="lighttext">├ makes <span id="pollenPSStat"></span></div>
+      <div class="lighttext smallgap" >└ makes <span id="nectarPSStat"></span></div></div>
+      <div id="honeybeestatwrapper"><div class="lighttext">honey bee</div>
+      <div class="lighttext">├ consumes <span id="nectarConsumptionStat"></span></div>
+      <div class="lighttext smallgap" >└ makes <span id="honeyPSStat"></span></div></div>
+      <div id="honeystatwrapper"><div class="lighttext">honey</div>
+      <div class="lighttext smallgap" >└ costs <span id="honeyWorthStat"></span> money</div></div>
+      <div id="beehivestatwrapper"><div class="lighttext">hive upgrade</div>
+      <div class="lighttext smallgap" >└ gives <span id="beehiveSpaceEffectStat"></span> worker space<span id="beehiveSpaceEffectStatS"></span></div></div>
+      <div id="fifthbeestatwrapper"><div class="lighttext">every fifth bee</div>
+      <div class="lighttext smallgap" >└ gives <span id="beeSpaceEffectStat"></span> worker space<span id="beeSpaceEffectStatS"></span></div></div>
+    </div>
+    </div> <!-- 😈 -->
+<div id="pernamentTributeEffects" style="position: fixed; right:3px;top:3px;text-align: right;width:max-content;padding-left:3px;background-color: #fffc;" title="&check;pollen: 2x pollen production&#10;nectar: 2x honey worth&#10;honey: bees amount isn't rounded down&#10;flowers: lets you sell honey&#10;capitalist: worker spaces aren't rounded down">pernament first tribute effects</div>
+<div id="offlineTicks" style="position: fixed;width: calc(100vw - min(300px,30vw) );margin-left: min(300px,30vw);top:21px;text-align: left;">
+  <span style="background-color: #fffc;">
+    <span id="ticksLeft"></span>
+      5x <input id="offlineTicksSpeed5" type="checkbox" title="use offline time"
+    > 10x <input  id="offlineTicksSpeed10" type="checkbox" title="use offline time">
+
+  </span>
+</div>
+<!-- <div id="gameCompletion" title="game completion" style="position: fixed; right:3px;top:21px;text-align: right;width:max-content;padding-left:3px;background-color: #fffc;">game completion</div> -->
+<div style="position: fixed; right:3px;bottom:21px;text-align: right;width:max-content;padding-left:3px;background-color: #fffc;">
+  display everything <input id="disaplyeverything" type="checkbox"> 
+  autosaves <input id="autosaves" type="checkbox"> 
+  <button style="padding-left:5px;padding-right:5px" id="saveButton"> save</button>  
+  <button style="padding-left:5px;padding-right:5px" id="loadButton"> load</button> 
+    <!-- <span >end of "new" content after ~30 tributes</span> -->
+  </div>
+<div style="position: fixed; right:3px;bottom:3px;text-align: right;width:max-content;padding-left:3px;background-color: #fffc;">
+    <!-- <button id="sacrificeForNothing">sacrifice yourself for nothing</button>  -->
+    report bugs or contact me through <a style="color:#5865F2" href="https://discord.gg/hS6ssMCDaB">discord</a> or <a style="color:#FF4500" href="https://www.reddit.com/user/ReQgamePlay">reddit DMs</a> 
+    <span title="v0.0.1&#9;added bees, resources and buildings&#10;&#10;v0.0.2&#9;added sacrifices&#10;v0.0.3&#9;added tribute milestones&#10;v0.1&#9;&#9;bug fixes,more polished and playable version of above features&#10;v0.1.1&#9;added 4 more tribute milestones, milestones rebalance&#10;v0.1.2&#9;added combining gods&#10;v0.1.3&#9;added royal jelly">changelog</span> 
+    alpha v0.1.1
+  </div>
+  <br>
+  </body>
+</html>
+ 
