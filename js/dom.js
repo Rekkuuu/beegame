@@ -182,5 +182,6 @@ const d = {
     honeyWorthStat: $("honeyWorthStat"),
     offlineTicksSpeed5: $("offlineTicksSpeed5"),
     offlineTicksSpeed10: $("offlineTicksSpeed10"),
+    honeystatwrapper: $("honeystatwrapper"),
 };
 //todo shorten these names?

@@ -215,5 +215,7 @@ const d = {
 
   offlineTicksSpeed5: $("offlineTicksSpeed5") as HTMLInputElement,
   offlineTicksSpeed10: $("offlineTicksSpeed10") as HTMLInputElement,
+
+  honeystatwrapper: $("honeystatwrapper"),
 };
 //todo shorten these names?

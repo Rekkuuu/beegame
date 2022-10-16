@@ -415,12 +415,12 @@ const updateDisplay = () => {
   } else {
     d.foragerbeestext.innerHTML = "├";
   }
-
-  d.beehivestatwrapper;
   if (tmp.displayeverything || p.unlocks.hive) {
     d.hivewrapper.style.display = "";
+    d.beehivestatwrapper.style.display = "";
   } else {
     d.hivewrapper.style.display = "none";
+    d.beehivestatwrapper.style.display = "none";
   }
 
   if (tmp.displayeverything || p.unlocks.foragerBees) {
@@ -450,10 +450,12 @@ const updateDisplay = () => {
     d.moneywrapper.style.visibility = "visible";
     d.flowerfieldwrapper.style.display = "";
     d.quickBuyFlowerField.style.display = "";
+    d.honeystatwrapper.style.display = "";
   } else {
     d.moneywrapper.style.visibility = "hidden";
     d.flowerfieldwrapper.style.display = "none";
     d.quickBuyFlowerField.style.display = "none";
+    d.honeystatwrapper.style.display = "none";
   }
   if (tmp.displayeverything || p.unlocks.sacrificing) {
     d.sacrificeWrapper.style.display = "";
