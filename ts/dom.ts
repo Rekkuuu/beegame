@@ -217,5 +217,8 @@ const d = {
   offlineTicksSpeed10: $("offlineTicksSpeed10") as HTMLInputElement,
 
   honeystatwrapper: $("honeystatwrapper"),
+
+  toggleDarkmode: $("toggleDarkmode") as HTMLInputElement,
+  body: document.querySelector("body") as HTMLBodyElement,
 };
 //todo shorten these names?

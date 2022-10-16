@@ -16,7 +16,7 @@
 
     </style>
   </head>
-  <body>
+  <body class="dark-mode">
     <div id="main" style="padding:8px;width:calc(100vw - 17px)">
       <div class="smallgap">
          <span id="flowerswrapper">flowers: <span id="flowers"></span> <span id="totalflowers" class="lighttext"></span> <span id="flowersPS"></span> <button id="slowBuyFlowerField" title="certainly not a quicker way to buy a flower field">+</button><br /></span>
@@ -111,9 +111,9 @@
       <div class="lighttext smallgap" >└ gives <span id="beeSpaceEffectStat"></span> worker space<span id="beeSpaceEffectStatS"></span></div></div>
     </div>
     </div> <!-- 😈 -->
-<div id="pernamentTributeEffects" style="position: fixed; right:3px;top:3px;text-align: right;width:max-content;padding-left:3px;background-color: #fffc;" title="&check;pollen: 2x pollen production&#10;nectar: 2x honey worth&#10;honey: bees amount isn't rounded down&#10;flowers: lets you sell honey&#10;capitalist: worker spaces aren't rounded down">pernament first tribute effects</div>
-<div id="offlineTicks" style="position: fixed;width: calc(100vw - min(300px,30vw) );margin-left: min(300px,30vw);top:21px;text-align: left;">
-  <span style="background-color: #fffc;">
+<div id="pernamentTributeEffects" style="position: fixed; right:3px;top:3px;text-align: right;width:max-content;padding-left:3px" title="&check;pollen: 2x pollen production&#10;nectar: 2x honey worth&#10;honey: bees amount isn't rounded down&#10;flowers: lets you sell honey&#10;capitalist: worker spaces aren't rounded down">pernament first tribute effects</div>
+<div id="offlineTicks" style="position: fixed;width: calc(100vw - min(500px,30vw) );margin-left: min(500px,30vw);top:21px;text-align: left;">
+  <span id="insideOfflineTicks" >
     <span id="ticksLeft"></span>
       5x <input id="offlineTicksSpeed5" type="checkbox" title="use offline time"
     > 10x <input  id="offlineTicksSpeed10" type="checkbox" title="use offline time">
@@ -121,19 +121,21 @@
   </span>
 </div>
 <!-- <div id="gameCompletion" title="game completion" style="position: fixed; right:3px;top:21px;text-align: right;width:max-content;padding-left:3px;background-color: #fffc;">game completion</div> -->
-<div style="position: fixed; right:3px;bottom:21px;text-align: right;width:max-content;padding-left:3px;background-color: #fffc;">
+<div id="aboveaboveFooter" style="position: fixed; right:3px;bottom:44px;text-align: right;width:max-content;padding-left:3px">toggle darkmode <input id="toggleDarkmode" type="checkbox">        </div>
+<div id="aboveFooter" style="position: fixed; right:3px;bottom:21px;text-align: right;width:max-content;padding-left:3px">
   display everything <input id="disaplyeverything" type="checkbox"> 
   autosaves <input id="autosaves" type="checkbox"> 
   <button style="padding-left:5px;padding-right:5px" id="saveButton"> save</button>  
   <button style="padding-left:5px;padding-right:5px" id="loadButton"> load</button> 
     <!-- <span >end of "new" content after ~30 tributes</span> -->
   </div>
-<div style="position: fixed; right:3px;bottom:3px;text-align: right;width:max-content;padding-left:3px;background-color: #fffc;">
+<div id="footer" style="position: fixed; right:3px;bottom:3px;text-align: right;width:max-content;padding-left:3px">
     <!-- <button id="sacrificeForNothing">sacrifice yourself for nothing</button>  -->
-    report bugs or contact me through <a style="color:#5865F2" href="https://discord.gg/hS6ssMCDaB">discord</a> or <a style="color:#FF4500" href="https://www.reddit.com/user/ReQgamePlay">reddit DMs</a> 
+    bugs/contact via <a style="color:#5865F2" href="https://discord.gg/hS6ssMCDaB">discord</a> or <a style="color:#FF4500" href="https://www.reddit.com/user/ReQgamePlay">reddit DMs</a> 
     <span title="v0.0.1&#9;added bees, resources and buildings&#10;&#10;v0.0.2&#9;added sacrifices&#10;v0.0.3&#9;added tribute milestones&#10;v0.1&#9;&#9;bug fixes,more polished and playable version of above features&#10;v0.1.1&#9;added 4 more tribute milestones, milestones rebalance&#10;v0.1.2&#9;added combining gods&#10;v0.1.3&#9;added royal jelly">changelog</span> 
-    alpha v0.1.1
+    alpha v0.1.1.5
   </div>
+  <br>
   <br>
   </body>
 </html>

@@ -362,6 +362,14 @@ const updateTmp = () => {
 };
 
 const updateDisplay = () => {
+  if (d.toggleDarkmode.checked) {
+    d.body.classList.add("dark-mode");
+    p.darkmode = true;
+  } else {
+    d.body.classList.remove("dark-mode");
+    p.darkmode = false;
+  }
+
   if (p.bees > 0) p.unlocks.bees = true;
   if (p.pollen >= 1) p.unlocks.hive = true;
   if (p.foragerBees > 0) p.unlocks.foragerBees = true;

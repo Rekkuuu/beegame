@@ -362,6 +362,14 @@ const updateTmp = () => {
         tmp.m8e = Math.pow(1.02, ((tmp.totalTributes / 5) * tmp.m5e));
 };
 const updateDisplay = () => {
+    if (d.toggleDarkmode.checked) {
+        d.body.classList.add("dark-mode");
+        p.darkmode = true;
+    }
+    else {
+        d.body.classList.remove("dark-mode");
+        p.darkmode = false;
+    }
     if (p.bees > 0)
         p.unlocks.bees = true;
     if (p.pollen >= 1)

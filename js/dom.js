@@ -183,5 +183,7 @@ const d = {
     offlineTicksSpeed5: $("offlineTicksSpeed5"),
     offlineTicksSpeed10: $("offlineTicksSpeed10"),
     honeystatwrapper: $("honeystatwrapper"),
+    toggleDarkmode: $("toggleDarkmode"),
+    body: document.querySelector("body"),
 };
 //todo shorten these names?

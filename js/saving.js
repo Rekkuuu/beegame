@@ -5,6 +5,8 @@ const save = () => {
 };
 const load = () => {
     p = localStorage["beegame"] == undefined ? newEmptyPlayer() : JSON.parse(localStorage["beegame"]);
+    if (p["darkmode"] == undefined)
+        p["darkmode"] = false;
     console.log("save loaded");
 };
 const toggleAutosave = () => {

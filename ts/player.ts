@@ -49,6 +49,7 @@ type t_player = {
   unlocks: {bees: boolean; foragerBees: boolean; hive: boolean; honeyBees: boolean; sacrificing: boolean; tributes: boolean};
   lastUpdate: number;
   offlineTime: number;
+  darkmode: boolean;
 };
 
 const newEmptyPlayer = (): t_player => {
@@ -101,6 +102,7 @@ const newEmptyPlayer = (): t_player => {
     unlocks: {bees: false, foragerBees: false, hive: false, honeyBees: false, sacrificing: false, tributes: false},
     lastUpdate: Date.now(),
     offlineTime: 1, // so generous
+    darkmode: true,
   };
 };
 let p: t_player;

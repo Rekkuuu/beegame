@@ -32,19 +32,11 @@ button {
   display: inline-block;
 }
 
-#donateToFlowerGod {
-  &:not(:disabled) #recomended {
-    color: #f00;
-  }
-  &:disabled #recomended {
-    color: #d66;
-  }
-}
 a {
   text-decoration: none;
 }
 #ticksLeft {
-  min-width: 200px;
+  min-width: 150px;
   display: inline-block;
 }
 #main div {
@@ -58,5 +50,43 @@ a {
   }
   td {
     padding-right: 3px;
+  }
+}
+
+body:not(.dark-mode) {
+  .offlineTicks .aboveFooter .footer {
+    background-color: #fffc;
+  }
+  #donateToFlowerGod {
+    &:not(:disabled) #recomended {
+      color: #f00;
+    }
+    &:disabled #recomended {
+      color: #d66;
+    }
+  }
+}
+
+body.dark-mode {
+  background-color: #222;
+  color: white;
+
+  .lighttext {
+    color: #999;
+  }
+  button:disabled {
+    color: #111;
+  }
+
+  #insideOfflineTicks #aboveFooter #footer {
+    background-color: #000;
+  }
+  #donateToFlowerGod {
+    &:not(:disabled) #recomended {
+      color: #f00;
+    }
+    &:disabled #recomended {
+      color: #f55;
+    }
   }
 }

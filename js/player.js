@@ -41,7 +41,8 @@ const newEmptyPlayer = () => {
         // buy bee, get forager bee, get honey bee, unlock money from tributes, at least 50 of pollen etc and 1k flowers, at least one tribute
         unlocks: { bees: false, foragerBees: false, hive: false, honeyBees: false, sacrificing: false, tributes: false },
         lastUpdate: Date.now(),
-        offlineTime: 1, // so generous
+        offlineTime: 1,
+        darkmode: true,
     };
 };
 let p;

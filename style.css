@@ -42,19 +42,12 @@ button {
   display: inline-block;
 }
 
-#donateToFlowerGod:not(:disabled) #recomended {
-  color: #f00;
-}
-#donateToFlowerGod:disabled #recomended {
-  color: #d66;
-}
-
 a {
   text-decoration: none;
 }
 
 #ticksLeft {
-  min-width: 200px;
+  min-width: 150px;
   display: inline-block;
 }
 
@@ -69,4 +62,34 @@ a {
 }
 .t td {
   padding-right: 3px;
+}
+
+body:not(.dark-mode) .offlineTicks .aboveFooter .footer {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+body:not(.dark-mode) #donateToFlowerGod:not(:disabled) #recomended {
+  color: #f00;
+}
+body:not(.dark-mode) #donateToFlowerGod:disabled #recomended {
+  color: #d66;
+}
+
+body.dark-mode {
+  background-color: #222;
+  color: white;
+}
+body.dark-mode .lighttext {
+  color: #999;
+}
+body.dark-mode button:disabled {
+  color: #111;
+}
+body.dark-mode #insideOfflineTicks #aboveFooter #footer {
+  background-color: #000;
+}
+body.dark-mode #donateToFlowerGod:not(:disabled) #recomended {
+  color: #f00;
+}
+body.dark-mode #donateToFlowerGod:disabled #recomended {
+  color: #f55;
 }/*# sourceMappingURL=style.css.map */
