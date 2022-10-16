@@ -1,0 +1,59 @@
+.btn {
+  padding: 1px;
+  padding-right: 5px;
+  padding-left: 5px;
+  margin-right: 0.5px;
+  margin-left: 0.5px;
+  border-width: 1px;
+  border-radius: 5px;
+}
+@media only screen and (max-width: 800px) {
+}
+body.big-buttons {
+  .btn {
+    padding: 3px;
+    padding-right: 8px;
+    padding-left: 8px;
+    margin-left: 3px;
+    margin-right: 3px;
+    margin-top: 3px;
+    padding-bottom: 4px;
+  }
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+  }
+}
+
+body:not(.dark-mode) {
+  button.btn {
+    background-color: #e9e9ed;
+    border-color: #8f8f9d;
+    &:hover,
+    &:active {
+      background-color: #ccc;
+    }
+    &:disabled {
+      background-color: #999;
+      border-color: #9c9c9f;
+      color: #222;
+    }
+  }
+}
+
+body.dark-mode {
+  button.btn {
+    background-color: #e9e9ed;
+    border-color: #8f8f9d;
+    &:hover,
+    &:active {
+      background-color: #d8d8d8;
+    }
+    &:disabled {
+      background-color: #808080;
+      border-color: #8f8f9d;
+      color: #111;
+    }
+  }
+}

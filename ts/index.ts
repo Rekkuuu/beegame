@@ -369,6 +369,13 @@ const updateDisplay = () => {
     d.body.classList.remove("dark-mode");
     p.darkmode = false;
   }
+  if (d.toggleBigButtons.checked) {
+    d.body.classList.add("big-buttons");
+    p.bigButtons = true;
+  } else {
+    d.body.classList.remove("big-buttons");
+    p.bigButtons = false;
+  }
 
   if (p.bees > 0) p.unlocks.bees = true;
   if (p.pollen >= 1) p.unlocks.hive = true;

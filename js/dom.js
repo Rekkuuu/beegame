@@ -185,5 +185,6 @@ const d = {
     honeystatwrapper: $("honeystatwrapper"),
     toggleDarkmode: $("toggleDarkmode"),
     body: document.querySelector("body"),
+    toggleBigButtons: $("toggleBigButtons"),
 };
 //todo shorten these names?

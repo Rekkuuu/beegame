@@ -43,6 +43,7 @@ const newEmptyPlayer = () => {
         lastUpdate: Date.now(),
         offlineTime: 1,
         darkmode: true,
+        bigButtons: false,
     };
 };
 let p;

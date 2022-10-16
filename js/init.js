@@ -8,6 +8,8 @@ const init = () => {
     load();
     if (p.darkmode)
         d.toggleDarkmode.checked = true;
+    if (p.bigButtons)
+        d.toggleBigButtons.checked = true;
     tmp.maxHoneyBees = getMaxForagerBees();
     tmp.maxForagerBees = getMaxHoneyBees();
     tmp.totalTributes = totalTributes();

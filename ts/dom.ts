@@ -220,5 +220,6 @@ const d = {
 
   toggleDarkmode: $("toggleDarkmode") as HTMLInputElement,
   body: document.querySelector("body") as HTMLBodyElement,
+  toggleBigButtons: $("toggleBigButtons") as HTMLInputElement,
 };
 //todo shorten these names?

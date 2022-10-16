@@ -50,6 +50,7 @@ type t_player = {
   lastUpdate: number;
   offlineTime: number;
   darkmode: boolean;
+  bigButtons: boolean;
 };
 
 const newEmptyPlayer = (): t_player => {
@@ -103,6 +104,7 @@ const newEmptyPlayer = (): t_player => {
     lastUpdate: Date.now(),
     offlineTime: 1, // so generous
     darkmode: true,
+    bigButtons: false,
   };
 };
 let p: t_player;
