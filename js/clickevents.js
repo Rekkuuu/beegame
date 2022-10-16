@@ -200,7 +200,10 @@ const sacrificeToGod = () => {
     let phoneyBees = p.honeyBees;
     let freeBees = 0;
     if (totalTributes() >= tributeMilestones[3]) {
-        freeBees = (totalTributes() / 5) * tmp.m5e;
+        if (p.honeyGodTributes == 0 && p.capitalistGodTributes == 0)
+            freeBees = Math.floor(totalTributes() / 5);
+        else
+            freeBees = (totalTributes() / 5) * tmp.m5e;
         if (p.honeyGodTributes)
             freeBees *= Math.pow(1.03, (p.honeyGodTributes * tmp.m5e));
         p.freeBees += freeBees;

@@ -687,9 +687,9 @@ const updateText = () => {
     d.hivePrice.innerHTML = format(getHivePrice());
     d.hives.innerHTML = "" + p.hives.toFixed(0);
     if (p.honeyGodTributes == 0 && p.capitalistGodTributes == 0) {
-        d.freeBees.innerHTML = "" + p.freeBees + "/" + p.bees;
-        d.foragerBees.innerHTML = "" + p.foragerBees + "/" + tmp.maxForagerBees;
-        d.honeyBees.innerHTML = "" + p.honeyBees + "/" + tmp.maxHoneyBees;
+        d.freeBees.innerHTML = "" + p.freeBees.toFixed(0) + "/" + p.bees.toFixed(0);
+        d.foragerBees.innerHTML = "" + p.foragerBees.toFixed(0) + "/" + tmp.maxForagerBees.toFixed(0);
+        d.honeyBees.innerHTML = "" + p.honeyBees.toFixed(0) + "/" + tmp.maxHoneyBees.toFixed(0);
     }
     else {
         d.freeBees.innerHTML = "" + format(p.freeBees) + "/" + format(totalBees());
