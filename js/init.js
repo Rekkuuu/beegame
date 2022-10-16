@@ -6,6 +6,8 @@ let lgmaxnumber = 20;
 const init = () => {
     loop = setInterval(GameLoop, 30);
     load();
+    if (p.darkmode)
+        d.toggleDarkmode.checked = true;
     tmp.maxHoneyBees = getMaxForagerBees();
     tmp.maxForagerBees = getMaxHoneyBees();
     tmp.totalTributes = totalTributes();
