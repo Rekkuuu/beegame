@@ -509,7 +509,7 @@ const updateDisplay = () => {
         d.maxHoneyBees.disabled = true;
     else
         d.maxHoneyBees.disabled = false;
-    if (p.honeyBees == tmp.maxHoneyBees || (p.foragerBees < 1 && p.freeBees < 1) || p.honeyBees + 1 > tmp.maxForagerBees)
+    if (p.honeyBees == tmp.maxHoneyBees || (p.foragerBees < 1 && p.freeBees < 1) || p.honeyBees + 1 > tmp.maxHoneyBees)
         d.plusHoneyBees.disabled = true;
     else
         d.plusHoneyBees.disabled = false;
@@ -740,9 +740,10 @@ const updateText = () => {
         d.m9e.innerHTML = "";
     else
         d.m9e.innerHTML = `current end of content`;
+    let brts = requiredBeesToSacrifice();
     d.totalTributes.innerHTML = `${tmp.totalTributes.toFixed(0)} + ${format(tmp.totalTributes * tmp.m5e - tmp.totalTributes)}`;
-    d.totalBeesToSacrificeFromTributes.innerHTML = `req ${format(requiredBeesToSacrifice())}  bees`;
-    d.reqBeesToSacTitle.title = `requires ${format(5 / Math.pow(1.02, (tmp.totalTributes / 3)))} + ${format(requiredBeesToSacrifice() - 5)} bees to sacrifice`;
+    d.totalBeesToSacrificeFromTributes.innerHTML = `req ${format(brts)}  bees`;
+    d.reqBeesToSacTitle.title = `requires ${format(5 / tmp.m2e)} + ${format(brts - requiredBeesToSacrifice(0))} bees to sacrifice`;
     for (let i = 0; i < tributeMilestones.length; i++) {
         if (tributeMilestones[i] < tmp.totalTributes && i != tributeMilestones.length) {
             d.m[i].innerHTML = "├";
