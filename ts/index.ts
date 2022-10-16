@@ -396,13 +396,11 @@ const updateDisplay = () => {
   if (d.disaplyeverything.checked) tmp.displayeverything = true;
 
   if (tmp.displayeverything || p.unlocks.bees) {
-    d.honeywrapper.style.visibility = "visible";
     d.foragerbeeswrapper.style.display = "";
     d.quickbuyhivewrapper.style.display = "";
     d.beesEffect.style.display = "";
     d.fifthbeestatwrapper.style.display = "";
   } else {
-    d.honeywrapper.style.visibility = "hidden";
     d.foragerbeeswrapper.style.display = "none";
     d.quickbuyhivewrapper.style.display = "none";
     d.beesEffect.style.display = "none";
@@ -430,9 +428,11 @@ const updateDisplay = () => {
   }
 
   if (tmp.displayeverything || p.unlocks.honeyBees) {
+    d.honeywrapper.style.visibility = "visible";
     d.honeybeestatwrapper.style.display = "";
   } else {
     d.honeybeestatwrapper.style.display = "none";
+    d.honeywrapper.style.visibility = "hidden";
   }
 
   if (tmp.totalTributes == 0) d.recomended.style.display = "";
