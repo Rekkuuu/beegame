@@ -442,7 +442,7 @@ const updateDisplay = () => {
   else d.recomended.style.display = "none";
 
   if (tmp.displayeverything || p.fge) {
-    d.moneywrapper.style.visibility = "show";
+    d.moneywrapper.style.visibility = "visible";
     d.flowerfieldwrapper.style.display = "";
     d.quickBuyFlowerField.style.display = "";
   } else {
