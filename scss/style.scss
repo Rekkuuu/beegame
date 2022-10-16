@@ -33,7 +33,7 @@ button {
 }
 
 #donateToFlowerGod {
-  & :not(:disabled) #recomended {
+  &:not(:disabled) #recomended {
     color: #f00;
   }
   &:disabled #recomended {

@@ -458,7 +458,7 @@ const updateDisplay = () => {
   else d.nectargodwrapper.style.display = "none";
   if (p.honeyGodTributes > 0 || p.highesthoney >= 35) d.honeygodwrapper.style.display = "";
   else d.honeygodwrapper.style.display = "none";
-  if (p.flowerGodTributes > 0 || p.highestflowers >= 800) d.flowergodwrapper.style.display = "";
+  if (p.flowerGodTributes > 0 || p.highestflowers >= 400) d.flowergodwrapper.style.display = "";
   else d.flowergodwrapper.style.display = "none";
   if (p.capitalistGodTributes > 0 || p.highestmoney >= 35) d.capitalistgodwrapper.style.display = "";
   else d.capitalistgodwrapper.style.display = "none";

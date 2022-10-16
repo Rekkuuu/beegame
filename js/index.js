@@ -469,7 +469,7 @@ const updateDisplay = () => {
         d.honeygodwrapper.style.display = "";
     else
         d.honeygodwrapper.style.display = "none";
-    if (p.flowerGodTributes > 0 || p.highestflowers >= 800)
+    if (p.flowerGodTributes > 0 || p.highestflowers >= 400)
         d.flowergodwrapper.style.display = "";
     else
         d.flowergodwrapper.style.display = "none";
