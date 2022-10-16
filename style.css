@@ -64,7 +64,10 @@ a {
   padding-right: 3px;
 }
 
-body:not(.dark-mode) .offlineTicks .aboveFooter .footer {
+body:not(.dark-mode) #aboveaboveFooter,
+body:not(.dark-mode) #insideOfflineTicks,
+body:not(.dark-mode) #aboveFooter,
+body:not(.dark-mode) #footer {
   background-color: rgba(255, 255, 255, 0.8);
 }
 body:not(.dark-mode) #donateToFlowerGod:not(:disabled) #recomended {
@@ -84,8 +87,11 @@ body.dark-mode .lighttext {
 body.dark-mode button:disabled {
   color: #111;
 }
-body.dark-mode #insideOfflineTicks #aboveFooter #footer {
-  background-color: #000;
+body.dark-mode #aboveaboveFooter,
+body.dark-mode #insideOfflineTicks,
+body.dark-mode #aboveFooter,
+body.dark-mode #footer {
+  background-color: rgba(34, 34, 34, 0.6666666667);
 }
 body.dark-mode #donateToFlowerGod:not(:disabled) #recomended {
   color: #f00;

@@ -54,7 +54,10 @@ a {
 }
 
 body:not(.dark-mode) {
-  .offlineTicks .aboveFooter .footer {
+  #aboveaboveFooter,
+  #insideOfflineTicks,
+  #aboveFooter,
+  #footer {
     background-color: #fffc;
   }
   #donateToFlowerGod {
@@ -78,8 +81,11 @@ body.dark-mode {
     color: #111;
   }
 
-  #insideOfflineTicks #aboveFooter #footer {
-    background-color: #000;
+  #aboveaboveFooter,
+  #insideOfflineTicks,
+  #aboveFooter,
+  #footer {
+    background-color: #222a;
   }
   #donateToFlowerGod {
     &:not(:disabled) #recomended {
