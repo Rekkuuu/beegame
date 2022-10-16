@@ -363,6 +363,7 @@ const updateTmp = () => {
 
 const updateDisplay = () => {
   if (p.bees > 0) p.unlocks.bees = true;
+  if (p.pollen >= 1) p.unlocks.hive = true;
   if (p.foragerBees > 0) p.unlocks.foragerBees = true;
   if (p.honeyBees > 0) p.unlocks.honeyBees = true;
   if (
@@ -416,16 +417,20 @@ const updateDisplay = () => {
   }
 
   d.beehivestatwrapper;
+  if (tmp.displayeverything || p.unlocks.hive) {
+    d.hivewrapper.style.display = "";
+  } else {
+    d.hivewrapper.style.display = "none";
+  }
+
   if (tmp.displayeverything || p.unlocks.foragerBees) {
     d.pollenwrapper.style.visibility = "visible";
     d.nectarwrapper.style.visibility = "visible";
-    d.hivewrapper.style.display = "";
     d.honeybeeswrapper.style.display = "";
     d.foragerstatwrapper.style.display = "";
   } else {
     d.pollenwrapper.style.visibility = "hidden";
     d.nectarwrapper.style.visibility = "hidden";
-    d.hivewrapper.style.display = "none";
     d.honeybeeswrapper.style.display = "none";
     d.foragerstatwrapper.style.display = "none";
   }

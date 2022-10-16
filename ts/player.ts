@@ -96,7 +96,7 @@ const newEmptyPlayer = (): t_player => {
     sellingHoney: false,
     autosaves: true,
     // bees -> foragerBees -> honeyBees -> sacrificing -> tributes
-    //              └> hive                    └> money
+    //              └> hive at 1 pollen         └> money
     // buy bee, get forager bee, get honey bee, unlock money from tributes, at least 50 of pollen etc and 1k flowers, at least one tribute
     unlocks: {bees: false, foragerBees: false, hive: false, honeyBees: false, sacrificing: false, tributes: false},
     lastUpdate: Date.now(),
