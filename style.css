@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  overflow-x: hidden;
 }
 
 * {
@@ -98,4 +99,14 @@ body.dark-mode #donateToFlowerGod:not(:disabled) #recomended {
 }
 body.dark-mode #donateToFlowerGod:disabled #recomended {
   color: #f55;
+}
+
+#offlineTicks {
+  width: calc(100vw - 16px - max(300px, 30vw));
+  margin-left: min(300px, 30vw);
+  top: 21px;
+  position: absolute;
+  text-align: right;
+  right: 3px;
+  position: fixed;
 }/*# sourceMappingURL=style.css.map */

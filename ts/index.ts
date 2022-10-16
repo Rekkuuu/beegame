@@ -644,7 +644,7 @@ const updateText = () => {
   d.hivePrice.innerHTML = format(getHivePrice());
   d.hives.innerHTML = "" + p.hives.toFixed(0);
 
-  if (p.honeyGodTributes == 0) {
+  if (p.honeyGodTributes == 0 && p.capitalistGodTributes == 0) {
     d.freeBees.innerHTML = "" + p.freeBees + "/" + p.bees;
     d.foragerBees.innerHTML = "" + p.foragerBees + "/" + tmp.maxForagerBees;
     d.honeyBees.innerHTML = "" + p.honeyBees + "/" + tmp.maxHoneyBees;
