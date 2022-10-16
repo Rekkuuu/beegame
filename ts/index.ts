@@ -330,6 +330,8 @@ const updateTmp = () => {
   if (d.offlineTicksSpeed10.checked) tmp.usedTime *= 10;
   if (!d.offlineTicksSpeed5.checked && !d.offlineTicksSpeed10.checked) tmp.usedTime = 0;
   tmp.usedTime = Math.max(0, Math.min(p.offlineTime, tmp.usedTime));
+  if (tmp.usedTime < 0.001) tmp.usedTime = 0;
+  if (p.offlineTime < 0.001) p.offlineTime = 0;
 
   if (tmp.totalTributes < tributeMilestones[0]) tmp.m0e = 1; // flowers mult
   else tmp.m0e = 1.02 ** (p.freeBees / 2 + (tmp.totalTributes / 2) * tmp.m5e);
