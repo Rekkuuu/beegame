@@ -121,7 +121,7 @@ const getNectarProduction = (foragerBees = p.foragerBees) => {
 };
 const getHoneyProduction = (honeyBees = p.honeyBees) => {
     let prod = honeyBees / 30;
-    prod *= Math.pow(1.01, Math.max(0, p.hives - 1));
+    prod *= Math.pow(1.01, Math.max(0, p.hives));
     prod *= Math.pow(1.03, (p.honeyGodTributes * tmp.m5e));
     prod *= tmp.m4e;
     prod *= p.nge ? 2 : 1;
@@ -683,11 +683,11 @@ const updateText = () => {
     // if(tributeEfficiency) //todo: later make it so its flooered without eff 2nd number
     let a = p.flowerFields - 1 + p.flowerGodTributes;
     if (tmp.m5e == 1) {
-        d.buyHive.title = `1.01 ^ ${(p.hives - 1).toFixed(0)} = ${format(Math.pow(1.01, (p.hives - 1)))}`;
+        d.buyHive.title = `1.01 ^ ${p.hives.toFixed(0)} = ${format(Math.pow(1.01, p.hives))}`;
         d.buyFlowerField.title = `1.01 ^ ${a.toFixed(0)} = ${format(Math.pow(1.01, a))}`;
     }
     else {
-        d.buyHive.title = `1.01 ^ ${format(p.hives - 1)} = ${format(Math.pow(1.01, (p.hives - 1)))}`;
+        d.buyHive.title = `1.01 ^ ${format(p.hives)} = ${format(Math.pow(1.01, p.hives))}`;
         d.buyFlowerField.title = `1.01 ^ ${format(a)} = ${format(Math.pow(1.01, a))}`;
     }
     if (tmp.m5e == 1 && tmp.totalTributes < 10)
