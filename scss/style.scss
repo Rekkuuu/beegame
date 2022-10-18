@@ -5,8 +5,11 @@ body {
 * {
   box-sizing: border-box;
 }
-div {
-  width: max-content;
+#mainTabContent,
+#tabs-container {
+  div {
+    width: max-content;
+  }
 }
 button {
   padding: 0;
@@ -40,9 +43,9 @@ a {
   min-width: 150px;
   display: inline-block;
 }
-#main div {
-  width: 100%;
-}
+// #main div {
+//   width: 100%;
+// }
 .t {
   td,
   tr {
@@ -55,18 +58,16 @@ a {
 }
 
 body:not(.dark-mode) {
-  #aboveaboveFooter,
-  #insideOfflineTicks,
-  #aboveFooter,
-  #footer {
-    background-color: #fffc;
-  }
-  #donateToFlowerGod {
-    &:not(:disabled) #recomended {
-      color: #f00;
+  button {
+    &:not(:disabled) {
+      .recomended {
+        color: #f00;
+      }
     }
-    &:disabled #recomended {
-      color: #d66;
+    &:disabled {
+      .recomended {
+        color: #f33;
+      }
     }
   }
 }
@@ -78,29 +79,92 @@ body.dark-mode {
   .lighttext {
     color: #999;
   }
-
-  #aboveaboveFooter,
-  #insideOfflineTicks,
-  #aboveFooter,
-  #footer {
-    background-color: #222a;
-  }
-  #donateToFlowerGod {
-    &:not(:disabled) #recomended {
-      color: #f00;
+  button {
+    &:not(:disabled) {
+      .recomended {
+        color: #f00;
+      }
     }
-    &:disabled #recomended {
-      color: #f55;
+    &:disabled {
+      .recomended {
+        color: #f55;
+      }
     }
   }
 }
 
 #offlineTicks {
-  top: 21px;
-  position: absolute;
+  top: 0px;
+  right: 0px;
   text-align: right;
-  right: 3px;
   position: fixed;
+  width: fit-content;
+  background-color: #222a;
+  box-shadow: 0 0 2px #222;
+  padding: 3px;
+}
+
+body.dark-mode {
+  #offlineTicks {
+    background-color: #222a;
+    box-shadow: 0 0 2px #222;
+  }
+}
+body:not(.dark-mode) {
+  #offlineTicks {
+    background-color: #fffa;
+    box-shadow: 0 0 2px #fff;
+  }
 }
 
 @import "button";
+@import "helper";
+@import "tabs";
+
+#settingsTabContent {
+  table {
+    tr {
+      td {
+        padding-right: 15px;
+        padding-bottom: 10px;
+        text-align: center;
+      }
+    }
+  }
+}
+
+table.tbl {
+  tr {
+    td {
+      text-align: center;
+    }
+  }
+}
+table.tbl2 {
+  tr {
+    td {
+      padding-right: 15px;
+    }
+    td:nth-child(1) {
+      text-align: right;
+    }
+    td:nth-child(2) {
+      width: 120px;
+      text-align: center;
+    }
+  }
+}
+
+table.tmr {
+  tr {
+    td {
+      padding-right: 3px;
+    }
+    td:nth-child(1) {
+      text-align: right;
+    }
+  }
+}
+
+jelly {
+}

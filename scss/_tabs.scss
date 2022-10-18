@@ -1,0 +1,19 @@
+#tabs-container {
+  margin-bottom: 10px;
+  max-width: 60vw;
+}
+
+div[id*="tabs-container"] {
+  // @include unselectable;
+
+  button {
+    font-size: medium;
+    cursor: pointer;
+  }
+  div:first-child {
+    margin-left: 5px;
+  }
+  div:last-child {
+    margin-right: 5px;
+  }
+}

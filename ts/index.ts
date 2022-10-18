@@ -29,11 +29,31 @@ let tmp = {
 
   foragerBeeConsumption: 1 / 3,
   usedTime: 1,
+
+  capitalistEff: 1,
+  brts: 5,
+  RJBonus: 1,
+  totalRJBonus: 1,
+
+  tmpunusedRJTributes: 0,
+  tmpRJpollenGodTributes: 0,
+  tmpRJnectarGodTributes: 0,
+  tmpRJhoneyGodTributes: 0,
+  tmpRJflowerGodTributes: 0,
+  tmpRJcapitalistGodTributes: 0,
 };
 
 type t_gods = "flower" | "pollen" | "nectar" | "honey" | "money";
 
 const format = (x: number, p = 0): string => {
+  // @ts-ignore
+  if (typeof x != "number" || x == null || x == undefined) return;
+  if (x < -1000) {
+    let power = Math.floor(Math.log10(Math.abs(x)));
+    console.log(power);
+
+    return (x / 10 ** power / 1.0001).toFixed(2) + "e" + power;
+  }
   if (x < -100) return x.toFixed(Math.max(0, 1 + p));
   if (x < -10) return x.toFixed(Math.max(0, 2 + p));
   if (x < -1) return x.toFixed(Math.max(0, 3 + p));
@@ -49,31 +69,49 @@ const format = (x: number, p = 0): string => {
 const ft2 = (x: number) => Math.floor(x * 100) / 100;
 
 const c = 10 ** (1 / 12);
+
 const getBeePrice = () => {
   let a = c ** p.bees;
-  let price = Math.ceil(2 * a) - 1;
-  if (tmp.totalTributes >= tributeMilestones[1]) price /= 1.02 ** ((tmp.totalTributes * tmp.m5e) / 2);
-  return ft2(price);
+  let price = 1 * a;
+  if (tmp.totalTributes >= tributeMilestones[1]) price /= tmp.m1e;
+  return price;
 };
+const getBeePriceMult = () => {
+  let a = 1;
+  if (tmp.totalTributes >= tributeMilestones[1]) a /= tmp.m1e;
+  return a;
+};
+
 const getHivePrice = () => {
-  let a = c ** (p.hives - 1);
-  let price = Math.floor(2 * a);
-  price /= 1.03 ** (p.capitalistGodTributes * tmp.m5e);
-  return ft2(price);
+  let a = c ** p.hives;
+  let price = 2 * a;
+  price /= tmp.capitalistEff;
+  return price;
 };
+const getHivePriceMult = () => {
+  let a = 2;
+  a /= tmp.capitalistEff;
+  return a;
+};
+
 const getFlowerFieldPrice = () => {
   let a = c ** (p.flowerFields - 1);
-  let price = Math.floor(5 * a);
-  price /= 1.03 ** (p.capitalistGodTributes * tmp.m5e);
-  return ft2(price);
+  let price = 5 * a;
+  price /= tmp.capitalistEff;
+  return price;
+};
+const getFlowerFieldPriceMult = () => {
+  let a = 5;
+  a /= tmp.capitalistEff;
+  return a;
 };
 
 const getMaxForagerBees = () => {
   let space = (3 + p.hives) / 5;
   space += Math.floor((4 + p.bees + (tmp.totalTributes / 5) * tmp.m5e) / 5);
-  space += p.pollenGodTributes * tmp.m5e;
-  space *= 1.03 ** (p.capitalistGodTributes * tmp.m5e);
-  if (p.capitalistGodTributes > 0) {
+  space += (p.pollenGodTributes + p.pollenGodRJTributes) * tmp.m5e;
+  space *= tmp.capitalistEff;
+  if (p.cge) {
     return space;
   } else return Math.floor(space);
 };
@@ -81,50 +119,58 @@ const getMaxForagerBees = () => {
 const getMaxHoneyBees = () => {
   let space = (3 + p.hives) / 5;
   space += Math.floor((4 + p.bees + (tmp.totalTributes / 5) * tmp.m5e) / 5);
-  space += p.nectarGodTributes * tmp.m5e;
-  space *= 1.03 ** (p.capitalistGodTributes * tmp.m5e);
-  if (p.capitalistGodTributes > 0) {
+  space += (p.nectarGodTributes + p.nectarGodRJTributes) * tmp.m5e;
+  space *= tmp.capitalistEff;
+  if (p.cge) {
     return space;
   } else return Math.floor(space);
 };
 
-const getFlowerProduction = (flowerFields = p.flowerFields + p.flowerGodTributes * tmp.m5e) => {
+const getFlowerProduction = (flowerFields = p.flowerFields + (p.flowerGodTributes + p.flowerGodRJTributes) * tmp.m5e) => {
   let prod = flowerFields;
-  prod *= 1.01 ** Math.max(0, p.flowerFields - 1 + p.flowerGodTributes * tmp.m5e);
-  prod *= 1.03 ** (p.flowerGodTributes * tmp.m5e);
+  prod *= 1.01 ** Math.max(0, p.flowerFields - 1 + (p.flowerGodTributes + p.flowerGodRJTributes) * tmp.m5e);
+  prod *= 1.03 ** ((p.flowerGodTributes + p.flowerGodRJTributes) * tmp.m5e);
   prod *= tmp.m0e;
   prod *= tmp.gameSpeedFormTicks;
+  prod *= tmp.RJBonus;
+  prod *= tmp.totalRJBonus;
   return prod;
 };
 
 const getPollenProduction = (foragerBees = p.foragerBees) => {
   let prod = (foragerBees * 3) / 40;
-  prod *= 1.01 ** Math.max(0, p.flowerFields + 2 * p.flowerGodTributes * tmp.m5e - 1);
-  prod *= 1.03 ** (p.pollenGodTributes * tmp.m5e);
+  prod *= 1.01 ** Math.max(0, p.flowerFields + (p.flowerGodTributes + p.flowerGodRJTributes) * tmp.m5e - 1);
+  prod *= 1.03 ** ((p.pollenGodTributes + p.pollenGodRJTributes) * tmp.m5e);
   if (p.pge) prod *= 2;
   prod *= tmp.m8e;
   prod *= tmp.gameSpeedFormTicks;
+  prod *= tmp.RJBonus;
+  prod *= tmp.totalRJBonus;
   return prod;
 };
 
 const getNectarProduction = (foragerBees = p.foragerBees) => {
   let prod = foragerBees / 8;
   prod *= 1.01 ** Math.max(0, p.bees - 1 + tmp.totalTributes / 5);
-  prod *= 1.03 ** (p.nectarGodTributes * tmp.m5e);
+  prod *= 1.03 ** ((p.nectarGodTributes + p.nectarGodRJTributes) * tmp.m5e);
   prod *= tmp.m6e;
   prod *= tmp.m8e;
   prod *= tmp.gameSpeedFormTicks;
+  prod *= tmp.RJBonus;
+  prod *= tmp.totalRJBonus;
   return prod;
 };
 
 const getHoneyProduction = (honeyBees = p.honeyBees) => {
   let prod = honeyBees / 30;
   prod *= 1.01 ** Math.max(0, p.hives);
-  prod *= 1.03 ** (p.honeyGodTributes * tmp.m5e);
+  prod *= 1.03 ** ((p.honeyGodTributes + p.honeyGodRJTributes) * tmp.m5e);
   prod *= tmp.m4e;
   prod *= p.nge ? 2 : 1;
   prod *= tmp.m8e;
   prod *= tmp.gameSpeedFormTicks;
+  prod *= tmp.RJBonus;
+  prod *= tmp.totalRJBonus;
   return prod;
 };
 
@@ -132,7 +178,12 @@ const getHoneyToSell = (honeyToSell = p.honey * 0.01) => {
   if (p.honey < 1 / (getHoneyWorth() * 10)) return 0;
   return honeyToSell;
 };
-const getHoneyWorth = () => tmp.m7e;
+const getHoneyWorth = () => {
+  let worth = tmp.m7e;
+  worth *= tmp.RJBonus;
+  worth *= tmp.totalRJBonus;
+  return worth;
+};
 
 const b = 10 ** (1 / 5);
 const b1 = 50 / b;
@@ -163,7 +214,18 @@ const getNextsmallGodTribute2 = (currentTributes: number, tributesToGet: number)
 };
 
 const totalTributes = () => {
-  return p.pollenGodTributes + p.nectarGodTributes + p.honeyGodTributes + p.flowerGodTributes + p.capitalistGodTributes;
+  return (
+    p.pollenGodTributes +
+    p.pollenGodRJTributes +
+    p.nectarGodTributes +
+    p.nectarGodRJTributes +
+    p.honeyGodTributes +
+    p.honeyGodRJTributes +
+    p.flowerGodTributes +
+    p.flowerGodRJTributes +
+    p.capitalistGodTributes +
+    p.capitalistGodRJTributes
+  );
 };
 const totalBees = () => {
   return p.freeBees + p.foragerBees + p.honeyBees;
@@ -174,7 +236,10 @@ const floor = (x: number) => Math.floor(x);
 const p1 = (s: number, n: number) => (n % s) * floor(1 + n / s);
 const p2 = (s: number, n: number) => (s * (floor(n / s) * (floor(n / s) + 1))) / 2;
 const stepwise1 = (s: number, n: number) => p1(s, n) + p2(s, n);
-const requiredBeesToSacrifice = (tributes = tmp.totalTributes) => (5 + stepwise1(10, tributes)) / tmp.m2e;
+const requiredBeesToSacrifice = (tributes = tmp.totalTributes) => {
+  if (p.harderTributes) return (5 + stepwise1(10, tributes)) / tmp.m2e;
+  else return 5 + tributes / tmp.m2e;
+};
 // its better i think (not like ur not gonna have bees)
 
 const getPSWithS = (what: string, x: number) => {
@@ -198,17 +263,18 @@ let tributeMilestondeDesc: TupleOf<string, 14> = [
   "1 bee for every 5 tributes",
   "1.02x honey production per tribute",
   "1.02x tribute efficiency for every 10 tributes",
-  "1.02x nectar prod for every tribute",
+  "1.02x nectar production for every 2 tributes",
   "1.02x honey price multiplier per 3 tributes",
   "1.02x time speed multiplier per 5 tributes",
   "unlocks royal jelly",
-  "combine a pair of gods  (all of these will be added in future updates)",
+  "combine a pair of gods",
   "combine another pair of gods",
   "turn one god into a higher god",
   "challenges",
 ];
 
 const ft = (x: number) => {
+  let rx = x;
   let t = "";
   if (x > 86400) {
     let d = Math.floor(x / 86400) % 365;
@@ -225,7 +291,7 @@ const ft = (x: number) => {
     x -= m * 60;
     t += ` ${m}m`;
   }
-  if (x > 1) {
+  if (x > 1 && rx < 86400) {
     let s = Math.floor(x) % 60;
     t += ` ${s}s`;
   }
@@ -284,7 +350,7 @@ const updateResources = (diff: number) => {
   }
 
   if (p.sellingHoney && p.bees) {
-    p.honey -= tmp.moneyProd * diff;
+    p.honey -= tmp.honeyConsumption * diff;
     p.money += Math.min(p.honey * getHoneyWorth(), tmp.moneyProd * diff);
   }
 
@@ -326,9 +392,10 @@ const updateOfflineTicks = (diff: number) => {
 };
 const updateTmp = () => {
   tmp.usedTime = 1;
+  if (d.offlineTicksSpeed2.checked) tmp.usedTime *= 2;
   if (d.offlineTicksSpeed5.checked) tmp.usedTime *= 5;
   if (d.offlineTicksSpeed10.checked) tmp.usedTime *= 10;
-  if (!d.offlineTicksSpeed5.checked && !d.offlineTicksSpeed10.checked) tmp.usedTime = 1;
+  if (!d.offlineTicksSpeed2.checked && !d.offlineTicksSpeed5.checked && !d.offlineTicksSpeed10.checked) tmp.usedTime = 1;
   tmp.usedTime = Math.max(0, Math.min(p.offlineTime, tmp.usedTime));
   if (tmp.usedTime < 1) tmp.usedTime = 0; // ouch
   if (p.offlineTime < 1) p.offlineTime = 0; // ouch
@@ -359,6 +426,8 @@ const updateTmp = () => {
 
   if (tmp.totalTributes < tributeMilestones[8]) tmp.m8e = 1; // time speed
   else tmp.m8e = 1.02 ** ((tmp.totalTributes / 5) * tmp.m5e);
+
+  tmp.capitalistEff = 1.03 ** ((p.capitalistGodTributes + p.capitalistGodRJTributes) * tmp.m5e);
 };
 
 const updateDisplay = () => {
@@ -375,6 +444,18 @@ const updateDisplay = () => {
   } else {
     d.body.classList.remove("big-buttons");
     p.bigButtons = false;
+  }
+  if (d.disaplyeverything.checked) p.displayEverything = true;
+  else p.displayEverything = false;
+  if (d.exchangeConfirmation.checked) p.exchangeConfirmation = true;
+  else p.exchangeConfirmation = false;
+
+  if (d.toggleHarderTributes.checked) {
+    d.beeReqString.innerHTML = `<b>+1 bee per tribute <span style="text-decoration:underline">per 10 tributes</span></b>`;
+    p.harderTributes = true;
+  } else {
+    d.beeReqString.innerHTML = "+1 bee per tribute";
+    p.harderTributes = false;
   }
 
   if (p.bees > 0) p.unlocks.bees = true;
@@ -411,10 +492,7 @@ const updateDisplay = () => {
     d.buyHive.disabled = false;
   }
 
-  tmp.displayeverything = false;
-  if (d.disaplyeverything.checked) tmp.displayeverything = true;
-
-  if (tmp.displayeverything || p.unlocks.bees) {
+  if (p.displayEverything || p.unlocks.bees) {
     d.foragerbeeswrapper.style.display = "";
     d.quickbuyhivewrapper.style.display = "";
     d.beesEffect.style.display = "";
@@ -425,12 +503,12 @@ const updateDisplay = () => {
     d.beesEffect.style.display = "none";
     d.fifthbeestatwrapper.style.display = "none";
   }
-  if ((!tmp.displayeverything && !p.unlocks.foragerBees) || (p.unlocks.bees && !p.unlocks.foragerBees)) {
+  if ((!p.displayEverything && !p.unlocks.foragerBees) || (p.unlocks.bees && !p.unlocks.foragerBees)) {
     d.foragerbeestext.innerHTML = "└";
   } else {
     d.foragerbeestext.innerHTML = "├";
   }
-  if (tmp.displayeverything || p.unlocks.hive) {
+  if (p.displayEverything || p.unlocks.hive) {
     d.hivewrapper.style.display = "";
     d.beehivestatwrapper.style.display = "";
   } else {
@@ -438,7 +516,7 @@ const updateDisplay = () => {
     d.beehivestatwrapper.style.display = "none";
   }
 
-  if (tmp.displayeverything || p.unlocks.foragerBees) {
+  if (p.displayEverything || p.unlocks.foragerBees) {
     d.pollenwrapper.style.visibility = "visible";
     d.nectarwrapper.style.visibility = "visible";
     d.honeybeeswrapper.style.display = "";
@@ -450,7 +528,7 @@ const updateDisplay = () => {
     d.foragerstatwrapper.style.display = "none";
   }
 
-  if (tmp.displayeverything || p.unlocks.honeyBees) {
+  if (p.displayEverything || p.unlocks.honeyBees) {
     d.honeywrapper.style.visibility = "visible";
     d.honeybeestatwrapper.style.display = "";
   } else {
@@ -458,10 +536,10 @@ const updateDisplay = () => {
     d.honeywrapper.style.visibility = "hidden";
   }
 
-  if (tmp.totalTributes == 0) d.recomended.style.display = "";
-  else d.recomended.style.display = "none";
+  if (tmp.totalTributes == 0) d.recomendedFlowers.style.display = "";
+  else d.recomendedFlowers.style.display = "none";
 
-  if (tmp.displayeverything || p.fge) {
+  if (p.displayEverything || p.fge) {
     d.moneywrapper.style.visibility = "visible";
     d.flowerfieldwrapper.style.display = "";
     d.quickBuyFlowerField.style.display = "";
@@ -472,23 +550,23 @@ const updateDisplay = () => {
     d.quickBuyFlowerField.style.display = "none";
     d.honeystatwrapper.style.display = "none";
   }
-  if (tmp.displayeverything || p.unlocks.sacrificing) {
+  if (p.displayEverything || p.unlocks.sacrificing) {
     d.sacrificeWrapper.style.display = "";
   } else {
     d.sacrificeWrapper.style.display = "none";
   }
-  if (p.pollenGodTributes > 0 || p.highestpollen >= 35) d.pollengodwrapper.style.display = "";
+  if (p.pge || p.highestpollen >= 35) d.pollengodwrapper.style.display = "";
   else d.pollengodwrapper.style.display = "none";
-  if (p.nectarGodTributes > 0 || p.highestnectar >= 35) d.nectargodwrapper.style.display = "";
+  if (p.nge || p.highestnectar >= 35) d.nectargodwrapper.style.display = "";
   else d.nectargodwrapper.style.display = "none";
-  if (p.honeyGodTributes > 0 || p.highesthoney >= 35) d.honeygodwrapper.style.display = "";
+  if (p.hge || p.highesthoney >= 35) d.honeygodwrapper.style.display = "";
   else d.honeygodwrapper.style.display = "none";
-  if (p.flowerGodTributes > 0 || p.highestflowers >= 400) d.flowergodwrapper.style.display = "";
+  if (p.fge || p.highestflowers >= 400) d.flowergodwrapper.style.display = "";
   else d.flowergodwrapper.style.display = "none";
-  if (p.capitalistGodTributes > 0 || p.highestmoney >= 35) d.capitalistgodwrapper.style.display = "";
+  if (p.cge || p.highestmoney >= 35) d.capitalistgodwrapper.style.display = "";
   else d.capitalistgodwrapper.style.display = "none";
 
-  if (tmp.displayeverything || p.unlocks.tributes) {
+  if (p.displayEverything || p.unlocks.tributes) {
     d.tributeswrapper.style.display = "";
     d.pernamentTributeEffects.style.display = "";
   } else {
@@ -540,35 +618,43 @@ const updateText = () => {
     d.pollenGodTributesToGet.innerHTML = `0 tributes`;
   } else {
     d.donateToPollenGod.disabled = false;
-    /*prettier-ignore*/ d.pollenGodTributesToGet.innerHTML = `${Math.max(0, pollenGodTributesToGet)} tribute${Math.max(0, pollenGodTributesToGet)==1?'':"s"}`
+    let actualpollenGodTributesToGet = Math.max(0, Math.min(lgmaxnumber - p.pollenGodTributes, Math.max(0, pollenGodTributesToGet)));
+    /*prettier-ignore*/ d.pollenGodTributesToGet.innerHTML = `${actualpollenGodTributesToGet} tribute${Math.max(0, actualpollenGodTributesToGet)==1?'':"s"}`
   }
-  if (nectarGodTributesToGet < 1 || hasBees || p.nectarGodTributes == lgmaxnumber) {
+  if (nectarGodTributesToGet < 1 || hasBees || p.nectarGodTributes >= lgmaxnumber) {
     d.donateToNectarGod.disabled = true;
     d.nectarGodTributesToGet.innerHTML = `0 tributes`;
   } else {
     d.donateToNectarGod.disabled = false;
-    /*prettier-ignore*/ d.nectarGodTributesToGet.innerHTML = `${Math.max(0, nectarGodTributesToGet)} tribute${Math.max(0, nectarGodTributesToGet)==1?'':"s"}`
+    let actualnectarGodTributesToGet = Math.max(0, Math.min(lgmaxnumber - p.nectarGodTributes, Math.max(0, nectarGodTributesToGet)));
+    /*prettier-ignore*/ d.nectarGodTributesToGet.innerHTML = `${actualnectarGodTributesToGet} tribute${Math.max(0, actualnectarGodTributesToGet)==1?'':"s"}`
   }
   if (honeyGodTributesToGet < 1 || hasBees || p.honeyGodTributes == lgmaxnumber) {
     d.donateToHoneyGod.disabled = true;
     d.honeyGodTributesToGet.innerHTML = `0 tributes`;
   } else {
     d.donateToHoneyGod.disabled = false;
-    /*prettier-ignore*/ d.honeyGodTributesToGet.innerHTML = `${Math.max(0, honeyGodTributesToGet)} tribute${Math.max(0, honeyGodTributesToGet)==1?'':"s"}`
+    let actualhoneyGodTributesToGet = Math.max(0, Math.min(lgmaxnumber - p.honeyGodTributes, Math.max(0, honeyGodTributesToGet)));
+    /*prettier-ignore*/ d.honeyGodTributesToGet.innerHTML = `${actualhoneyGodTributesToGet} tribute${Math.max(0, actualhoneyGodTributesToGet)==1?'':"s"}`
   }
   if (flowerGodTributesToGet < 1 || hasBees || p.flowerGodTributes == lgmaxnumber) {
     d.donateToFlowerGod.disabled = true;
     d.flowerGodTributesToGet.innerHTML = `0 tributes`;
   } else {
     d.donateToFlowerGod.disabled = false;
-    /*prettier-ignore*/ d.flowerGodTributesToGet.innerHTML = `${Math.max(0, flowerGodTributesToGet)} tribute${Math.max(0, flowerGodTributesToGet)==1?'':"s"}`
+    let actualflowerGodTributesToGet = Math.max(0, Math.min(lgmaxnumber - p.flowerGodTributes, Math.max(0, flowerGodTributesToGet)));
+    /*prettier-ignore*/ d.flowerGodTributesToGet.innerHTML = `${actualflowerGodTributesToGet} tribute${Math.max(0, actualflowerGodTributesToGet)==1?'':"s"}`
   }
   if (capitalistGodTributesToGet < 1 || hasBees || p.capitalistGodTributes == lgmaxnumber) {
     d.donateToCapitalistGod.disabled = true;
     d.capitalistGodTributesToGet.innerHTML = `0 tributes`;
   } else {
     d.donateToCapitalistGod.disabled = false;
-    /*prettier-ignore*/ d.capitalistGodTributesToGet.innerHTML = `${Math.max(0, capitalistGodTributesToGet)} tribute${Math.max(0, capitalistGodTributesToGet)==1?'':"s"}`
+    let actualcapitalistGodTributesToGet = Math.max(
+      0,
+      Math.min(lgmaxnumber - p.capitalistGodTributes, Math.max(0, capitalistGodTributesToGet))
+    );
+    /*prettier-ignore*/ d.capitalistGodTributesToGet.innerHTML = `${actualcapitalistGodTributesToGet} tribute${Math.max(0, actualcapitalistGodTributesToGet)==1?'':"s"}`
   }
 
   // d.pollenGodTributes.innerHTML = "" + p.pollenGodTributes;
@@ -640,19 +726,26 @@ const updateText = () => {
   d.moneyPS.innerHTML = `(${format(tmp.moneyProd)}/s)`;
 
   d.flowerFieldPrice.innerHTML = format(getFlowerFieldPrice());
-  if (tmp.m5e == 1) d.flowerFields.innerHTML = "" + `${p.flowerFields.toFixed(0)} + ${p.flowerGodTributes.toFixed(0)}`;
-  else d.flowerFields.innerHTML = "" + `${p.flowerFields.toFixed(0)} + ${format(p.flowerGodTributes * tmp.m5e)}`;
+
+  d.flowerFields.innerHTML = p.flowerFields.toFixed(0);
+  if (p.flowerGodTributes > 0)
+    if (tmp.m5e == 1) d.flowerFields.innerHTML += " + " + p.flowerGodTributes.toFixed(0);
+    else d.flowerFields.innerHTML += " + " + format(p.flowerGodTributes);
+  if (p.RJflowerFields > 0) d.flowerFields.innerHTML += " + " + p.RJflowerFields.toFixed();
+
   d.beePrice.innerHTML = format(getBeePrice());
-  if (tmp.totalTributes >= 10) {
-    if (tmp.totalTributes >= 20) d.bees.innerHTML = `${p.bees} + ${format(tmp.totalTributes / 5)}`;
-    else d.bees.innerHTML = `${p.bees} + ${format(tmp.totalTributes / 5, -1)}`;
-  } else d.bees.innerHTML = "" + p.bees;
+
+  d.bees.innerHTML = p.bees.toFixed(0);
+  if (tmp.totalTributes >= tributeMilestones[3]) d.bees.innerHTML += " + " + format(tmp.m3e);
+  if (p.RJbees > 0) d.bees.innerHTML += " + " + p.RJbees.toFixed(0);
+
+  d.hives.innerHTML = p.hives.toFixed(0);
+  if (p.RJhives > 0) d.hives.innerHTML += " + " + p.RJhives.toFixed(0);
 
   d.hivePrice.innerHTML = format(getHivePrice());
-  d.hives.innerHTML = "" + p.hives.toFixed(0);
 
   if (p.honeyGodTributes == 0 && p.capitalistGodTributes == 0) {
-    d.freeBees.innerHTML = "" + p.freeBees.toFixed(0) + "/" + p.bees.toFixed(0);
+    d.freeBees.innerHTML = "" + p.freeBees.toFixed(0) + "/" + (p.bees + p.RJbees).toFixed(0);
     d.foragerBees.innerHTML = "" + p.foragerBees.toFixed(0) + "/" + tmp.maxForagerBees.toFixed(0);
     d.honeyBees.innerHTML = "" + p.honeyBees.toFixed(0) + "/" + tmp.maxHoneyBees.toFixed(0);
   } else {
@@ -674,8 +767,7 @@ const updateText = () => {
   d.beehiveSpaceEffectStatS.innerHTML = `${format(0.2 * 1.03 ** (p.capitalistGodTributes * tmp.m5e)) == "1.00" ? "" : "s"}`;
   d.beeSpaceEffectStatS.innerHTML = `${format(1 * 1.03 ** (p.capitalistGodTributes * tmp.m5e)) == "1.00" ? "" : "s"}`;
 
-  let totalbees = p.bees;
-  if (tmp.totalTributes >= 10) totalbees += tmp.totalTributes / 5;
+  let totalbees = p.bees + tmp.m3e + p.RJbees;
 
   // if(tributeEfficiency) //todo: later make it so its flooered without eff 2nd number
   let a = p.flowerFields - 1 + p.flowerGodTributes;
@@ -689,11 +781,16 @@ const updateText = () => {
   if (tmp.m5e == 1 && tmp.totalTributes < 10) d.buyBee.title = `1.01 ^ ${(totalbees - 1).toFixed(0)} = ${format(1.01 ** (totalbees - 1))}`;
   else d.buyBee.title = `1.01 ^ ${format(totalbees - 1)} = ${format(1.01 ** (totalbees - 1))}`;
 
-  d.donateToPollenGod.title = `1.03 ^ ${format(p.pollenGodTributes * tmp.m5e, 1)} = ${format(1.03 ** p.pollenGodTributes)}`;
-  d.donateToNectarGod.title = `1.03 ^ ${format(p.nectarGodTributes * tmp.m5e, 1)} = ${format(1.03 ** p.nectarGodTributes)}`;
-  d.donateToHoneyGod.title = `1.03 ^ ${format(p.honeyGodTributes * tmp.m5e, 1)} = ${format(1.03 ** p.honeyGodTributes)}`;
-  d.donateToFlowerGod.title = `1.03 ^ ${format(p.flowerGodTributes * tmp.m5e, 1)} = ${format(1.03 ** p.flowerGodTributes)}`;
-  d.donateToCapitalistGod.title = `1.03 ^ ${format(p.capitalistGodTributes * tmp.m5e, 1)} = ${format(1.03 ** p.capitalistGodTributes)}`;
+  let pp = (p.pollenGodTributes + p.pollenGodRJTributes) * tmp.m5e;
+  d.donateToPollenGod.title = `1.03 ^ ${format(pp, 1)} = ${format(1.03 ** pp)}`;
+  let np = (p.nectarGodTributes + p.nectarGodRJTributes) * tmp.m5e;
+  d.donateToNectarGod.title = `1.03 ^ ${format(np, 1)} = ${format(1.03 ** np)}`;
+  let hp = (p.honeyGodTributes + p.honeyGodRJTributes) * tmp.m5e;
+  d.donateToHoneyGod.title = `1.03 ^ ${format(hp, 1)} = ${format(1.03 ** hp)}`;
+  let fp = (p.flowerGodTributes + p.flowerGodRJTributes) * tmp.m5e;
+  d.donateToFlowerGod.title = `1.03 ^ ${format(fp, 1)} = ${format(1.03 ** fp)}`;
+  let cp = (p.capitalistGodTributes + p.capitalistGodRJTributes) * tmp.m5e;
+  d.donateToCapitalistGod.title = `1.03 ^ ${format(cp, 1)} = ${format(1.03 ** cp)}`;
 
   //
 
@@ -724,13 +821,18 @@ const updateText = () => {
   if (tmp.totalTributes < tributeMilestones[8]) d.m8e.innerHTML = "";
   else d.m8e.innerHTML = `${format(tmp.m8e)}x`;
 
-  if (tmp.totalTributes < tributeMilestones[9]) d.m9e.innerHTML = "";
-  else d.m9e.innerHTML = `current end of content`;
+  // if (tmp.totalTributes < tributeMilestones[9]) d.m9e.innerHTML = "";
+  // else d.m9e.innerHTML = ``;
 
-  let brts = requiredBeesToSacrifice();
+  if (tmp.totalTributes < tributeMilestones[10]) d.m9e.innerHTML = "";
+  else d.m10e.innerHTML = `end of content`;
+  if (tmp.totalTributes < tributeMilestones[11]) d.m9e.innerHTML = "";
+  else d.m11e.innerHTML = `end of content`;
+
+  tmp.brts = requiredBeesToSacrifice();
+  d.totalBeesToSacrificeFromTributes.innerHTML = `req ${format(tmp.brts)}  bees`;
   d.totalTributes.innerHTML = `${tmp.totalTributes.toFixed(0)} + ${format(tmp.totalTributes * tmp.m5e - tmp.totalTributes)}`;
-  d.totalBeesToSacrificeFromTributes.innerHTML = `req ${format(brts)}  bees`;
-  d.reqBeesToSacTitle.title = `requires ${format(5 / tmp.m2e)} + ${format(brts - requiredBeesToSacrifice(0))} bees to sacrifice`;
+  d.reqBeesToSacTitle.title = `requires ${format(5 / tmp.m2e)} + ${format(tmp.brts - requiredBeesToSacrifice(0))} bees to sacrifice`;
 
   for (let i = 0; i < tributeMilestones.length; i++) {
     if (tributeMilestones[i]! < tmp.totalTributes && i != tributeMilestones.length) {
@@ -742,22 +844,17 @@ const updateText = () => {
   }
 
   for (let i = 0; i < tributeMilestonesShow.length; i++) {
-    if (
-      !tmp.displayeverything &&
-      tributeMilestonesShow[i]! > tmp.totalTributes &&
-      d[`m${i}d`] != null &&
-      d[`m${i}d`].textContent[0] != "?"
-    ) {
+    if (!p.displayEverything && tributeMilestonesShow[i]! > tmp.totalTributes && d[`m${i}d`] != null && d[`m${i}d`].textContent[0] != "?") {
       d[`m${i}d`].textContent = d[`m${i}d`].textContent
         .replace(/[(0-9)(a-z)(A-Z)(.)]+/g, "?")
         .replaceAll("?", "?".repeat(Math.floor(Math.random() * 3 + 2 + Math.sqrt(i)))); // send help
-    } else if (tmp.displayeverything || (d[`m${i}d`].textContent[0] == "?" && tributeMilestonesShow[i]! <= tmp.totalTributes)) {
+    } else if (p.displayEverything || (d[`m${i}d`].textContent[0] == "?" && tributeMilestonesShow[i]! <= tmp.totalTributes)) {
       d[`m${i}d`].textContent = tributeMilestondeDesc[i];
     }
   }
 
   for (let i = 0; i < tributeMilestonesHide.length; i++) {
-    if (!tmp.displayeverything && tributeMilestonesHide[i]! > tmp.totalTributes) (d[`m${i}t`] as HTMLElement).style.display = "none";
+    if (!p.displayEverything && tributeMilestonesHide[i]! > tmp.totalTributes) (d[`m${i}t`] as HTMLElement).style.display = "none";
     else (d[`m${i}t`] as HTMLElement).style.display = "";
   }
 
@@ -781,7 +878,7 @@ const updateText = () => {
 
   d.foragerbeestextunderline.style.textDecorationLine = "none";
   d.honeybeestextunderline.style.textDecorationLine = "none";
-  if (p.honeyGodTributes > 0) {
+  if (p.hge) {
     if (p.autoAsignBeesTo[0] == "forager") d.foragerbeestextunderline.style.textDecorationLine = "underline";
     if (p.autoAsignBeesTo[0] == "honey") d.honeybeestextunderline.style.textDecorationLine = "underline";
     if (p.autoAsignBeesTo[1] == "forager") d.foragerbeestextunderline.style.textDecorationLine = "underline";
@@ -794,12 +891,12 @@ const updateText = () => {
     p.autoAsignBeesTo = [];
   }
 
-  d.pernamentTributeEffects.title = `${p.pollenGodTributes > 0 ? "✓" : "✗"} pollen: 2x pollen production
-${p.nectarGodTributes > 0 ? "✓" : "✗"} nectar: 2x honey production
-${p.honeyGodTributes > 0 ? "✓" : "✗"} honey: bees amount isn't rounded down & you can choose
-  bee type to auto assing bought bees to (try clicking a bee type)
-${p.flowerGodTributes > 0 ? "✓" : "✗"} flowers: lets you sell honey (requires at least 0.1 honey)
-${p.capitalistGodTributes > 0 ? "✓" : "✗"} capitalist: worker spaces aren't rounded down`;
+  d.pernamentTributeEffects.innerHTML = `${p.pge ? "✓" : "✗"} pollen: 2x pollen production<br>
+${p.nge ? "✓" : "✗"} nectar: 2x honey production<br>
+${p.hge ? "✓" : "✗"} honey: bees amount isn't rounded down & you can choose<br>
+ bee type to auto assing bought bees to (try clicking a bee type)<br>
+${p.fge ? "✓" : "✗"} flowers: lets you sell honey (requires at least 0.1 honey)<br>
+${p.cge ? "✓" : "✗"} capitalist: worker spaces aren't rounded down`;
 
   // let t = tributeMilestones.filter((a) => a > tmp.totalTributes).length;
 
@@ -816,7 +913,206 @@ const GameLoop = () => {
   let now = Date.now();
   let diff = ((now - p.lastUpdate) / 1000) * gameSpeed;
 
+  if (tmp.totalTributes >= tributeMilestones[9]) p.unlocks.jelly = true;
+  if (p.RJ > 0) p.unlocks.jelly2 = true;
+  if (p.unlocks.jelly) {
+    d.jellyTabButton.style.display = "";
+    d.RJWrapper3.style.display = "";
+  } else {
+    d.jellyTabButton.style.display = "none";
+    d.RJWrapper3.style.display = "none";
+  }
+  if (p.unlocks.jelly2) {
+    d.RJWrapper.style.display = "";
+    d.RJWrapper2.style.display = "";
+    d.RJWrapper4.style.visibility = "visible";
+  } else {
+    d.RJWrapper.style.display = "none";
+    d.RJWrapper2.style.display = "none";
+    d.RJWrapper4.style.visibility = "hidden";
+  }
+
+  tmp.totalTributes = totalTributes();
   updateTmp();
+  //prettier-ignore
+  if (tmp.tmpunusedRJTributes ==tmp.tmpRJpollenGodTributes +tmp.tmpRJnectarGodTributes +tmp.tmpRJhoneyGodTributes +tmp.tmpRJflowerGodTributes +tmp.tmpRJcapitalistGodTributes
+  ) {
+    d.exchangeToApplyChanges.style.display = "none";
+  } else {
+    d.exchangeToApplyChanges.style.display = "";
+  }
+  d.totalRJTributes.innerHTML = "" + p.RJTributes;
+
+  d.tmpunusedRJTributes.innerHTML = " -> " + tmp.tmpunusedRJTributes + "/30";
+  if (tmp.tmpunusedRJTributes == 0) d.tmpunusedRJTributes.style.display = "none";
+  else d.tmpunusedRJTributes.style.display = "";
+
+  // if (tmp.totalTributes < tributeMilestones[9]) d.exchangeForRJ.disabled = true;
+  // else d.exchangeForRJ.disabled = false;
+
+  if (tmp.tmpRJpollenGodTributes == 0) d.tmpRJpollenGodTributes.innerHTML = "";
+  else d.tmpRJpollenGodTributes.innerHTML = " -> " + (p.pollenGodRJTributes + tmp.tmpRJpollenGodTributes);
+  if (tmp.tmpRJnectarGodTributes == 0) d.tmpRJnectarGodTributes.innerHTML = "";
+  else d.tmpRJnectarGodTributes.innerHTML = " -> " + (p.nectarGodRJTributes + tmp.tmpRJnectarGodTributes);
+  if (tmp.tmpRJhoneyGodTributes == 0) d.tmpRJhoneyGodTributes.innerHTML = "";
+  else d.tmpRJhoneyGodTributes.innerHTML = " -> " + (p.honeyGodRJTributes + tmp.tmpRJhoneyGodTributes);
+  if (tmp.tmpRJflowerGodTributes == 0) d.tmpRJflowerGodTributes.innerHTML = "";
+  else d.tmpRJflowerGodTributes.innerHTML = " -> " + (p.flowerGodRJTributes + tmp.tmpRJflowerGodTributes);
+  if (tmp.tmpRJcapitalistGodTributes == 0) d.tmpRJcapitalistGodTributes.innerHTML = "";
+  else d.tmpRJcapitalistGodTributes.innerHTML = " -> " + (p.capitalistGodRJTributes + tmp.tmpRJcapitalistGodTributes);
+
+  d.RJpollenGodTributes.innerHTML = "" + p.pollenGodRJTributes;
+  d.RJnectarGodTributes.innerHTML = "" + p.nectarGodRJTributes;
+  d.RJhoneyGodTributes.innerHTML = "" + p.honeyGodRJTributes;
+  d.RJflowerGodTributes.innerHTML = "" + p.flowerGodRJTributes;
+  d.RJcapitalistGodTributes.innerHTML = "" + p.capitalistGodRJTributes;
+
+  if (p.unusedRJTributes > 0 || tmp.tmpunusedRJTributes > 0) d.addpollenGodTribute.disabled = false;
+  else d.addpollenGodTribute.disabled = true;
+  if (p.unusedRJTributes > 0 || tmp.tmpunusedRJTributes > 0) d.addnectarGodTribute.disabled = false;
+  else d.addnectarGodTribute.disabled = true;
+  if (p.unusedRJTributes > 0 || tmp.tmpunusedRJTributes > 0) d.addhoneyGodTribute.disabled = false;
+  else d.addhoneyGodTribute.disabled = true;
+  if (p.unusedRJTributes > 0 || tmp.tmpunusedRJTributes > 0) d.addflowerGodTribute.disabled = false;
+  else d.addflowerGodTribute.disabled = true;
+  if (p.unusedRJTributes > 0 || tmp.tmpunusedRJTributes > 0) d.addcapitalistGodTribute.disabled = false;
+  else d.addcapitalistGodTribute.disabled = true;
+
+  if (p.pollenGodRJTributes > 0 || tmp.tmpRJpollenGodTributes > 0) d.removepollenGodTribute.disabled = false;
+  else d.removepollenGodTribute.disabled = true;
+  if (p.nectarGodRJTributes > 0 || tmp.tmpRJnectarGodTributes > 0) d.removenectarGodTribute.disabled = false;
+  else d.removenectarGodTribute.disabled = true;
+  if (p.honeyGodRJTributes > 0 || tmp.tmpRJhoneyGodTributes > 0) d.removehoneyGodTribute.disabled = false;
+  else d.removehoneyGodTribute.disabled = true;
+  if (p.flowerGodRJTributes > 0 || tmp.tmpRJflowerGodTributes > 0) d.removeflowerGodTribute.disabled = false;
+  else d.removeflowerGodTribute.disabled = true;
+  if (p.capitalistGodRJTributes > 0 || tmp.tmpRJcapitalistGodTributes > 0) d.removecapitalistGodTribute.disabled = false;
+  else d.removecapitalistGodTribute.disabled = true;
+
+  RJTributeCost.level = p.RJTributes;
+
+  let [tributesToBuy, tributesPrice] = RJTributeCost.maxFunction(p.RJ);
+
+  if (p.RJTributes >= 30) {
+    d.buyTribute.disabled = true;
+    d.buyMaxTribute.disabled = true;
+    d.buyMaxTributeAmount.innerHTML = "?";
+    d.buyMaxTributeS.innerHTML = "s";
+    d.buyMaxTributePrice.innerHTML = "?";
+    d.tributePrice.innerHTML = "?";
+  } else {
+    d.buyTribute.disabled = false;
+    d.buyMaxTribute.disabled = false;
+    d.buyMaxTributeAmount.innerHTML = format(tributesToBuy, -3);
+    d.buyMaxTributeS.innerHTML = tributesToBuy == 1 ? "" : "s";
+    d.buyMaxTributePrice.innerHTML = format(tributesPrice);
+    d.tributePrice.innerHTML = format(RJTributeCost.costFunction());
+  }
+
+  d.RJTributes.innerHTML = "" + p.unusedRJTributes;
+  // RJtotalTributes;
+
+  d.RJflowerFields.innerHTML = "" + format(p.RJflowerFields, -3);
+  d.RJbees.innerHTML = "" + format(p.RJbees, -3);
+  d.RJhives.innerHTML = "" + format(p.RJhives, -3);
+
+  let RJflowerFieldsCost = structurePrice(p.RJflowerFields);
+  let RJbeesCost = structurePrice(p.RJbees);
+  let RJhivesCost = structurePrice(p.RJhives);
+
+  d.RJfrombuyflowerFields.innerHTML = format(RJflowerFieldsCost);
+  d.RJfrombuyhives.innerHTML = format(RJhivesCost);
+  d.RJfrombuybees.innerHTML = format(RJbeesCost);
+  if (p.RJ < RJflowerFieldsCost) d.RJbuyflowerFields.disabled = true;
+  else d.RJbuyflowerFields.disabled = false;
+  if (p.RJ < RJbeesCost) d.RJbuybees.disabled = true;
+  else d.RJbuybees.disabled = false;
+  if (p.RJ < RJhivesCost) d.RJbuyhives.disabled = true;
+  else d.RJbuyhives.disabled = false;
+
+  // if (p.RJflowerFields == 0) {
+  //   d.RJsellflowerFields.disabled = true;
+  //   d.RJfromsellflowerFields.innerHTML = "0.00";
+  // } else {
+  //   d.RJsellflowerFields.disabled = false;
+  //   d.RJfromsellflowerFields.innerHTML = format(structurePrice(p.RJflowerFields - 1));
+  // }
+  // if (p.RJbees == 0) {
+  //   d.RJsellbees.disabled = true;
+  //   d.RJfromsellbees.innerHTML = "0.00";
+  // } else {
+  //   d.RJsellbees.disabled = false;
+  //   d.RJfromsellbees.innerHTML = format(structurePrice(p.RJbees - 1));
+  // }
+  // if (p.RJhives == 0) {
+  //   d.RJsellhives.disabled = true;
+  //   d.RJfromsellhives.innerHTML = "0.00";
+  // } else {
+  //   d.RJsellhives.disabled = false;
+  //   d.RJfromsellhives.innerHTML = format(structurePrice(p.RJhives - 1));
+  // }
+
+  p.highestRJ = Math.max(p.RJ, p.highestRJ);
+
+  tmp.RJBonus = getRJBonus(p.RJ);
+  tmp.totalRJBonus = getRJBonus(p.totalRJ);
+
+  d.RJ.innerHTML = format(p.RJ);
+  d.RJtotal.innerHTML = format(p.totalRJ);
+  d.RJBoost.innerHTML = "x" + format(tmp.RJBonus);
+  d.RJtotalBoost.innerHTML = "x" + format(tmp.totalRJBonus);
+
+  beeCost.level = p.bees;
+  beeCost.offset = getBeePriceMult();
+
+  hiveCost.level = p.hives;
+  hiveCost.offset = getHivePriceMult();
+
+  flowerFieldCost.level = p.flowerFields;
+  flowerFieldCost.offset = getFlowerFieldPriceMult();
+
+  // TODO make tmp
+  d.RJfromflowers.innerHTML = format(Math.log10(Math.max(1, p.totalflowers)), 1) + " RJ";
+  d.RJfrompollen.innerHTML = format(Math.log10(Math.max(1, p.totalpollen)), 1) + " RJ";
+  d.RJfromnectar.innerHTML = format(Math.log10(Math.max(1, p.totalnectar)), 1) + " RJ";
+  d.RJfromhoney.innerHTML = format(Math.log10(Math.max(1, p.totalhoney)), 1) + " RJ";
+  d.RJfrommoney.innerHTML = format(Math.log10(Math.max(1, p.totalmoney)), 1) + " RJ";
+
+  d.totalpollen.innerHTML = format(p.totalpollen);
+  d.totalnectar.innerHTML = format(p.totalnectar);
+  d.totalhoney.innerHTML = format(p.totalhoney);
+  d.totalflowers.innerHTML = format(p.totalflowers);
+  d.totalmoney.innerHTML = format(p.totalmoney);
+
+  let RJ = RJToGet();
+  d.RJToGet.innerHTML = format(RJ, 1);
+
+  if (p.totalRJ > 0) $("RJExchangeResets").classList.remove("lighttext");
+  else $("RJExchangeResets").classList.add("lighttext");
+
+  let [flowerFieldsToBuy, flowerFieldsPrice] = flowerFieldCost.maxFunction(p.money);
+  let [beesToBuy, beesPrice] = beeCost.maxFunction(p.honey);
+  let [hivesToBuy, hivesPrice] = hiveCost.maxFunction(p.pollen);
+
+  if (flowerFieldsToBuy == 0) d.buyMaxFlowerField.disabled = true;
+  else d.buyMaxFlowerField.disabled = false;
+  if (beesToBuy == 0) d.buyMaxBee.disabled = true;
+  else d.buyMaxBee.disabled = false;
+  if (hivesToBuy == 0) d.buyMaxHive.disabled = true;
+  else d.buyMaxHive.disabled = false;
+
+  d.buyMaxFlowerFieldAmount.innerHTML = format(flowerFieldsToBuy, -3);
+  d.buyMaxBeeAmount.innerHTML = format(beesToBuy, -3);
+  d.buyMaxHiveAmount.innerHTML = format(hivesToBuy, -3);
+
+  d.buyMaxFlowerFieldPrice.innerHTML = format(flowerFieldsPrice);
+  d.buyMaxBeePrice.innerHTML = format(beesPrice);
+  d.buyMaxHivePrice.innerHTML = format(hivesPrice);
+
+  d.buyMaxFlowerFieldS.innerHTML = flowerFieldsToBuy == 1 ? "" : "s";
+  d.buyMaxBeeS.innerHTML = beesToBuy == 1 ? "" : "s";
+  d.buyMaxHiveS.innerHTML = hivesToBuy == 1 ? "" : "s";
+
   diff = updateOfflineTicks(diff);
   updateResources(diff);
 

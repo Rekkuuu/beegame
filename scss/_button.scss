@@ -6,7 +6,17 @@
   margin-left: 0.5px;
   border-width: 1px;
   border-radius: 5px;
+  &:not(:disabled) {
+    cursor: pointer;
+  }
 }
+
+input[type="checkbox"] {
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
 @media only screen and (max-width: 800px) {
 }
 body.big-buttons {
@@ -58,6 +68,20 @@ body.dark-mode {
       background-color: #808080;
       border-color: #8f8f9d;
       color: #111;
+    }
+  }
+}
+
+body.dark-mode {
+  #exchangeForRJ {
+    background-color: #ffcc11;
+    border-color: #ddaa00;
+    text-shadow: #ffffaabb 0 0 4px;
+    background: linear-gradient(211deg, #ff6411, #ffcc11), linear-gradient(161deg, #ee5025f5, #ffcc11);
+    &:hover {
+      border-color: #ccaa00;
+      background-color: #ddaa00;
+      background: linear-gradient(211deg, #ee5400, #ddc000), linear-gradient(161deg, #d54525f5, #ddcc11);
     }
   }
 }

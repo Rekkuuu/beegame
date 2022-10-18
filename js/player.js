@@ -36,14 +36,40 @@ const newEmptyPlayer = () => {
         cge: false,
         sellingHoney: false,
         autosaves: true,
-        // bees -> foragerBees -> honeyBees -> sacrificing -> tributes
+        // bees -> foragerBees -> honeyBees -> sacrificing -> tributes -> jelly -> jelly2
         //              └> hive at 1 pollen         └> money
         // buy bee, get forager bee, get honey bee, unlock money from tributes, at least 50 of pollen etc and 1k flowers, at least one tribute
-        unlocks: { bees: false, foragerBees: false, hive: false, honeyBees: false, sacrificing: false, tributes: false },
+        unlocks: {
+            bees: false,
+            foragerBees: false,
+            hive: false,
+            honeyBees: false,
+            sacrificing: false,
+            tributes: false,
+            jelly: false,
+            jelly2: false,
+        },
         lastUpdate: Date.now(),
         offlineTime: 1,
+        RJ: 0,
+        highestRJ: 0,
+        totalRJ: 0,
+        RJbees: 0,
+        RJflowerFields: 0,
+        RJhives: 0,
+        RJTributes: 0,
+        unusedRJTributes: 0,
+        pollenGodRJTributes: 0,
+        nectarGodRJTributes: 0,
+        honeyGodRJTributes: 0,
+        flowerGodRJTributes: 0,
+        capitalistGodRJTributes: 0,
+        tab: "main",
         darkmode: true,
         bigButtons: false,
+        displayEverything: false,
+        harderTributes: false,
+        exchangeConfirmation: true,
     };
 };
 let p;

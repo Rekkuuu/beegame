@@ -7,7 +7,8 @@ body {
   box-sizing: border-box;
 }
 
-div {
+#mainTabContent div,
+#tabs-container div {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -52,10 +53,6 @@ a {
   display: inline-block;
 }
 
-#main div {
-  width: 100%;
-}
-
 .t td,
 .t tr {
   margin: 0;
@@ -65,17 +62,11 @@ a {
   padding-right: 3px;
 }
 
-body:not(.dark-mode) #aboveaboveFooter,
-body:not(.dark-mode) #insideOfflineTicks,
-body:not(.dark-mode) #aboveFooter,
-body:not(.dark-mode) #footer {
-  background-color: rgba(255, 255, 255, 0.8);
-}
-body:not(.dark-mode) #donateToFlowerGod:not(:disabled) #recomended {
+body:not(.dark-mode) button:not(:disabled) .recomended {
   color: #f00;
 }
-body:not(.dark-mode) #donateToFlowerGod:disabled #recomended {
-  color: #d66;
+body:not(.dark-mode) button:disabled .recomended {
+  color: #f33;
 }
 
 body.dark-mode {
@@ -85,25 +76,34 @@ body.dark-mode {
 body.dark-mode .lighttext {
   color: #999;
 }
-body.dark-mode #aboveaboveFooter,
-body.dark-mode #insideOfflineTicks,
-body.dark-mode #aboveFooter,
-body.dark-mode #footer {
-  background-color: rgba(34, 34, 34, 0.6666666667);
-}
-body.dark-mode #donateToFlowerGod:not(:disabled) #recomended {
+body.dark-mode button:not(:disabled) .recomended {
   color: #f00;
 }
-body.dark-mode #donateToFlowerGod:disabled #recomended {
+body.dark-mode button:disabled .recomended {
   color: #f55;
 }
 
 #offlineTicks {
-  top: 21px;
-  position: absolute;
+  top: 0px;
+  right: 0px;
   text-align: right;
-  right: 3px;
   position: fixed;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  background-color: rgba(34, 34, 34, 0.6666666667);
+  box-shadow: 0 0 2px #222;
+  padding: 3px;
+}
+
+body.dark-mode #offlineTicks {
+  background-color: rgba(34, 34, 34, 0.6666666667);
+  box-shadow: 0 0 2px #222;
+}
+
+body:not(.dark-mode) #offlineTicks {
+  background-color: rgba(255, 255, 255, 0.6666666667);
+  box-shadow: 0 0 2px #fff;
 }
 
 .btn {
@@ -114,6 +114,13 @@ body.dark-mode #donateToFlowerGod:disabled #recomended {
   margin-left: 0.5px;
   border-width: 1px;
   border-radius: 5px;
+}
+.btn:not(:disabled) {
+  cursor: pointer;
+}
+
+input[type=checkbox]:not(:disabled) {
+  cursor: pointer;
 }
 
 body.big-buttons .btn {
@@ -161,4 +168,65 @@ body.dark-mode button.btn:disabled {
   background-color: #808080;
   border-color: #8f8f9d;
   color: #111;
+}
+
+body.dark-mode #exchangeForRJ {
+  background-color: #ffcc11;
+  border-color: #ddaa00;
+  text-shadow: rgba(255, 255, 170, 0.7333333333) 0 0 4px;
+  background: linear-gradient(211deg, #ff6411, #ffcc11), linear-gradient(161deg, rgba(238, 80, 37, 0.9607843137), #ffcc11);
+}
+body.dark-mode #exchangeForRJ:hover {
+  border-color: #ccaa00;
+  background-color: #ddaa00;
+  background: linear-gradient(211deg, #ee5400, #ddc000), linear-gradient(161deg, rgba(213, 69, 37, 0.9607843137), #ddcc11);
+}
+
+.line {
+  border-top: 1px solid silver;
+  margin-top: -1px;
+}
+
+#tabs-container {
+  margin-bottom: 10px;
+  max-width: 60vw;
+}
+
+div[id*=tabs-container] button {
+  font-size: medium;
+  cursor: pointer;
+}
+div[id*=tabs-container] div:first-child {
+  margin-left: 5px;
+}
+div[id*=tabs-container] div:last-child {
+  margin-right: 5px;
+}
+
+#settingsTabContent table tr td {
+  padding-right: 15px;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+table.tbl tr td {
+  text-align: center;
+}
+
+table.tbl2 tr td {
+  padding-right: 15px;
+}
+table.tbl2 tr td:nth-child(1) {
+  text-align: right;
+}
+table.tbl2 tr td:nth-child(2) {
+  width: 120px;
+  text-align: center;
+}
+
+table.tmr tr td {
+  padding-right: 3px;
+}
+table.tmr tr td:nth-child(1) {
+  text-align: right;
 }/*# sourceMappingURL=style.css.map */

@@ -79,11 +79,6 @@ const d = {
   beehiveSpaceEffectStatS: $("beehiveSpaceEffectStatS"),
   beeSpaceEffectStatS: $("beeSpaceEffectStatS"),
 
-  totalflowers: $("totalflowers"),
-  totalpollen: $("totalpollen"),
-  totalnectar: $("totalnectar"),
-  totalhoney: $("totalhoney"),
-
   totalTributes: $("totalTributes"),
   neededBeesToSacrifice: $("neededBeesToSacrifice"),
 
@@ -95,7 +90,6 @@ const d = {
   capitalistGodTributesAfterSacrifice: $("capitalistGodTributesAfterSacrifice"),
 
   money: $("money"),
-  totalmoney: $("totalmoney"),
   moneyPS: $("moneyPS"),
 
   m: {
@@ -189,7 +183,7 @@ const d = {
   honeybeestatwrapper: $("honeybeestatwrapper"),
   beehivestatwrapper: $("beehivestatwrapper"),
   fifthbeestatwrapper: $("fifthbeestatwrapper"),
-  recomended: $("recomended"),
+  recomendedFlowers: $("recomendedFlowers"),
   disaplyeverything: $("disaplyeverything") as HTMLInputElement,
 
   pollengodwrapper: $("pollengodwrapper"),
@@ -213,6 +207,7 @@ const d = {
   nectarConsumptionStat: $("nectarConsumptionStat"),
   honeyWorthStat: $("honeyWorthStat"),
 
+  offlineTicksSpeed2: $("offlineTicksSpeed2") as HTMLInputElement,
   offlineTicksSpeed5: $("offlineTicksSpeed5") as HTMLInputElement,
   offlineTicksSpeed10: $("offlineTicksSpeed10") as HTMLInputElement,
 
@@ -221,5 +216,132 @@ const d = {
   toggleDarkmode: $("toggleDarkmode") as HTMLInputElement,
   body: document.querySelector("body") as HTMLBodyElement,
   toggleBigButtons: $("toggleBigButtons") as HTMLInputElement,
+
+  mainTabButton: $("mainTabButton") as HTMLButtonElement,
+  jellyTabButton: $("jellyTabButton") as HTMLButtonElement,
+  helpTabButton: $("helpTabButton") as HTMLButtonElement,
+  settingsTabButton: $("settingsTabButton") as HTMLButtonElement,
+
+  mainTabContent: $("mainTabContent"),
+  jellyTabContent: $("jellyTabContent"),
+  helpTabContent: $("helpTabContent"),
+  settingsTabContent: $("settingsTabContent"),
+
+  saveButton2: $("saveButton2") as HTMLButtonElement,
+  loadButton2: $("loadButton2") as HTMLButtonElement,
+
+  RJfrompollen: $("RJfrompollen"),
+  RJfromnectar: $("RJfromnectar"),
+  RJfromhoney: $("RJfromhoney"),
+  RJfromflowers: $("RJfromflowers"),
+  RJfrommoney: $("RJfrommoney"),
+
+  totalflowers: $("totalflowers"),
+  totalpollen: $("totalpollen"),
+  totalnectar: $("totalnectar"),
+  totalhoney: $("totalhoney"),
+  totalmoney: $("totalmoney"),
+
+  RJToGet: $("RJToGet"),
+  RJToGet2: $("RJToGet2"),
+
+  RJExchangeResets: $("RJExchangeResets"),
+
+  buyMaxFlowerField: $("buyMaxFlowerField") as HTMLButtonElement,
+  buyMaxBee: $("buyMaxBee") as HTMLButtonElement,
+  buyMaxHive: $("buyMaxHive") as HTMLButtonElement,
+
+  buyMaxFlowerFieldAmount: $("buyMaxFlowerFieldAmount"),
+  buyMaxFlowerFieldS: $("buyMaxFlowerFieldS"),
+  buyMaxFlowerFieldPrice: $("buyMaxFlowerFieldPrice"),
+
+  buyMaxBeeAmount: $("buyMaxBeeAmount"),
+  buyMaxBeeS: $("buyMaxBeeS"),
+  buyMaxBeePrice: $("buyMaxBeePrice"),
+
+  buyMaxHiveAmount: $("buyMaxHiveAmount"),
+  buyMaxHiveS: $("buyMaxHiveS"),
+  buyMaxHivePrice: $("buyMaxHivePrice"),
+
+  toggleHarderTributes: $("toggleHarderTributes") as HTMLInputElement,
+
+  beeReqString: $("beeReqString"),
+
+  RJ: $("RJ"),
+  RJtotal: $("RJtotal"),
+  RJtotalBoost: $("RJtotalBoost"),
+  RJBoost: $("RJBoost"),
+
+  RJflowerFields: $("RJflowerFields"),
+  RJbees: $("RJbees"),
+  RJhives: $("RJhives"),
+
+  RJbuyflowerFields: $("RJbuyflowerFields") as HTMLButtonElement,
+  RJbuybees: $("RJbuybees") as HTMLButtonElement,
+  RJbuyhives: $("RJbuyhives") as HTMLButtonElement,
+
+  // RJsellflowerFields: $("RJsellflowerFields") as HTMLButtonElement,
+  // RJsellbees: $("RJsellbees") as HTMLButtonElement,
+  // RJsellhives: $("RJsellhives") as HTMLButtonElement,
+
+  RJfrombuyflowerFields: $("RJfrombuyflowerFields"), // bad name?
+  RJfromsellflowerFields: $("RJfromsellflowerFields"), // bad name?
+  RJfrombuybees: $("RJfrombuybees"), // bad name?
+  RJfromsellbees: $("RJfromsellbees"), // bad name?
+  RJfrombuyhives: $("RJfrombuyhives"), // bad name?
+  RJfromsellhives: $("RJfromsellhives"), // bad name?
+
+  buyTribute: $("buyTribute") as HTMLButtonElement,
+  buyMaxTribute: $("buyMaxTribute") as HTMLButtonElement,
+
+  RJTributes: $("RJTributes"),
+  RJtotalTributes: $("RJtotalTributes"),
+  tributePrice: $("tributePrice"),
+  buyMaxTributeAmount: $("buyMaxTributeAmount"),
+  buyMaxTributeS: $("buyMaxTributeS"),
+  buyMaxTributePrice: $("buyMaxTributePrice"),
+
+  addpollenGodTribute: $("addpollenGodTribute") as HTMLButtonElement,
+  removepollenGodTribute: $("removepollenGodTribute") as HTMLButtonElement,
+  addnectarGodTribute: $("addnectarGodTribute") as HTMLButtonElement,
+  removenectarGodTribute: $("removenectarGodTribute") as HTMLButtonElement,
+  addhoneyGodTribute: $("addhoneyGodTribute") as HTMLButtonElement,
+  removehoneyGodTribute: $("removehoneyGodTribute") as HTMLButtonElement,
+  addflowerGodTribute: $("addflowerGodTribute") as HTMLButtonElement,
+  removeflowerGodTribute: $("removeflowerGodTribute") as HTMLButtonElement,
+  addcapitalistGodTribute: $("addcapitalistGodTribute") as HTMLButtonElement,
+  removecapitalistGodTribute: $("removecapitalistGodTribute") as HTMLButtonElement,
+
+  RJpollenGodTributes: $("RJpollenGodTributes"),
+  RJnectarGodTributes: $("RJnectarGodTributes"),
+  RJhoneyGodTributes: $("RJhoneyGodTributes"),
+  RJflowerGodTributes: $("RJflowerGodTributes"),
+  RJcapitalistGodTributes: $("RJcapitalistGodTributes"),
+
+  tmpRJpollenGodTributes: $("tmpRJpollenGodTributes"),
+  tmpRJnectarGodTributes: $("tmpRJnectarGodTributes"),
+  tmpRJhoneyGodTributes: $("tmpRJhoneyGodTributes"),
+  tmpRJflowerGodTributes: $("tmpRJflowerGodTributes"),
+  tmpRJcapitalistGodTributes: $("tmpRJcapitalistGodTributes"),
+
+  exchangeForRJ: $("exchangeForRJ") as HTMLButtonElement,
+
+  tmpunusedRJTributes: $("tmpunusedRJTributes"),
+
+  totalRJTributes: $("totalRJTributes"),
+
+  exchangeToApplyChanges: $("exchangeToApplyChanges"),
+
+  exchangeConfirmation: $("exchangeConfirmation") as HTMLInputElement,
+
+  export: $("export") as HTMLButtonElement,
+  import: $("import") as HTMLButtonElement,
+
+  pernamentTributeEffectsLabel: $("pernamentTributeEffectsLabel"),
+
+  RJWrapper: $("RJWrapper"),
+  RJWrapper2: $("RJWrapper2"),
+  RJWrapper3: $("RJWrapper3"),
+  RJWrapper4: $("RJWrapper4"),
 };
 //todo shorten these names?

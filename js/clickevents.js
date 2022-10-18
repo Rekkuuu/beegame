@@ -43,57 +43,6 @@ d.plusForagerBees.addEventListener("click", () => {
         p.foragerBees += 1;
     }
 });
-// todo: fix this !!!!!!!!!!!!!!!!!!!!!
-//try buing one bee
-// {
-//   "flowers": 944.5180780923126,
-//   "pollen": 7.278617519999898,
-//   "nectar": 0,
-//   "honey": 9.457599737765394,
-//   "money": 0,
-//   "highestflowers": 944.5180780923126,
-//   "highestpollen": 7.278617519999898,
-//   "highestnectar": 1.463636698183273,
-//   "highesthoney": 10.839258042765472,
-//   "highestmoney": 0,
-//   "totalflowers": 6655.069848627492,
-//   "totalpollen": 1311.4953903747737,
-//   "totalnectar": 2323.7858133239706,
-//   "totalhoney": 310.87024239274297,
-//   "totalmoney": 661.2380631939391,
-//   "bees": 3,
-//   "freeBees": 0,
-//   "foragerBees": 0,
-//   "honeyBees": 1,
-//   "flowerFields": 1,
-//   "hives": 0,
-//   "totalSacrifices": 0,
-//   "pollenGodTributes": 0,
-//   "nectarGodTributes": 3,
-//   "honeyGodTributes": 3,
-//   "flowerGodTributes": 1,
-//   "capitalistGodTributes": 0,
-//   "autoAsignBeesTo": [
-//     "forager",
-//     "honey"
-//   ],
-//   "pge": false,
-//   "nge": true,
-//   "hge": true,
-//   "fge": true,
-//   "cge": false,
-//   "sellingHoney": false,
-//   "autosaves": true,
-//   "unlocks": {
-//     "bees": true,
-//     "foragerBees": true,
-//     "hive": false,
-//     "honeyBees": true,
-//     "sacrificing": true,
-//     "tributes": true
-//   },
-//   "lastUpdate": 1665353761692
-// }
 d.maxForagerBees.addEventListener("click", e_maxForagerBees);
 d.set0HoneyBees.addEventListener("click", () => {
     p.freeBees += p.honeyBees;
@@ -147,11 +96,7 @@ const buyBee = () => {
     p.honey -= getBeePrice();
     p.bees++;
     let beesLeft = Math.pow(1.03, p.honeyGodTributes);
-    if (p.autoAsignBeesTo[0] != undefined)
-        beesLeft = assignBeesTo(p.autoAsignBeesTo[0], beesLeft);
-    if (p.autoAsignBeesTo[1] != undefined)
-        beesLeft = assignBeesTo(p.autoAsignBeesTo[1], beesLeft);
-    assignBeesTo("free", beesLeft);
+    autoAssignBees(beesLeft);
 };
 const buyHive = () => {
     if (p.pollen < getHivePrice())
@@ -199,19 +144,26 @@ const sacrificeToGod = () => {
     let pforagerBees = p.foragerBees;
     let phoneyBees = p.honeyBees;
     let freeBees = 0;
-    if (totalTributes() >= tributeMilestones[3]) {
-        if (p.honeyGodTributes == 0 && p.capitalistGodTributes == 0)
-            freeBees = Math.floor(totalTributes() / 5);
-        else
-            freeBees = (totalTributes() / 5) * tmp.m5e;
-        if (p.honeyGodTributes)
-            freeBees *= Math.pow(1.03, (p.honeyGodTributes * tmp.m5e));
-        p.freeBees += freeBees;
-    }
+    tmp.totalTributes = totalTributes();
+    freeBees += p.RJbees;
+    if (tmp.totalTributes >= tributeMilestones[3])
+        freeBees += Math.floor(tmp.totalTributes / 5);
+    tmp.m5e = Math.min(9, Math.pow(1.02, ((tmp.totalTributes / 10) * tmp.m5e)));
+    tmp.m5e = Math.min(9, Math.pow(1.02, ((tmp.totalTributes / 10) * tmp.m5e)));
+    tmp.m5e = Math.min(9, Math.pow(1.02, ((tmp.totalTributes / 10) * tmp.m5e)));
+    if (p.honeyGodTributes + p.honeyGodRJTributes > 0)
+        freeBees *= Math.pow(1.03, ((p.honeyGodTributes + p.honeyGodRJTributes) * tmp.m5e));
     let a = pfreeBees + pforagerBees + phoneyBees;
-    p.freeBees = (pfreeBees * freeBees) / a;
-    p.foragerBees = (pforagerBees * freeBees) / a;
-    p.honeyBees = (phoneyBees * freeBees) / a;
+    if (a > 0) {
+        p.freeBees = (pfreeBees * freeBees) / (a || 1);
+        p.foragerBees = (pforagerBees * freeBees) / (a || 1);
+        p.honeyBees = (phoneyBees * freeBees) / (a || 1);
+    }
+    else {
+        p.freeBees = freeBees;
+        p.foragerBees = 0;
+        p.honeyBees = 0;
+    }
     p.bees = 0;
     p.flowerFields = 1;
     p.hives = 0;
@@ -231,26 +183,27 @@ const sacrificeToGod = () => {
         p.fge = true;
     if (p.capitalistGodTributes > 0)
         p.cge = true;
-    tmp.totalTributes = totalTributes();
+    d.offlineTicksSpeed5.checked = false;
+    d.offlineTicksSpeed10.checked = false;
 };
 d.donateToPollenGod.addEventListener("click", () => {
-    p.pollenGodTributes += getSmallGodTribute(p.highestpollen, p.pollenGodTributes);
+    /*prettier-ignore*/ p.pollenGodTributes += Math.max(0, Math.min(lgmaxnumber - p.pollenGodTributes, Math.max(0, getSmallGodTribute(p.highestpollen, p.pollenGodTributes))));
     sacrificeToGod();
 });
 d.donateToNectarGod.addEventListener("click", () => {
-    p.nectarGodTributes += getSmallGodTribute(p.highestnectar, p.nectarGodTributes);
+    /*prettier-ignore*/ p.nectarGodTributes += Math.max(0, Math.min(lgmaxnumber - p.nectarGodTributes, Math.max(0, getSmallGodTribute(p.highestnectar, p.nectarGodTributes))));
     sacrificeToGod();
 });
 d.donateToHoneyGod.addEventListener("click", () => {
-    p.honeyGodTributes += getSmallGodTribute(p.highesthoney, p.honeyGodTributes);
+    /*prettier-ignore*/ p.honeyGodTributes += Math.max(0, Math.min(lgmaxnumber - p.honeyGodTributes, Math.max(0, getSmallGodTribute(p.highesthoney, p.honeyGodTributes))));
     sacrificeToGod();
 });
 d.donateToFlowerGod.addEventListener("click", () => {
-    p.flowerGodTributes += getSmallGodTribute2(p.highestflowers, p.flowerGodTributes);
+    /*prettier-ignore*/ p.flowerGodTributes += Math.max(0, Math.min(lgmaxnumber - p.flowerGodTributes, Math.max(0, getSmallGodTribute2(p.highestflowers, p.flowerGodTributes))));
     sacrificeToGod();
 });
 d.donateToCapitalistGod.addEventListener("click", () => {
-    p.capitalistGodTributes += getSmallGodTribute(p.highestmoney, p.capitalistGodTributes);
+    /*prettier-ignore*/ p.capitalistGodTributes += Math.max(0, Math.min(lgmaxnumber - p.capitalistGodTributes, Math.max(0, getSmallGodTribute(p.highestmoney, p.capitalistGodTributes))));
     sacrificeToGod();
 });
 d.foragerbeestextunderline.addEventListener("click", () => {
@@ -272,3 +225,259 @@ d.honeybeestextunderline.addEventListener("click", () => {
 d.autosaves.addEventListener("click", toggleAutosave);
 d.saveButton.addEventListener("click", save);
 d.loadButton.addEventListener("click", load);
+d.saveButton2.addEventListener("click", save);
+d.loadButton2.addEventListener("click", load);
+let tabs1 = ["main", "jelly", "help", "settings"];
+const e_switchTab1 = (tab) => {
+    tabs1.forEach((_tab) => (d[`${_tab}TabContent`].style.display = "none"));
+    d[`${tab}TabContent`].style.display = "";
+    p.tab = tab;
+};
+tabs1.forEach((tab) => {
+    d[`${tab}TabButton`].addEventListener("click", () => e_switchTab1(tab));
+});
+const exchangeProgress = () => {
+    let rjToGet = RJToGet();
+    if (p.exchangeConfirmation && !confirm(`are you sure you want to reset all your progress for ${format(rjToGet, 1)} royal jelly`))
+        return;
+    p.RJ += rjToGet;
+    p.totalRJ += rjToGet;
+    p.highestRJ = Math.max(p.highestRJ, p.RJ);
+    p.flowerGodTributes = 0;
+    p.pollenGodTributes = 0;
+    p.nectarGodTributes = 0;
+    p.honeyGodTributes = 0;
+    p.capitalistGodTributes = 0;
+    p.totalflowers = 0;
+    p.totalpollen = 0;
+    p.totalnectar = 0;
+    p.totalhoney = 1;
+    p.totalmoney = 0;
+    tmp.totalTributes = totalTributes();
+    sacrificeToGod();
+    p.unusedRJTributes += tmp.tmpunusedRJTributes;
+    p.pollenGodRJTributes = p.pollenGodRJTributes + tmp.tmpRJpollenGodTributes;
+    p.nectarGodRJTributes = p.nectarGodRJTributes + tmp.tmpRJnectarGodTributes;
+    p.honeyGodRJTributes = p.honeyGodRJTributes + tmp.tmpRJhoneyGodTributes;
+    p.flowerGodRJTributes = p.flowerGodRJTributes + tmp.tmpRJflowerGodTributes;
+    p.capitalistGodRJTributes = p.capitalistGodRJTributes + tmp.tmpRJcapitalistGodTributes;
+    tmp.tmpunusedRJTributes = 0;
+    tmp.tmpRJpollenGodTributes = 0;
+    tmp.tmpRJnectarGodTributes = 0;
+    tmp.tmpRJhoneyGodTributes = 0;
+    tmp.tmpRJflowerGodTributes = 0;
+    tmp.tmpRJcapitalistGodTributes = 0;
+};
+d.exchangeForRJ.addEventListener("click", exchangeProgress);
+const e_buyMaxFlowerFields = () => {
+    let [bought, cost] = flowerFieldCost.buy(p.money, "max");
+    p.money -= cost;
+    p.flowerFields += bought;
+};
+const e_buyMaxBees = () => {
+    let [bought, cost] = beeCost.buy(p.honey, "max");
+    p.honey -= cost;
+    p.bees += bought;
+    let beesLeft = bought * Math.pow(1.03, p.honeyGodTributes);
+    autoAssignBees(beesLeft);
+};
+const autoAssignBees = (beesLeft) => {
+    if (p.autoAsignBeesTo[0] != undefined)
+        beesLeft = assignBeesTo(p.autoAsignBeesTo[0], beesLeft);
+    if (p.autoAsignBeesTo[1] != undefined)
+        beesLeft = assignBeesTo(p.autoAsignBeesTo[1], beesLeft);
+    assignBeesTo("free", beesLeft);
+};
+const e_buyMaxHives = () => {
+    let [bought, cost] = hiveCost.buy(p.pollen, "max");
+    p.pollen -= cost;
+    p.hives += bought;
+};
+d.buyMaxFlowerField.addEventListener("click", e_buyMaxFlowerFields);
+d.buyMaxBee.addEventListener("click", e_buyMaxBees);
+d.buyMaxHive.addEventListener("click", e_buyMaxHives);
+const e_RJbuyflowerFields = () => {
+    let price = structurePrice(p.RJflowerFields);
+    if (p.RJ < price)
+        return;
+    p.RJflowerFields++;
+    p.RJ -= price;
+};
+const e_RJbuybees = () => {
+    let price = structurePrice(p.RJbees);
+    if (p.RJ < price)
+        return;
+    p.RJbees++;
+    let beesLeft = Math.pow(1.03, p.honeyGodTributes);
+    autoAssignBees(beesLeft);
+    p.RJ -= price;
+};
+const e_RJbuyhives = () => {
+    let price = structurePrice(p.RJhives);
+    if (p.RJ < price)
+        return;
+    p.RJhives++;
+    p.RJ -= price;
+};
+d.RJbuyflowerFields.addEventListener("click", e_RJbuyflowerFields);
+d.RJbuybees.addEventListener("click", e_RJbuybees);
+d.RJbuyhives.addEventListener("click", e_RJbuyhives);
+const e_RJsellflowerFields = () => {
+    if (p.RJflowerFields <= 0)
+        return;
+    p.RJ += structurePrice(p.RJflowerFields - 1);
+    p.RJflowerFields--;
+};
+const e_RJsellbees = () => {
+    if (p.RJbees <= 0)
+        return;
+    p.RJ += structurePrice(p.RJbees - 1);
+    p.RJbees--;
+};
+const e_RJsellhives = () => {
+    if (p.RJhives <= 0)
+        return;
+    p.RJ += structurePrice(p.RJhives - 1);
+    p.RJhives--;
+};
+// d.RJsellflowerFields.addEventListener("click", e_RJsellflowerFields);
+// d.RJsellbees.addEventListener("click", e_RJsellbees);
+// d.RJsellhives.addEventListener("click", e_RJsellhives);
+d.buyTribute.addEventListener("click", () => {
+    if (p.RJTributes >= 30)
+        return; //cap
+    let price = RJTributeCost.costFunction();
+    if (p.RJ < price)
+        return;
+    p.RJTributes++;
+    p.unusedRJTributes++;
+    p.RJ -= price;
+});
+d.buyMaxTribute.addEventListener("click", () => {
+    if (p.RJTributes >= 30)
+        return; //cap
+    let [bought, cost] = RJTributeCost.buy(p.RJ, "max");
+    bought = Math.max(0, Math.min(30 - p.RJTributes, bought));
+    cost = RJTributeCost.cumulativeFunction(bought);
+    p.RJTributes += bought;
+    p.unusedRJTributes += bought;
+    p.RJ -= cost;
+});
+d.addpollenGodTribute.addEventListener("click", () => {
+    if (p.unusedRJTributes > 0) {
+        p.pollenGodRJTributes++;
+        p.unusedRJTributes--;
+    }
+    else if (tmp.tmpunusedRJTributes > 0) {
+        tmp.tmpRJpollenGodTributes++;
+        tmp.tmpunusedRJTributes--;
+    }
+});
+d.removepollenGodTribute.addEventListener("click", () => {
+    if (p.pollenGodRJTributes + tmp.tmpRJpollenGodTributes <= 0)
+        return;
+    tmp.tmpRJpollenGodTributes--;
+    tmp.tmpunusedRJTributes++;
+});
+d.addnectarGodTribute.addEventListener("click", () => {
+    if (p.unusedRJTributes > 0) {
+        p.nectarGodRJTributes++;
+        p.unusedRJTributes--;
+    }
+    else if (tmp.tmpunusedRJTributes > 0) {
+        tmp.tmpRJnectarGodTributes++;
+        tmp.tmpunusedRJTributes--;
+    }
+});
+d.removenectarGodTribute.addEventListener("click", () => {
+    if (p.nectarGodRJTributes + tmp.tmpRJnectarGodTributes <= 0)
+        return;
+    tmp.tmpRJnectarGodTributes--;
+    tmp.tmpunusedRJTributes++;
+});
+d.addhoneyGodTribute.addEventListener("click", () => {
+    if (p.unusedRJTributes > 0) {
+        p.honeyGodRJTributes++;
+        p.unusedRJTributes--;
+    }
+    else if (tmp.tmpunusedRJTributes > 0) {
+        tmp.tmpRJhoneyGodTributes++;
+        tmp.tmpunusedRJTributes--;
+    }
+});
+d.removehoneyGodTribute.addEventListener("click", () => {
+    if (p.honeyGodRJTributes + tmp.tmpRJhoneyGodTributes <= 0)
+        return;
+    tmp.tmpRJhoneyGodTributes--;
+    tmp.tmpunusedRJTributes++;
+});
+d.addflowerGodTribute.addEventListener("click", () => {
+    if (p.unusedRJTributes > 0) {
+        p.flowerGodRJTributes++;
+        p.unusedRJTributes--;
+    }
+    else if (tmp.tmpunusedRJTributes > 0) {
+        tmp.tmpRJflowerGodTributes++;
+        tmp.tmpunusedRJTributes--;
+    }
+});
+d.removeflowerGodTribute.addEventListener("click", () => {
+    if (p.flowerGodRJTributes + tmp.tmpRJflowerGodTributes <= 0)
+        return;
+    tmp.tmpRJflowerGodTributes--;
+    tmp.tmpunusedRJTributes++;
+});
+d.addcapitalistGodTribute.addEventListener("click", () => {
+    if (p.unusedRJTributes > 0) {
+        p.capitalistGodRJTributes++;
+        p.unusedRJTributes--;
+    }
+    else if (tmp.tmpunusedRJTributes > 0) {
+        tmp.tmpRJcapitalistGodTributes++;
+        tmp.tmpunusedRJTributes--;
+    }
+});
+d.removecapitalistGodTribute.addEventListener("click", () => {
+    if (p.capitalistGodRJTributes + tmp.tmpRJcapitalistGodTributes <= 0)
+        return;
+    tmp.tmpRJcapitalistGodTributes--;
+    tmp.tmpunusedRJTributes++;
+});
+const e_export = () => {
+    let output = $("saveExport");
+    let parent = output.parentElement;
+    parent.style.display = "";
+    output.value = btoa(JSON.stringify(p));
+    output.onblur = function () {
+        parent.style.display = "none";
+    };
+    output.focus();
+    output.select();
+    try {
+        if (document.execCommand("copy")) {
+            output.blur();
+        }
+        d.export.innerText = "exported";
+        setTimeout(() => (d.export.innerText = "export"), 2500);
+    }
+    catch (ex) { }
+};
+d.export.addEventListener("click", e_export);
+const e_import = () => {
+    let save = prompt("paste your save string. MAKE SURE ITS CORRECT");
+    if (save == null)
+        return;
+    try {
+        if (save.length > 1500) {
+            p = fix(JSON.parse(atob(save)));
+            e_switchTab1("main");
+            return;
+        }
+    }
+    catch (e) {
+        window.alert("loading save failed");
+        return;
+    }
+    return window.alert("loading save failed");
+};
+d.import.addEventListener("click", e_import);
