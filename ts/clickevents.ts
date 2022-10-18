@@ -90,7 +90,7 @@ const buyBee = () => {
   if (p.honey < getBeePrice()) return;
   p.honey -= getBeePrice();
   p.bees++;
-  let beesLeft = 1.03 ** p.honeyGodTributes;
+  let beesLeft = 1.03 ** (p.honeyGodTributes + p.RJbees);
   autoAssignBees(beesLeft);
 };
 const buyHive = () => {
