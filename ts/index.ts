@@ -670,46 +670,61 @@ const updateText = () => {
   let cap = p.capitalistGodTributes + Math.max(0, capitalistGodTributesToGet);
 
   // todo: make it cap to 20 30 or 40 depending of god type
-  if (pol >= lgmaxnumber) {
+  if (pol == lgmaxnumber) {
     d.pollenGodTributesAfterSacrifice.innerHTML = lgmax;
+  }
+  if (pol >= lgmaxnumber) {
+    d.pollenGodTributesAfterSacrifice.innerHTML = `${p.pollenGodTributes} -> ${lgmax};`;
     d.nextPollenGodTribute.innerHTML = "???";
   } else {
     d.nextPollenGodTribute.innerHTML =
       "" + format(getNextsmallGodTribute(p.pollenGodTributes, Math.min(lgmaxnumber - p.pollenGodTributes, pollenGodTributesToGet)));
-    d.pollenGodTributesAfterSacrifice.innerHTML = `${p.pollenGodTributes} ->${pol}`;
+    d.pollenGodTributesAfterSacrifice.innerHTML = `${p.pollenGodTributes} -> ${pol}`;
+  }
+  if (nec == lgmaxnumber) {
+    d.nectarGodTributesAfterSacrifice.innerHTML = lgmax;
   }
   if (nec >= lgmaxnumber) {
-    d.nectarGodTributesAfterSacrifice.innerHTML = lgmax;
+    d.nectarGodTributesAfterSacrifice.innerHTML = `${p.nectarGodTributes} -> ${lgmax};`;
     d.nextNectarGodTribute.innerHTML = "???";
   } else {
     d.nextNectarGodTribute.innerHTML =
       "" + format(getNextsmallGodTribute(p.nectarGodTributes, Math.min(lgmaxnumber - p.nectarGodTributes, nectarGodTributesToGet)));
-    d.nectarGodTributesAfterSacrifice.innerHTML = `${p.nectarGodTributes} ->${nec}`;
+    d.nectarGodTributesAfterSacrifice.innerHTML = `${p.nectarGodTributes} -> ${nec}`;
+  }
+  if (hon == lgmaxnumber) {
+    d.honeyGodTributesAfterSacrifice.innerHTML = lgmax;
   }
   if (hon >= lgmaxnumber) {
-    d.honeyGodTributesAfterSacrifice.innerHTML = lgmax;
+    d.honeyGodTributesAfterSacrifice.innerHTML = `${p.honeyGodTributes} -> ${lgmax};`;
     d.nextHoneyGodTribute.innerHTML = "???";
   } else {
     d.nextHoneyGodTribute.innerHTML =
       "" + format(getNextsmallGodTribute(p.honeyGodTributes, Math.min(lgmaxnumber - p.honeyGodTributes, honeyGodTributesToGet)));
-    d.honeyGodTributesAfterSacrifice.innerHTML = `${p.honeyGodTributes} ->${hon}`;
+    d.honeyGodTributesAfterSacrifice.innerHTML = `${p.honeyGodTributes} -> ${hon}`;
+  }
+  if (flo == lgmaxnumber) {
+    d.flowerGodTributesAfterSacrifice.innerHTML = lgmax;
   }
   if (flo >= lgmaxnumber) {
-    d.flowerGodTributesAfterSacrifice.innerHTML = lgmax;
+    d.flowerGodTributesAfterSacrifice.innerHTML = `${p.flowerGodTributes} -> ${lgmax};`;
     d.nextFlowerGodTribute.innerHTML = "???";
   } else {
     d.nextFlowerGodTribute.innerHTML =
       "" + format(getNextsmallGodTribute2(p.flowerGodTributes, Math.min(lgmaxnumber - p.flowerGodTributes, flowerGodTributesToGet)));
-    d.flowerGodTributesAfterSacrifice.innerHTML = `${p.flowerGodTributes} ->${flo}`;
+    d.flowerGodTributesAfterSacrifice.innerHTML = `${p.flowerGodTributes} -> ${flo}`;
+  }
+  if (cap == lgmaxnumber) {
+    d.capitalistGodTributesAfterSacrifice.innerHTML = lgmax;
   }
   if (cap >= lgmaxnumber) {
-    d.capitalistGodTributesAfterSacrifice.innerHTML = lgmax;
+    d.capitalistGodTributesAfterSacrifice.innerHTML = `${p.honeyGodTributes} -> ${lgmax}`;
     d.nextCapitalistGodTribute.innerHTML = "???";
   } else {
     d.nextCapitalistGodTribute.innerHTML =
       "" +
       format(getNextsmallGodTribute(p.capitalistGodTributes, Math.min(lgmaxnumber - p.capitalistGodTributes, capitalistGodTributesToGet)));
-    d.capitalistGodTributesAfterSacrifice.innerHTML = `${p.capitalistGodTributes} ->${cap}`;
+    d.capitalistGodTributesAfterSacrifice.innerHTML = `${p.capitalistGodTributes} -> ${cap}`;
   }
 
   d.flowers.innerHTML = ` ${format(p.flowers)}`;
