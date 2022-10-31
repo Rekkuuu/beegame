@@ -832,20 +832,20 @@ var n_structures;
         hiveCost.offset = getHivePriceMult();
         flowerFieldCost.level = p.flowerFields;
         flowerFieldCost.offset = getFlowerFieldPriceMult();
-        let [flowerFieldsToBuy, flowerFieldsPrice] = flowerFieldCost.maxFunction((p.money / 100) * a.flowerBuyPercent);
-        let [beesToBuy, beesPrice] = beeCost.maxFunction((p.honey / 100) * a.beeBuyPercent);
-        let [hivesToBuy, hivesPrice] = hiveCost.maxFunction((p.pollen / 100) * a.hiveBuyPercent);
+        let [ftb, fp] = flowerFieldCost.maxFunction((p.money / 100) * a.flowerBuyPercent);
+        let [btb, bp] = beeCost.maxFunction((p.honey / 100) * a.beeBuyPercent);
+        let [htb, hp] = hiveCost.maxFunction((p.pollen / 100) * a.hiveBuyPercent);
         // console.log(flowerFieldsToBuy, beesToBuy, hivesToBuy);
         if (a.on) {
             if (a.flower && a.flowerBuy) {
-                p.money -= flowerFieldsPrice;
-                p.flowerFields += flowerFieldsToBuy;
+                p.money -= fp;
+                p.flowerFields += ftb;
             }
             if (a.bee && a.beeBuy) {
-                p.honey -= beesPrice;
-                p.bees += beesToBuy;
-                if (beesToBuy > 0) {
-                    let beesLeft = beesToBuy * n_sacrifices.tmp.honeyGodEffect;
+                p.honey -= bp;
+                p.bees += btb;
+                if (btb > 0) {
+                    let beesLeft = btb * n_sacrifices.tmp.honeyGodEffect;
                     if (p.autoAsignBeesTo[0] != undefined)
                         beesLeft = assignBeesTo(p.autoAsignBeesTo[0], beesLeft);
                     if (p.autoAsignBeesTo[1] != undefined)
@@ -854,8 +854,8 @@ var n_structures;
                 }
             }
             if (a.hive && a.hiveBuy) {
-                p.pollen -= hivesPrice;
-                p.hives += hivesToBuy;
+                p.pollen -= hp;
+                p.hives += htb;
             }
         }
     };
