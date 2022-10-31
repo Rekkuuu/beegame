@@ -345,12 +345,12 @@ const exchangeProgress = () => {
 };
 d.exchangeForRJ.addEventListener("click", exchangeProgress);
 const e_buyMaxFlowerFields = () => {
-    let [bought, cost] = flowerFieldCost.maxFunction(p.money);
+    let [bought, cost] = [n_structures.tmp.flowerFieldsToBuy, n_structures.tmp.flowerFieldsPrice];
     p.money -= cost;
     p.flowerFields += bought;
 };
 const e_buyMaxBees = () => {
-    let [bought, cost] = beeCost.maxFunction(p.honey);
+    let [bought, cost] = [n_structures.tmp.beesToBuy, n_structures.tmp.beesPrice];
     p.honey -= cost;
     p.bees += bought;
     let beesLeft = bought * Math.pow(1.03, p.honeyGodTributes);
