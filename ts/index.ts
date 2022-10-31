@@ -802,8 +802,10 @@ namespace n_structures {
 
     beeCost.level = p.bees;
     beeCost.offset = getBeePriceMult();
+
     hiveCost.level = p.hives;
     hiveCost.offset = getHivePriceMult();
+
     flowerFieldCost.level = p.flowerFields;
     flowerFieldCost.offset = getFlowerFieldPriceMult();
 
@@ -832,18 +834,6 @@ namespace n_structures {
         p.pollen -= hivesPrice;
         p.hives += hivesToBuy;
       }
-    }
-    if (beesToBuy > 0) {
-      beeCost.level += p.bees;
-      beeCost.offset = getBeePriceMult();
-    }
-    if (hivesToBuy > 0) {
-      hiveCost.level += p.hives;
-      hiveCost.offset = getHivePriceMult();
-    }
-    if (flowerFieldsToBuy > 0) {
-      flowerFieldCost.level += p.flowerFields;
-      flowerFieldCost.offset = getFlowerFieldPriceMult();
     }
   };
 }
@@ -1412,7 +1402,7 @@ const GameLoop = () => {
   // pentagram and u can chose which gods u want to connect
   // can be in form of buttons for now // idk about all this
 
-  d.godsTabButton.style.display="none"
+  d.godsTabButton.style.display = "none"
 
   beeCost.level = p.bees;
   beeCost.offset = getBeePriceMult();

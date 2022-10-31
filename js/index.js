@@ -858,18 +858,6 @@ var n_structures;
                 p.hives += hivesToBuy;
             }
         }
-        if (beesToBuy > 0) {
-            beeCost.level += p.bees;
-            beeCost.offset = getBeePriceMult();
-        }
-        if (hivesToBuy > 0) {
-            hiveCost.level += p.hives;
-            hiveCost.offset = getHivePriceMult();
-        }
-        if (flowerFieldsToBuy > 0) {
-            flowerFieldCost.level += p.flowerFields;
-            flowerFieldCost.offset = getFlowerFieldPriceMult();
-        }
     };
 })(n_structures || (n_structures = {}));
 const getSGTBees = (tributes) => {

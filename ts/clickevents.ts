@@ -391,7 +391,7 @@ const autoAssignBees = (beesLeft: number) => {
 };
 
 const e_buyMaxHives = () => {
-  let [bought, cost] = hiveCost.maxFunction(p.pollen);
+  let [bought, cost] = [n_structures.tmp.hivesToBuy, n_structures.tmp.hivesPrice];
   p.pollen -= cost;
   p.hives += bought;
 };
