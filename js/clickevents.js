@@ -83,12 +83,9 @@ const autoAssign = () => {
     let beesLeft = assignableBees;
     if (p.autoAsignBeesTo[0] != undefined)
         beesLeft = assignBeesTo(p.autoAsignBeesTo[0], beesLeft);
-    console.log(beesLeft);
     if (p.autoAsignBeesTo[1] != undefined)
         beesLeft = assignBeesTo(p.autoAsignBeesTo[1], beesLeft);
-    console.log(beesLeft);
     assignBeesTo("free", beesLeft);
-    console.log(beesLeft);
 };
 const buyBee = () => {
     if (p.honey < getBeePrice())
@@ -164,15 +161,11 @@ const sacrificeToGod = () => {
     let a = pfreeBees + pforagerBees + phoneyBees;
     let maxForagerBees = getMaxForagerBees();
     let maxHoneyBees = getMaxHoneyBees();
-    console.log(pfreeBees, pforagerBees, phoneyBees, a);
-    console.log(pfreeBees / a, pforagerBees / a, phoneyBees / a);
-    console.log(maxForagerBees, maxHoneyBees, freeBees);
     // assigned bees or had any?
     if (a > 1) {
         let freeBeesToGet = freeBees * (pfreeBees / a);
         let foragerBeesToGet = freeBees * (pforagerBees / a);
         let honeyBeesToGet = freeBees * (phoneyBees / a);
-        console.log(freeBees, freeBeesToGet, foragerBeesToGet, honeyBeesToGet);
         p.foragerBees = Math.min(maxForagerBees, foragerBeesToGet);
         p.honeyBees = Math.min(maxHoneyBees, honeyBeesToGet);
         p.freeBees = freeBeesToGet;
@@ -661,22 +654,22 @@ d.autoStructures.addEventListener("click", () => {
     p.autobuy.structures.on = d.autoStructures.checked;
 });
 d.autoflowerBuy.addEventListener("click", () => {
-    p.autobuy.structures.flowerBuy = d.autoflowerBuy.checked;
+    p.autobuy.structures.flowerBuy = !p.autobuy.structures.flowerBuy;
 });
 d.autobeeBuy.addEventListener("click", () => {
-    p.autobuy.structures.beeBuy = d.autobeeBuy.checked;
+    p.autobuy.structures.beeBuy = !p.autobuy.structures.beeBuy;
 });
 d.autohiveBuy.addEventListener("click", () => {
-    p.autobuy.structures.hiveBuy = d.autohiveBuy.checked;
+    p.autobuy.structures.hiveBuy = !p.autobuy.structures.hiveBuy;
 });
 d.quickautoflowerBuy.addEventListener("click", () => {
-    p.autobuy.structures.flowerBuy = d.quickautoflowerBuy.checked;
+    p.autobuy.structures.flowerBuy = !p.autobuy.structures.flowerBuy;
 });
 d.quickautobeeBuy.addEventListener("click", () => {
-    p.autobuy.structures.beeBuy = d.quickautobeeBuy.checked;
+    p.autobuy.structures.beeBuy = !p.autobuy.structures.beeBuy;
 });
 d.quickautohiveBuy.addEventListener("click", () => {
-    p.autobuy.structures.hiveBuy = d.quickautohiveBuy.checked;
+    p.autobuy.structures.hiveBuy = !p.autobuy.structures.hiveBuy;
 });
 d.autoflowerButton.addEventListener("click", () => {
     if (p.RJ < 5 || p.autobuy.structures.flower)

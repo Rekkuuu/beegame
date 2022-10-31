@@ -793,7 +793,6 @@ var n_structures;
             d.autoflowerButtonWrapper.style.display = "";
             d.quickautoflowerBuy.checked = false;
             d.autoflowerBuy.checked = false;
-            p.autobuy.structures.flowerBuy = false;
         }
         if (a.bee) {
             d.autobeeWrapper.style.display = "";
@@ -810,7 +809,6 @@ var n_structures;
             d.autobeeButtonWrapper.style.display = "";
             d.quickautobeeBuy.checked = false;
             d.autobeeBuy.checked = false;
-            p.autobuy.structures.beeBuy = false;
         }
         if (a.hive) {
             d.autohiveWrapper.style.display = "";
@@ -827,7 +825,6 @@ var n_structures;
             d.autohiveButtonWrapper.style.display = "";
             d.quickautohiveBuy.checked = false;
             d.autohiveBuy.checked = false;
-            p.autobuy.structures.hiveBuy = false;
         }
         beeCost.level = p.bees;
         beeCost.offset = getBeePriceMult();
@@ -838,6 +835,7 @@ var n_structures;
         let [flowerFieldsToBuy, flowerFieldsPrice] = flowerFieldCost.maxFunction((p.money / 100) * a.flowerBuyPercent);
         let [beesToBuy, beesPrice] = beeCost.maxFunction((p.honey / 100) * a.beeBuyPercent);
         let [hivesToBuy, hivesPrice] = hiveCost.maxFunction((p.pollen / 100) * a.hiveBuyPercent);
+        console.log(flowerFieldsToBuy, beesToBuy, hivesToBuy);
         if (a.on) {
             if (a.flower && a.flowerBuy) {
                 p.money -= flowerFieldsPrice;
@@ -845,7 +843,15 @@ var n_structures;
             }
             if (a.bee && a.beeBuy) {
                 p.honey -= beesPrice;
-                p.hives += beesToBuy;
+                p.bees += beesToBuy;
+                if (beesToBuy > 0) {
+                    let beesLeft = beesToBuy * n_sacrifices.tmp.honeyGodEffect;
+                    if (p.autoAsignBeesTo[0] != undefined)
+                        beesLeft = assignBeesTo(p.autoAsignBeesTo[0], beesLeft);
+                    if (p.autoAsignBeesTo[1] != undefined)
+                        beesLeft = assignBeesTo(p.autoAsignBeesTo[1], beesLeft);
+                    assignBeesTo("free", beesLeft);
+                }
             }
             if (a.hive && a.hiveBuy) {
                 p.pollen -= hivesPrice;
@@ -853,15 +859,15 @@ var n_structures;
             }
         }
         if (beesToBuy > 0) {
-            beeCost.level = p.bees;
+            beeCost.level += p.bees;
             beeCost.offset = getBeePriceMult();
         }
         if (hivesToBuy > 0) {
-            hiveCost.level = p.hives;
+            hiveCost.level += p.hives;
             hiveCost.offset = getHivePriceMult();
         }
         if (flowerFieldsToBuy > 0) {
-            flowerFieldCost.level = p.flowerFields;
+            flowerFieldCost.level += p.flowerFields;
             flowerFieldCost.offset = getFlowerFieldPriceMult();
         }
     };
@@ -1278,6 +1284,12 @@ var n_jelly;
             d.quickautobeeBuy.disabled = true;
             d.quickautohiveBuy.disabled = true;
         }
+        d.quickautoflowerBuy.checked = p.autobuy.structures.flowerBuy;
+        d.autoflowerBuy.checked = p.autobuy.structures.flowerBuy;
+        d.quickautobeeBuy.checked = p.autobuy.structures.beeBuy;
+        d.autobeeBuy.checked = p.autobuy.structures.beeBuy;
+        d.quickautohiveBuy.checked = p.autobuy.structures.hiveBuy;
+        d.autohiveBuy.checked = p.autobuy.structures.hiveBuy;
         // rj structures
         if (p.RJTributes >= 30) {
             d.buyTribute.disabled = true;
