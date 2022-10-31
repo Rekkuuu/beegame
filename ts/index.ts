@@ -1119,7 +1119,7 @@ namespace n_tributes {
     d.totalTributes.innerHTML = `${tmp.sacrificeTributes}`;
     if (tmp.me[5] > 1)
       d.totalTributes.innerHTML += ` + <span class="lighttext">${ft2(
-        (tmp.totalTributes - tmp.RJTributes) * tmp.me[5] - tmp.totalTributes
+        (tmp.totalTributes - tmp.RJTributes) * tmp.me[5] - (tmp.totalTributes - tmp.RJTributes)
       )}</span>`;
     if (p.RJTributes > 0) d.totalTributes.innerHTML += ` + <span class="rjtext">${p.RJTributes}</span>`;
 

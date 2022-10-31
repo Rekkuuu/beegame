@@ -1146,7 +1146,7 @@ var n_tributes;
         // total tributes
         d.totalTributes.innerHTML = `${n_tributes.tmp.sacrificeTributes}`;
         if (n_tributes.tmp.me[5] > 1)
-            d.totalTributes.innerHTML += ` + <span class="lighttext">${ft2((n_tributes.tmp.totalTributes - n_tributes.tmp.RJTributes) * n_tributes.tmp.me[5] - n_tributes.tmp.totalTributes)}</span>`;
+            d.totalTributes.innerHTML += ` + <span class="lighttext">${ft2((n_tributes.tmp.totalTributes - n_tributes.tmp.RJTributes) * n_tributes.tmp.me[5] - (n_tributes.tmp.totalTributes - n_tributes.tmp.RJTributes))}</span>`;
         if (p.RJTributes > 0)
             d.totalTributes.innerHTML += ` + <span class="rjtext">${p.RJTributes}</span>`;
         // tributes unlock
