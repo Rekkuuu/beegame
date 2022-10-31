@@ -370,12 +370,12 @@ const exchangeProgress = () => {
 d.exchangeForRJ.addEventListener("click", exchangeProgress);
 
 const e_buyMaxFlowerFields = () => {
-  let [bought, cost] = flowerFieldCost.buy(p.money, "max");
+  let [bought, cost] = flowerFieldCost.maxFunction(p.money);
   p.money -= cost;
   p.flowerFields += bought;
 };
 const e_buyMaxBees = () => {
-  let [bought, cost] = beeCost.buy(p.honey, "max");
+  let [bought, cost] = beeCost.maxFunction(p.honey);
   p.honey -= cost;
   p.bees += bought;
 
@@ -391,7 +391,7 @@ const autoAssignBees = (beesLeft: number) => {
 };
 
 const e_buyMaxHives = () => {
-  let [bought, cost] = hiveCost.buy(p.pollen, "max");
+  let [bought, cost] = hiveCost.maxFunction(p.pollen);
   p.pollen -= cost;
   p.hives += bought;
 };

@@ -811,7 +811,7 @@ namespace n_structures {
     let [beesToBuy, beesPrice] = beeCost.maxFunction((p.honey / 100) * a.beeBuyPercent);
     let [hivesToBuy, hivesPrice] = hiveCost.maxFunction((p.pollen / 100) * a.hiveBuyPercent);
 
-    console.log(flowerFieldsToBuy, beesToBuy, hivesToBuy);
+    // console.log(flowerFieldsToBuy, beesToBuy, hivesToBuy);
 
     if (a.on) {
       if (a.flower && a.flowerBuy) {

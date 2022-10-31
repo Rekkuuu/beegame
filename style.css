@@ -314,4 +314,10 @@ table.tmr tr td:nth-child(1) {
 
 .pr10 {
   padding-right: 10px;
+}
+
+#quickautoflowerBuy,
+#quickautobeeBuy,
+#quickautohiveBuy {
+  margin-left: 10px;
 }/*# sourceMappingURL=style.css.map */
