@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  width: 100vw;
   overflow-x: hidden;
 }
 
@@ -9,9 +10,9 @@ body {
 
 #mainTabContent div,
 #tabs-container div {
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 button {
@@ -44,6 +45,10 @@ button {
   display: inline-block;
 }
 
+#totalTributes {
+  padding-left: 1px;
+}
+
 a {
   text-decoration: none;
 }
@@ -72,6 +77,13 @@ body:not(.dark-mode) button:disabled .recomended {
 body.dark-mode {
   background-color: #222;
   color: white;
+}
+body.dark-mode input[type=text] {
+  background-color: #222;
+  color: white;
+  border: 0;
+  text-align: right;
+  font-family: monospace;
 }
 body.dark-mode .lighttext {
   color: #999;
@@ -114,6 +126,7 @@ body:not(.dark-mode) #offlineTicks {
   margin-left: 0.5px;
   border-width: 1px;
   border-radius: 5px;
+  margin-top: 1px;
 }
 .btn:not(:disabled) {
   cursor: pointer;
@@ -175,9 +188,10 @@ body.dark-mode #exchangeForRJ {
   border-color: #ddaa00;
   text-shadow: rgba(255, 255, 170, 0.7333333333) 0 0 4px;
   background: linear-gradient(211deg, #ff6411, #ffcc11), linear-gradient(161deg, rgba(238, 80, 37, 0.9607843137), #ffcc11);
+  box-shadow: rgba(255, 255, 170, 0.2666666667) 0 0 4px;
 }
 body.dark-mode #exchangeForRJ:hover {
-  border-color: #ccaa00;
+  border-color: #aa9900;
   background-color: #ddaa00;
   background: linear-gradient(211deg, #ee5400, #ddc000), linear-gradient(161deg, rgba(213, 69, 37, 0.9607843137), #ddcc11);
 }
@@ -187,19 +201,27 @@ body.dark-mode #exchangeForRJ:hover {
   margin-top: -1px;
 }
 
-#tabs-container {
-  margin-bottom: 10px;
+.tabs-container {
   max-width: 60vw;
+  margin-bottom: 0px;
 }
 
-div[id*=tabs-container] button {
+div[id*=TabContent] {
+  margin-top: 8px;
+}
+div[id*=TabContent] div[class*=tabs-container] {
+  margin-top: -5px;
+}
+
+div[class*=tabs-container] button {
+  margin-bottom: 5px;
   font-size: medium;
   cursor: pointer;
 }
-div[id*=tabs-container] div:first-child {
+div[class*=tabs-container] div:first-child {
   margin-left: 5px;
 }
-div[id*=tabs-container] div:last-child {
+div[class*=tabs-container] div:last-child {
   margin-right: 5px;
 }
 
@@ -229,4 +251,67 @@ table.tmr tr td {
 }
 table.tmr tr td:nth-child(1) {
   text-align: right;
+}
+
+.rjtext {
+  color: #ff6411;
+  background: linear-gradient(211deg, #ff6411, #ffcc11), linear-gradient(161deg, rgba(238, 80, 37, 0.9607843137), #ffcc11);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: rgba(255, 255, 255, 0.2666666667) 0 0 4px;
+}
+
+*:disabled.rjtext {
+  color: #ee5400;
+  background: linear-gradient(211deg, #ee5400, #ddc000), linear-gradient(161deg, rgba(213, 69, 37, 0.9607843137), #ddcc11);
+  text-shadow: rgba(255, 255, 255, 0.2) 0 0 4px;
+}
+
+.fc {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.fc div {
+  padding: 5px;
+  padding-bottom: 7px;
+  text-align: center;
+  width: calc(150px + 11vw);
+  max-width: 250px;
+  display: inline-block;
+}
+.fc div div:nth-child(1) {
+  text-decoration: underline;
+}
+.fc div:not(:nth-child(1)) {
+  padding-bottom: 10px;
+}
+
+#offlineTicks {
+  pointer-events: none;
+}
+#offlineTicks input {
+  pointer-events: all;
+}
+
+.ng {
+  margin-top: 0;
+}
+
+#RJlastReset,
+#lastRJfromflowers,
+#lastRJfrompollen,
+#lastRJfromnectar,
+#lastRJfromhoney,
+#lastRJfrommoney {
+  padding-left: 11px;
+}
+
+.mr10 {
+  margin-right: 10px;
+}
+
+.pr10 {
+  padding-right: 10px;
 }/*# sourceMappingURL=style.css.map */

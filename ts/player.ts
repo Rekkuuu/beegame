@@ -21,6 +21,12 @@ type t_player = {
   totalhoney: number;
   totalmoney: number;
 
+  lastRJfromflowers: number;
+  lastRJfrompollen: number;
+  lastRJfromnectar: number;
+  lastRJfromhoney: number;
+  lastRJfrommoney: number;
+
   bees: number;
   freeBees: number;
   foragerBees: number;
@@ -44,7 +50,6 @@ type t_player = {
   cge: boolean;
 
   sellingHoney: boolean;
-  autosaves: boolean;
 
   unlocks: {
     bees: boolean;
@@ -60,6 +65,7 @@ type t_player = {
   offlineTime: number;
 
   RJ: number;
+  totalExchanges: number;
   highestRJ: number;
   totalRJ: number;
   RJbees: number;
@@ -74,13 +80,44 @@ type t_player = {
   flowerGodRJTributes: number;
   capitalistGodRJTributes: number;
 
-  tab: t_tabs1;
+  combinedGods: t_gods[];
 
-  darkmode: boolean;
-  bigButtons: boolean;
-  displayEverything: boolean;
-  harderTributes: boolean;
-  exchangeConfirmation: boolean;
+  tab: t_tabs1;
+  tab2: t_tabs2;
+  tab3: t_tabs3;
+
+  settings: {
+    darkmode: boolean;
+    bigButtons: boolean;
+    displayEverything: boolean;
+    iconMove: boolean;
+
+    sacrificeConfirmation: boolean;
+    exchangeConfirmation: boolean;
+
+    toggleHoneyOfflineTime: boolean;
+    toggleSacrificeOfflineTime: boolean;
+    toggleRJOfflineTime: boolean;
+
+    autosaves: boolean;
+  };
+
+  autobuy: {
+    structures: {
+      on: boolean; // autobuy if  on && xBuy
+      flowerBuy: boolean; // autobuyer status on/off
+      beeBuy: boolean; // autobuyer status on/off
+      hiveBuy: boolean; // autobuyer status on/off
+
+      flowerBuyPercent: number; // % of resource to use
+      beeBuyPercent: number; // % of resource to use
+      hiveBuyPercent: number; // % of resource to use
+
+      flower: boolean; // bought
+      bee: boolean; // bought
+      hive: boolean; // bought
+    };
+  };
 };
 
 const newEmptyPlayer = (): t_player => {
@@ -102,6 +139,12 @@ const newEmptyPlayer = (): t_player => {
     totalnectar: 0,
     totalhoney: 0,
     totalmoney: 0,
+
+    lastRJfromflowers: 0,
+    lastRJfrompollen: 0,
+    lastRJfromnectar: 0,
+    lastRJfromhoney: 0,
+    lastRJfrommoney: 0,
 
     bees: 0,
     freeBees: 0,
@@ -126,7 +169,6 @@ const newEmptyPlayer = (): t_player => {
     cge: false,
 
     sellingHoney: false,
-    autosaves: true,
     // bees -> foragerBees -> honeyBees -> sacrificing -> tributes -> jelly -> jelly2
     //              └> hive at 1 pollen         └> money
     // buy bee, get forager bee, get honey bee, unlock money from tributes, at least 50 of pollen etc and 1k flowers, at least one tribute
@@ -143,6 +185,7 @@ const newEmptyPlayer = (): t_player => {
     lastUpdate: Date.now(),
     offlineTime: 1, // so generous
 
+    totalExchanges: 0,
     RJ: 0,
     highestRJ: 0,
     totalRJ: 0,
@@ -158,13 +201,42 @@ const newEmptyPlayer = (): t_player => {
     flowerGodRJTributes: 0,
     capitalistGodRJTributes: 0,
 
-    tab: "main",
+    combinedGods: [],
 
-    darkmode: true,
-    bigButtons: false,
-    displayEverything: false,
-    harderTributes: false,
-    exchangeConfirmation: true,
+    tab: "main",
+    tab2: "combine",
+    tab3: "stats",
+
+    settings: {
+      darkmode: true,
+      bigButtons: false,
+      displayEverything: false,
+      iconMove: false,
+
+      sacrificeConfirmation: true,
+      exchangeConfirmation: true,
+
+      toggleHoneyOfflineTime: false,
+      toggleSacrificeOfflineTime: true,
+      toggleRJOfflineTime: true,
+
+      autosaves: true,
+    },
+
+    autobuy: {
+      structures: {
+        on: true,
+        flowerBuy: true,
+        beeBuy: true,
+        hiveBuy: true,
+        flowerBuyPercent: 100,
+        beeBuyPercent: 100,
+        hiveBuyPercent: 100,
+        flower: false,
+        bee: false,
+        hive: false,
+      },
+    },
   };
 };
 let p: t_player;

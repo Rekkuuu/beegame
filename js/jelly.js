@@ -1,16 +1,19 @@
 "use strict";
 const RJToGet = () => {
-    if (totalTributes() < tributeMilestones[9])
+    if (n_tributes.tmp.totalTributes < tributes[9].unlockAt)
         return 0;
-    //prettier-ignore
-    return Math.log10(Math.max(1, p.totalflowers) *
-        Math.max(1, p.totalhoney) *
-        Math.max(1, p.totalmoney) *
-        Math.max(1, p.totalnectar) *
-        Math.max(1, p.totalpollen));
+    let RJToGet = n_stats.tmp.RJFromtotalflowers +
+        n_stats.tmp.RJFromtotalhoney +
+        n_stats.tmp.RJFromtotalmoney +
+        n_stats.tmp.RJFromtotalnectar +
+        n_stats.tmp.RJFromtotalpollen;
+    return RJToGet * n_jelly.tmp.totalRJBonus;
 };
 const getRJBonus = (rj) => {
     return Math.pow(1.06, Math.log2(Math.max(1, 1 + rj)));
+};
+const getTotalRJBonus = (rj) => {
+    return Math.pow(1.06, blog(3, Math.max(1, 1 + rj)));
 };
 const structurePrice = (amount) => {
     return ft2(Math.pow(2, (amount / 3)));

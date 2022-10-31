@@ -39,11 +39,11 @@ const d = {
 
   // requiredBeesToSacrifice: $("requiredBeesToSacrifice"),
 
-  donateToPollenGod: $("donateToPollenGod") as HTMLButtonElement,
-  donateToNectarGod: $("donateToNectarGod") as HTMLButtonElement,
-  donateToHoneyGod: $("donateToHoneyGod") as HTMLButtonElement,
-  donateToFlowerGod: $("donateToFlowerGod") as HTMLButtonElement,
-  donateToCapitalistGod: $("donateToCapitalistGod") as HTMLButtonElement,
+  sacrificeToPollenGod: $("sacrificeToPollenGod") as HTMLButtonElement,
+  sacrificeToNectarGod: $("sacrificeToNectarGod") as HTMLButtonElement,
+  sacrificeToHoneyGod: $("sacrificeToHoneyGod") as HTMLButtonElement,
+  sacrificeToFlowerGod: $("sacrificeToFlowerGod") as HTMLButtonElement,
+  sacrificeToCapitalistGod: $("sacrificeToCapitalistGod") as HTMLButtonElement,
 
   pollenGodTributesToGet: $("pollenGodTributesToGet"),
   nectarGodTributesToGet: $("nectarGodTributesToGet"),
@@ -80,9 +80,9 @@ const d = {
   beeSpaceEffectStatS: $("beeSpaceEffectStatS"),
 
   totalTributes: $("totalTributes"),
-  neededBeesToSacrifice: $("neededBeesToSacrifice"),
+  // neededBeesToSacrifice: $("neededBeesToSacrifice"),
 
-  totalBeesToSacrificeFromTributes: $("totalBeesToSacrificeFromTributes"),
+  // totalBeesToSacrificeFromTributes: $("totalBeesToSacrificeFromTributes"),
   pollenGodTributesAfterSacrifice: $("pollenGodTributesAfterSacrifice"),
   nectarGodTributesAfterSacrifice: $("nectarGodTributesAfterSacrifice"),
   honeyGodTributesAfterSacrifice: $("honeyGodTributesAfterSacrifice"),
@@ -107,6 +107,7 @@ const d = {
     11: $("m11"),
     12: $("m12"),
     13: $("m13"),
+    14: $("m14"),
   },
 
   m0e: $("m0e"),
@@ -123,6 +124,7 @@ const d = {
   m11e: $("m11e"),
   m12e: $("m12e"),
   m13e: $("m13e"),
+  m14e: $("m14e"),
 
   m0d: $("m0d"),
   m1d: $("m1d"),
@@ -138,6 +140,7 @@ const d = {
   m11d: $("m11d"),
   m12d: $("m12d"),
   m13d: $("m13d"),
+  m14d: $("m14d"),
 
   m0t: $("m0t"),
   m1t: $("m1t"),
@@ -153,11 +156,12 @@ const d = {
   m11t: $("m11t"),
   m12t: $("m12t"),
   m13t: $("m13t"),
+  m14t: $("m14t"),
 
   // m7effect: $("m6effect"),
   honeyCheckBox: $("honeyCheckBox") as HTMLInputElement,
 
-  reqBeesToSacTitle: $("reqBeesToSacTitle"),
+  // reqBeesToSacTitle: $("reqBeesToSacTitle"),
   pernamentTributeEffects: $("pernamentTributeEffects"),
   gameCompletion: $("gameCompletion"),
 
@@ -219,12 +223,14 @@ const d = {
 
   mainTabButton: $("mainTabButton") as HTMLButtonElement,
   jellyTabButton: $("jellyTabButton") as HTMLButtonElement,
-  helpTabButton: $("helpTabButton") as HTMLButtonElement,
+  godsTabButton: $("godsTabButton") as HTMLButtonElement,
+  statshelpTabButton: $("statshelpTabButton") as HTMLButtonElement,
   settingsTabButton: $("settingsTabButton") as HTMLButtonElement,
 
   mainTabContent: $("mainTabContent"),
   jellyTabContent: $("jellyTabContent"),
-  helpTabContent: $("helpTabContent"),
+  godsTabContent: $("godsTabContent"),
+  statshelpTabContent: $("statshelpTabContent"),
   settingsTabContent: $("settingsTabContent"),
 
   saveButton2: $("saveButton2") as HTMLButtonElement,
@@ -263,9 +269,7 @@ const d = {
   buyMaxHiveS: $("buyMaxHiveS"),
   buyMaxHivePrice: $("buyMaxHivePrice"),
 
-  toggleHarderTributes: $("toggleHarderTributes") as HTMLInputElement,
-
-  beeReqString: $("beeReqString"),
+  // beeReqString: $("beeReqString"),
 
   RJ: $("RJ"),
   RJtotal: $("RJtotal"),
@@ -332,8 +336,6 @@ const d = {
 
   exchangeToApplyChanges: $("exchangeToApplyChanges"),
 
-  exchangeConfirmation: $("exchangeConfirmation") as HTMLInputElement,
-
   export: $("export") as HTMLButtonElement,
   import: $("import") as HTMLButtonElement,
 
@@ -342,6 +344,84 @@ const d = {
   RJWrapper: $("RJWrapper"),
   RJWrapper2: $("RJWrapper2"),
   RJWrapper3: $("RJWrapper3"),
-  RJWrapper4: $("RJWrapper4"),
+
+  favicon: $("favicon") as HTMLLinkElement,
+  iconMove: $("iconMove") as HTMLInputElement,
+
+  nextPollenGodTributeBees: $("nextPollenGodTributeBees"),
+  nextNectarGodTributeBees: $("nextNectarGodTributeBees"),
+  nextHoneyGodTributeBees: $("nextHoneyGodTributeBees"),
+  nextFlowerGodTributeBees: $("nextFlowerGodTributeBees"),
+  nextCapitalistGodTributeBees: $("nextCapitalistGodTributeBees"),
+
+  combinePGButton: $("combinePGButton") as HTMLButtonElement,
+  combineNGButton: $("combineNGButton") as HTMLButtonElement,
+  combineFGButton: $("combineFGButton") as HTMLButtonElement,
+  combineHGButton: $("combineHGButton") as HTMLButtonElement,
+  combineCGButton: $("combineCGButton") as HTMLButtonElement,
+
+  confirmCombine: $("confirmCombine") as HTMLButtonElement,
+
+  hardreset: $("hardreset") as HTMLButtonElement,
+
+  lastRJfromflowers: $("lastRJfromflowers"),
+  lastRJfrompollen: $("lastRJfrompollen"),
+  lastRJfromnectar: $("lastRJfromnectar"),
+  lastRJfromhoney: $("lastRJfromhoney"),
+  lastRJfrommoney: $("lastRJfrommoney"),
+
+  RJlastReset: $("RJlastReset"),
+
+  sacrificeConfirmation: $("sacrificeConfirmation") as HTMLInputElement,
+  exchangeConfirmation: $("exchangeConfirmation") as HTMLInputElement,
+  toggleHoneyOfflineTime: $("toggleHoneyOfflineTime") as HTMLInputElement,
+  toggleSacrificeOfflineTime: $("toggleSacrificeOfflineTime") as HTMLInputElement,
+  toggleRJOfflineTime: $("toggleRJOfflineTime") as HTMLInputElement,
+
+  equalResources: $("equalResources") as HTMLButtonElement,
+
+  maxForagerProduction: $("maxForagerProduction") as HTMLButtonElement,
+  maxHoneyProduction: $("maxHoneyProduction") as HTMLButtonElement,
+
+  autoStructures: $("autoStructures") as HTMLInputElement,
+  autoflowerBuyPercent: $("autoflowerBuyPercent") as HTMLInputElement,
+  autobeeBuyPercent: $("autobeeBuyPercent") as HTMLInputElement,
+  autohiveBuyPercent: $("autohiveBuyPercent") as HTMLInputElement,
+
+  autoflowerBuy: $("autoflowerBuy") as HTMLInputElement,
+  autobeeBuy: $("autobeeBuy") as HTMLInputElement,
+  autohiveBuy: $("autohiveBuy") as HTMLInputElement,
+  quickautoflowerBuy: $("quickautoflowerBuy") as HTMLInputElement,
+  quickautobeeBuy: $("quickautobeeBuy") as HTMLInputElement,
+  quickautohiveBuy: $("quickautohiveBuy") as HTMLInputElement,
+
+  autoflowerWrapper: $("autoflowerWrapper"),
+  autoflowerWrapper2: $("autoflowerWrapper2"),
+  autobeeWrapper: $("autobeeWrapper"),
+  autobeeWrapper2: $("autobeeWrapper2"),
+  autohiveWrapper: $("autohiveWrapper"),
+  autohiveWrapper2: $("autohiveWrapper2"),
+
+  structuresBuyAt: $("structuresBuyAt"),
+
+  combineTabButton: $("combineTabButton") as HTMLButtonElement,
+  challengesTabButton: $("challengesTabButton") as HTMLButtonElement,
+  statsTabButton: $("statsTabButton") as HTMLButtonElement,
+  helpTabButton: $("helpTabButton") as HTMLButtonElement,
+
+  combineTabContent: $("combineTabContent"),
+  challengesTabContent: $("challengesTabContent"),
+  statsTabContent: $("statsTabContent"),
+  helpTabContent: $("helpTabContent"),
+
+  sacrificeResets: $("sacrificeResets"),
+
+  autoflowerButton: $("autoflowerButton") as HTMLButtonElement,
+  autobeeButton: $("autobeeButton") as HTMLButtonElement,
+  autohiveButton: $("autohiveButton") as HTMLButtonElement,
+
+  autoflowerButtonWrapper: $("autoflowerButtonWrapper"),
+  autobeeButtonWrapper: $("autobeeButtonWrapper"),
+  autohiveButtonWrapper: $("autohiveButtonWrapper"),
 };
 //todo shorten these names?
