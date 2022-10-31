@@ -1409,7 +1409,7 @@ const GameLoop = () => {
   flowerFieldCost.level = p.flowerFields;
   flowerFieldCost.offset = getFlowerFieldPriceMult();
 
-  if (p.totalSacrifices) diff = updateOfflineTicks(diff) ?? 0;
+  diff = updateOfflineTicks(diff) ?? 0;
 
   n_jelly.calc();
   n_jelly.text();

@@ -1449,8 +1449,7 @@ const GameLoop = () => {
     hiveCost.offset = getHivePriceMult();
     flowerFieldCost.level = p.flowerFields;
     flowerFieldCost.offset = getFlowerFieldPriceMult();
-    if (p.totalSacrifices)
-        diff = (_a = updateOfflineTicks(diff)) !== null && _a !== void 0 ? _a : 0;
+    diff = (_a = updateOfflineTicks(diff)) !== null && _a !== void 0 ? _a : 0;
     n_jelly.calc();
     n_jelly.text();
     n_tributes.calc();
