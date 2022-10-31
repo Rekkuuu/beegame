@@ -174,7 +174,7 @@ const getTotalSacrificeTributes = () => {
 };
 const getTotalTributes = () => getTotalSacrificeTributes() + getTotalRJTributes();
 const totalBees = () => {
-    return p.freeBees + p.foragerBees + p.honeyBees + p.RJbees;
+    return p.freeBees + p.foragerBees + p.honeyBees;
 };
 const floor = (x) => Math.floor(x);
 const stepwise1 = (s, n) => {

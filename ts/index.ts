@@ -180,7 +180,7 @@ const getTotalSacrificeTributes = (): number => {
 const getTotalTributes = (): number => getTotalSacrificeTributes() + getTotalRJTributes();
 
 const totalBees = () => {
-  return p.freeBees + p.foragerBees + p.honeyBees + p.RJbees;
+  return p.freeBees + p.foragerBees + p.honeyBees;
 };
 const floor = (x: number) => Math.floor(x);
 

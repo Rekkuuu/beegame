@@ -148,7 +148,7 @@ const sacrificeToGod = () => {
   let phoneyBees = p.honeyBees;
 
   let freeBees = 0;
-  freeBees += p.RJbees;
+  freeBees += p.RJbees * n_sacrifices.tmp.honeyGodEffect;
 
   n_tributes.tmp.sacrificeTributes = getTotalSacrificeTributes();
   n_tributes.tmp.totalTributes = getTotalTributes();
