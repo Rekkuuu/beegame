@@ -198,8 +198,6 @@ const sacrificeToGod = () => {
   if (p.honeyGodTributes > 0) p.hge = true;
   if (p.flowerGodTributes > 0) p.fge = true;
   if (p.capitalistGodTributes > 0) p.cge = true;
-  d.offlineTicksSpeed5.checked = false;
-  d.offlineTicksSpeed10.checked = false;
 
   p.totalSacrifices++;
 };
