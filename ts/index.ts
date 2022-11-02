@@ -222,6 +222,14 @@ type t_tribute = {
   description: string;
 };
 
+const getSGTBees = (tributes: number) => {
+  return stepwise2(3, tributes) / n_tributes.tmp.me[2];
+};
+
+const getNSGTBees = (bees: number) => {
+  return reversedstepwise2(3, bees * n_tributes.tmp.me[2]);
+};
+
 // prettier-ignore
 let tributes: TupleOf<t_tribute, 15> = [
   {unlockAt: 2  , showAt: 1  , displayAt: 0  , description: "1.02x flower production for every 2 free bee and for every 2 tributes"},
@@ -240,7 +248,9 @@ let tributes: TupleOf<t_tribute, 15> = [
   {unlockAt: 170, showAt: 140, displayAt: 130, description: "combine another pair of gods"},
   {unlockAt: 180, showAt: 160, displayAt: 140, description: "challenges"},
 ];
-
+const getConnectedTo = (god: t_gods): t_gods[] => {
+  return [god];
+};
 const ft = (x: number): string => {
   let rx = x;
   let t = "";
@@ -598,7 +608,7 @@ namespace n_resources {
   };
 }
 
-// v and n_bees
+// todo:  make n_bees?
 namespace n_structures {
   export let tmp = {
     maxForagerBees: 0,
@@ -838,14 +848,6 @@ namespace n_structures {
   };
 }
 
-const getSGTBees = (tributes: number) => {
-  return stepwise2(3, tributes) / n_tributes.tmp.me[2];
-};
-
-const getNSGTBees = (bees: number) => {
-  return reversedstepwise2(3, bees * n_tributes.tmp.me[2]);
-};
-
 namespace n_sacrifices {
   export let tmp = {
     pollenGodEffect: 1,
@@ -1051,6 +1053,7 @@ namespace n_sacrifices {
     else d.sacrificeToCapitalistGod.disabled = true;
   };
 }
+
 namespace n_tributes {
   /*prettier-ignore*/
   export let def:TupleOf< number, 15>=[
@@ -1376,9 +1379,6 @@ namespace n_stats {
   };
 }
 
-const getConnectedTo = (god: t_gods): t_gods[] => {
-  return [god];
-};
 namespace n_gods {
   export let tmp = {
     pollenGodMaxTributes: 20,
@@ -1416,23 +1416,23 @@ const GameLoop = () => {
   diff = updateOfflineTicks(diff) ?? 0;
 
   n_jelly.calc();
-  n_jelly.text();
-
   n_tributes.calc();
-  n_tributes.text();
-
   n_sacrifices.calc();
-  n_sacrifices.text();
-
   n_structures.calc();
-  n_structures.display();
-  n_structures.text();
+  n_resources.calc(diff);
+
   n_structures.autobuy();
 
-  n_resources.calc(diff);
-  n_resources.text();
+  if (p.tab == "jelly") n_jelly.text();
 
-  n_stats.text();
+  if (p.tab == "main") {
+    n_tributes.text();
+    n_sacrifices.text();
+    n_structures.display();
+    n_structures.text();
+    n_resources.text();
+  }
+  if (p.tab == "statshelp") n_stats.text();
 
   updateUnlocks();
   updateDisplay();

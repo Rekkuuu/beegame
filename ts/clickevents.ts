@@ -120,7 +120,6 @@ d.buyFlowerField.addEventListener("click", () => {
 d.quickBuyFlowerField.addEventListener("click", () => {
   buyFlowerField();
 });
-// TODO: SMART ADD BEES
 
 const sacrificeToGod = () => {
   if (p.settings.toggleSacrificeOfflineTime) {
@@ -163,7 +162,7 @@ const sacrificeToGod = () => {
   let maxForagerBees = getMaxForagerBees();
   let maxHoneyBees = getMaxHoneyBees();
 
-  // assigned bees or had any?
+  // reassign bees if had any
   if (a > 1) {
     let freeBeesToGet = freeBees * (pfreeBees / a);
     let foragerBeesToGet = freeBees * (pforagerBees / a);
@@ -198,8 +197,6 @@ const sacrificeToGod = () => {
   if (p.honeyGodTributes > 0) p.hge = true;
   if (p.flowerGodTributes > 0) p.fge = true;
   if (p.capitalistGodTributes > 0) p.cge = true;
-  d.offlineTicksSpeed5.checked = false;
-  d.offlineTicksSpeed10.checked = false;
 
   p.totalSacrifices++;
 };

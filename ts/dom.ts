@@ -423,5 +423,7 @@ const d = {
   autoflowerButtonWrapper: $("autoflowerButtonWrapper"),
   autobeeButtonWrapper: $("autobeeButtonWrapper"),
   autohiveButtonWrapper: $("autohiveButtonWrapper"),
+
+  version: $("version"),
 };
 //todo shorten these names?

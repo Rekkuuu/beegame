@@ -29,9 +29,11 @@ const toggleAutosave = () => {
 let fix = (save) => {
     var _a;
     if (save["version"] == undefined)
-        save["version"] = 0;
-    save["version"] = 0;
-    if (save["version"] < 0.3) {
+        save["version"] = [0, 0, 0, 0];
+    if (typeof save["version"] == "number")
+        save["version"] = [0, 0, 0, 0];
+    let v = [0, 2, 5, 3];
+    if (save["version"] < v) {
         // rj
         if (save["RJ"] == undefined)
             save["RJ"] = 0;
@@ -123,7 +125,6 @@ let fix = (save) => {
         }
         if (save["autosaves"] != undefined)
             delete save["autosaves"];
-        save["version"] = 0.3;
         // total exchanges
         if (save["totalExchanges"] == undefined)
             save["totalExchanges"] = 0;
@@ -134,6 +135,7 @@ let fix = (save) => {
             save.autobuy = newEmptyPlayer().autobuy;
         if (save["autobuy"]["structures"] == undefined)
             save["autobuy"]["structures"] = newEmptyPlayer().autobuy.structures;
+        save["version"] = v;
     }
     return save;
 };

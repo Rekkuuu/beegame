@@ -118,6 +118,7 @@ type t_player = {
       hive: boolean; // bought
     };
   };
+  version: [number, number, number, number];
 };
 
 const newEmptyPlayer = (): t_player => {
@@ -237,6 +238,7 @@ const newEmptyPlayer = (): t_player => {
         hive: false,
       },
     },
+    version: [0, 2, 5, 3],
   };
 };
 let p: t_player;

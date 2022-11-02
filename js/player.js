@@ -99,6 +99,7 @@ const newEmptyPlayer = () => {
                 hive: false,
             },
         },
+        version: [0, 2, 5, 3],
     };
 };
 let p;

@@ -10,6 +10,7 @@ let RJTributeCost: Linear.Cost;
 const init = () => {
   loop = setInterval(GameLoop, 30);
   load();
+  d.version.innerHTML = p.version.join(".");
 
   flowerFieldCost = new Linear.Cost(c, p.flowerFields, getFlowerFieldPriceMult(), -1);
   beeCost = new Linear.Cost(c, p.bees, getBeePriceMult(), 0);

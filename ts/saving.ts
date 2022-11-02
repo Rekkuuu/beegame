@@ -28,11 +28,19 @@ const toggleAutosave = () => {
   console.log(`autosave ${p.settings.autosaves ? "on" : "off"}`);
 };
 
-let fix = (save: t_player) => {
-  if (save["version"] == undefined) save["version"] = 0;
-  save["version"] = 0;
+//  version number  //
+//    first number  -
+//   second number  - classic content updates etc
+//    third number  - non content updates like QoL ?
+//    forth number  - hotfixes
+type t_vn = [number, number, number, number];
 
-  if (save["version"] < 0.3) {
+let fix = (save: t_player) => {
+  if (save["version"] == undefined) save["version"] = [0, 0, 0, 0];
+  if (typeof save["version"] == "number") save["version"] = [0, 0, 0, 0];
+
+  let v: t_vn = [0, 2, 5, 3];
+  if (save["version"] < v) {
     // rj
     if (save["RJ"] == undefined) save["RJ"] = 0;
     if (save["highestRJ"] == undefined) save["highestRJ"] = 0;
@@ -104,7 +112,6 @@ let fix = (save: t_player) => {
       save["settings"]["autosaves"] == p["autosaves"] ?? true;
     }
     if (save["autosaves"] != undefined) delete save["autosaves"];
-    save["version"] = 0.3;
 
     // total exchanges
     if (save["totalExchanges"] == undefined) save["totalExchanges"] = 0;
@@ -115,6 +122,8 @@ let fix = (save: t_player) => {
     if (save["autobuy"] == undefined) save.autobuy = newEmptyPlayer().autobuy;
 
     if (save["autobuy"]["structures"] == undefined) save["autobuy"]["structures"] = newEmptyPlayer().autobuy.structures;
+
+    save["version"] = v;
   }
   return save;
 };

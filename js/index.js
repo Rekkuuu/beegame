@@ -209,6 +209,12 @@ const getPS = (what, x) => {
     else
         return `1 ${what} per ${format(1 / x)} seconds`;
 };
+const getSGTBees = (tributes) => {
+    return stepwise2(3, tributes) / n_tributes.tmp.me[2];
+};
+const getNSGTBees = (bees) => {
+    return reversedstepwise2(3, bees * n_tributes.tmp.me[2]);
+};
 // prettier-ignore
 let tributes = [
     { unlockAt: 2, showAt: 1, displayAt: 0, description: "1.02x flower production for every 2 free bee and for every 2 tributes" },
@@ -227,6 +233,9 @@ let tributes = [
     { unlockAt: 170, showAt: 140, displayAt: 130, description: "combine another pair of gods" },
     { unlockAt: 180, showAt: 160, displayAt: 140, description: "challenges" },
 ];
+const getConnectedTo = (god) => {
+    return [god];
+};
 const ft = (x) => {
     let rx = x;
     let t = "";
@@ -600,7 +609,7 @@ var n_resources;
         //TODO:
     };
 })(n_resources || (n_resources = {}));
-// v and n_bees
+// todo:  make n_bees?
 var n_structures;
 (function (n_structures) {
     n_structures.tmp = {
@@ -860,12 +869,6 @@ var n_structures;
         }
     };
 })(n_structures || (n_structures = {}));
-const getSGTBees = (tributes) => {
-    return stepwise2(3, tributes) / n_tributes.tmp.me[2];
-};
-const getNSGTBees = (bees) => {
-    return reversedstepwise2(3, bees * n_tributes.tmp.me[2]);
-};
 var n_sacrifices;
 (function (n_sacrifices) {
     n_sacrifices.tmp = {
@@ -1417,9 +1420,6 @@ var n_stats;
     ${p.cge ? "✓" : "✗"} capitalist: worker spaces aren't rounded down`;
     };
 })(n_stats || (n_stats = {}));
-const getConnectedTo = (god) => {
-    return [god];
-};
 var n_gods;
 (function (n_gods) {
     n_gods.tmp = {
@@ -1451,18 +1451,22 @@ const GameLoop = () => {
     flowerFieldCost.offset = getFlowerFieldPriceMult();
     diff = (_a = updateOfflineTicks(diff)) !== null && _a !== void 0 ? _a : 0;
     n_jelly.calc();
-    n_jelly.text();
     n_tributes.calc();
-    n_tributes.text();
     n_sacrifices.calc();
-    n_sacrifices.text();
     n_structures.calc();
-    n_structures.display();
-    n_structures.text();
-    n_structures.autobuy();
     n_resources.calc(diff);
-    n_resources.text();
-    n_stats.text();
+    n_structures.autobuy();
+    if (p.tab == "jelly")
+        n_jelly.text();
+    if (p.tab == "main") {
+        n_tributes.text();
+        n_sacrifices.text();
+        n_structures.display();
+        n_structures.text();
+        n_resources.text();
+    }
+    if (p.tab == "statshelp")
+        n_stats.text();
     updateUnlocks();
     updateDisplay();
     p.lastUpdate = now;
