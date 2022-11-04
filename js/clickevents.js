@@ -625,7 +625,7 @@ const getV = (el) => {
         if (Number.isNaN(a) || el.value == "")
             el.value = "" + el.placeholder;
         //@ts-ignore
-        let v = clamp(0, a, 100);
+        let v = clamp(0, el.value, 100);
         el.value = "" + v;
     }
     catch (e) {
