@@ -137,7 +137,7 @@ let fix = (save) => {
             save["autobuy"]["structures"] = newEmptyPlayer().autobuy.structures;
         save["version"] = v;
     }
-    v = [0, 3, 0, 0];
+    v = [0, 3, 0, 1];
     if (save["version"] < v) {
         if (save["combinedGods"] == undefined)
             save["combinedGods"] = [];

@@ -770,6 +770,6 @@ d.resetCombinedGods.addEventListener("click", () => {
         n_gods.tmp.nectarGodMaxTributes = 20;
         n_gods.tmp.honeyGodMaxTributes = 20;
         n_gods.tmp.flowerGodMaxTributes = 20;
-        n_gods.tmp.capitalistGodMaxTributes = 20;
+        n_gods.tmp.moneyGodMaxTributes = 20;
     }
 });

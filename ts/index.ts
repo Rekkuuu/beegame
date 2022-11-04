@@ -910,16 +910,16 @@ namespace n_sacrifices {
     if (n_gods.tmp.pollenGodMaxTributes <= p.pollenGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
       d.nextPollenGodTribute.innerHTML = "???";
     else d.nextPollenGodTribute.innerHTML = format(tmp.pollenForNext);
-    if (n_gods.tmp.nectarGodMaxTributes <= p.nectarGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
+    if (n_gods.tmp.nectarGodMaxTributes <= p.nectarGodTributes + n_sacrifices.tmp.nectarGodTributesToGet)
       d.nextNectarGodTribute.innerHTML = "???";
     else d.nextNectarGodTribute.innerHTML = format(tmp.nectarForNext);
-    if (n_gods.tmp.honeyGodMaxTributes <= p.honeyGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
+    if (n_gods.tmp.honeyGodMaxTributes <= p.honeyGodTributes + n_sacrifices.tmp.honeyGodTributesToGet)
       d.nextHoneyGodTribute.innerHTML = "???";
     else d.nextHoneyGodTribute.innerHTML = format(tmp.honeyForNext);
-    if (n_gods.tmp.flowerGodMaxTributes <= p.flowerGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
+    if (n_gods.tmp.flowerGodMaxTributes <= p.flowerGodTributes + n_sacrifices.tmp.flowerGodTributesToGet)
       d.nextFlowerGodTribute.innerHTML = "???";
     else d.nextFlowerGodTribute.innerHTML = format(tmp.flowersForNext);
-    if (n_gods.tmp.capitalistGodMaxTributes <= p.capitalistGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
+    if (n_gods.tmp.moneyGodMaxTributes <= p.capitalistGodTributes + n_sacrifices.tmp.capitalistGodTributesToGet)
       d.nextCapitalistGodTribute.innerHTML = "???";
     else d.nextCapitalistGodTribute.innerHTML = format(tmp.moneyForNext);
 
@@ -940,13 +940,13 @@ namespace n_sacrifices {
 
     if (n_gods.tmp.pollenGodMaxTributes <= p.pollenGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
       d.nextPollenGodTributeBees.innerHTML = "??? bees";
-    if (n_gods.tmp.nectarGodMaxTributes <= p.nectarGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
+    if (n_gods.tmp.nectarGodMaxTributes <= p.nectarGodTributes + n_sacrifices.tmp.nectarGodTributesToGet)
       d.nextNectarGodTributeBees.innerHTML = "??? bees";
-    if (n_gods.tmp.honeyGodMaxTributes <= p.honeyGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
+    if (n_gods.tmp.honeyGodMaxTributes <= p.honeyGodTributes + n_sacrifices.tmp.honeyGodTributesToGet)
       d.nextHoneyGodTributeBees.innerHTML = "??? bees";
-    if (n_gods.tmp.flowerGodMaxTributes <= p.flowerGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
+    if (n_gods.tmp.flowerGodMaxTributes <= p.flowerGodTributes + n_sacrifices.tmp.flowerGodTributesToGet)
       d.nextFlowerGodTributeBees.innerHTML = "??? bees";
-    if (n_gods.tmp.capitalistGodMaxTributes <= p.capitalistGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
+    if (n_gods.tmp.moneyGodMaxTributes <= p.capitalistGodTributes + n_sacrifices.tmp.capitalistGodTributesToGet)
       d.nextCapitalistGodTributeBees.innerHTML = "??? bees";
 
     // tributes to get
@@ -1013,7 +1013,7 @@ namespace n_sacrifices {
     let nextnt = Math.min(n_gods.tmp.nectarGodMaxTributes, p.nectarGodTributes + tmp.nectarGodTributesToGet + 1);
     let nextht = Math.min(n_gods.tmp.honeyGodMaxTributes, p.honeyGodTributes + tmp.honeyGodTributesToGet + 1);
     let nextft = Math.min(n_gods.tmp.flowerGodMaxTributes, p.flowerGodTributes + tmp.flowerGodTributesToGet + 1);
-    let nextmt = Math.min(n_gods.tmp.capitalistGodMaxTributes, p.capitalistGodTributes + tmp.capitalistGodTributesToGet + 1);
+    let nextmt = Math.min(n_gods.tmp.moneyGodMaxTributes, p.capitalistGodTributes + tmp.capitalistGodTributesToGet + 1);
 
     /*prettier-ignore*/ tmp.pollenGodTributesToGet =
       Math.max(0, Math.min(n_gods.tmp.pollenGodMaxTributes, p.pollenGodTributes + tmp.pollenGodTributesToGet) - p.pollenGodTributes);
@@ -1024,7 +1024,7 @@ namespace n_sacrifices {
     /*prettier-ignore*/ tmp.flowerGodTributesToGet =
       Math.max(0, Math.min(n_gods.tmp.flowerGodMaxTributes, p.flowerGodTributes + tmp.flowerGodTributesToGet) - p.flowerGodTributes);
     /*prettier-ignore*/ tmp.capitalistGodTributesToGet =
-      Math.max(0, Math.min(n_gods.tmp.capitalistGodMaxTributes, p.capitalistGodTributes + tmp.capitalistGodTributesToGet) - p.capitalistGodTributes);
+      Math.max(0, Math.min(n_gods.tmp.moneyGodMaxTributes, p.capitalistGodTributes + tmp.capitalistGodTributesToGet) - p.capitalistGodTributes);
 
     // next from resource / bees
     tmp.pollenForNext = getNextsmallGodTribute(Math.max(nextpt));
@@ -1387,7 +1387,7 @@ namespace n_gods {
     nectarGodMaxTributes: number;
     honeyGodMaxTributes: number;
     flowerGodMaxTributes: number;
-    capitalistGodMaxTributes: number;
+    moneyGodMaxTributes: number;
     godsToCombine: t_gods[];
     combinedGods: {[key in t_gods]: t_gods[]};
     connections: t_gods[][];
@@ -1399,7 +1399,7 @@ namespace n_gods {
     nectarGodMaxTributes: 20,
     honeyGodMaxTributes: 20,
     flowerGodMaxTributes: 20,
-    capitalistGodMaxTributes: 20,
+    moneyGodMaxTributes: 20,
     godsToCombine: [],
     combinedGods: {
       flower: [],
