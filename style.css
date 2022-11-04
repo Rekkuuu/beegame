@@ -183,6 +183,19 @@ body.dark-mode button.btn:disabled {
   color: #111;
 }
 
+#exchangeForRJ {
+  background-color: #ffcc11;
+  border-color: #ccbb22;
+  text-shadow: rgba(255, 255, 170, 0.7333333333) 0 0 4px;
+  background: linear-gradient(211deg, #ff6411, #ffcc11), linear-gradient(161deg, rgba(238, 80, 37, 0.9607843137), #ffcc11);
+  box-shadow: rgba(255, 255, 170, 0.5333333333) 0 0 4px;
+}
+#exchangeForRJ:hover {
+  border-color: #9c7a00;
+  background-color: #efbf0f;
+  background: linear-gradient(211deg, #ee5400, #ddc000), linear-gradient(161deg, rgba(213, 69, 37, 0.9607843137), #ddcc11);
+}
+
 body.dark-mode #exchangeForRJ {
   background-color: #ffcc11;
   border-color: #ddaa00;
@@ -223,6 +236,14 @@ div[class*=tabs-container] div:first-child {
 }
 div[class*=tabs-container] div:last-child {
   margin-right: 5px;
+}
+
+#mainTabContent,
+#jellyTabContent,
+#godsTabContent,
+#statshelpTabContent,
+#settingsTabContent {
+  margin-bottom: 15px;
 }
 
 #settingsTabContent table tr td {

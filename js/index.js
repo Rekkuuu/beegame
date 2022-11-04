@@ -3,6 +3,12 @@ let tmp = {
     gameSpeedFormTicks: 1,
     usedTime: 1,
 };
+// https://stackoverflow.com/a/196991
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, (txt) => {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
 const format = (x, p = 0) => {
     // @ts-ignore
     if (typeof x != "number" || x == null || x == undefined)
@@ -69,6 +75,7 @@ const getFlowerFieldPriceMult = () => {
 const getMaxForagerBees = () => {
     let space = (3 + p.hives) / 5;
     space += Math.floor((4 + p.bees + n_tributes.tmp.me[3]) / 5);
+    space += Math.floor(p.RJbees / 2.5);
     space += p.pollenGodTributes * n_tributes.tmp.me[5];
     space += p.pollenGodRJTributes;
     space *= n_sacrifices.tmp.capitalistGodEffect;
@@ -81,6 +88,7 @@ const getMaxForagerBees = () => {
 const getMaxHoneyBees = () => {
     let space = (3 + p.hives) / 5;
     space += Math.floor((4 + p.bees + n_tributes.tmp.me[3]) / 5);
+    space += Math.floor(p.RJbees / 2.5);
     space += p.nectarGodTributes * n_tributes.tmp.me[5];
     space += p.nectarGodRJTributes;
     space *= n_sacrifices.tmp.capitalistGodEffect;
@@ -228,9 +236,9 @@ let tributes = [
     { unlockAt: 75, showAt: 50, displayAt: 30, description: "1.02x time speed multiplier per 5 tributes" },
     { unlockAt: 100, showAt: 100, displayAt: 75, description: "unlocks royal jelly" },
     { unlockAt: 110, showAt: 110, displayAt: 100, description: "combine a pair of gods" },
-    { unlockAt: 130, showAt: 120, displayAt: 110, description: "combine another pair of gods" },
-    { unlockAt: 150, showAt: 130, displayAt: 120, description: "combine another pair of gods" },
-    { unlockAt: 170, showAt: 140, displayAt: 130, description: "combine another pair of gods" },
+    { unlockAt: 120, showAt: 120, displayAt: 110, description: "combine another pair of gods" },
+    { unlockAt: 135, showAt: 130, displayAt: 120, description: "combine another pair of gods" },
+    { unlockAt: 155, showAt: 140, displayAt: 130, description: "combine another pair of gods" },
     { unlockAt: 180, showAt: 160, displayAt: 140, description: "challenges" },
 ];
 const getConnectedTo = (god) => {
@@ -301,6 +309,14 @@ const updateTmp = () => {
         p.offlineTime = 0; // ouch
 };
 const updateUnlocks = () => {
+    if (n_tributes.tmp.me[10])
+        p.unlocks.c1 = true;
+    if (n_tributes.tmp.me[11])
+        p.unlocks.c2 = true;
+    if (n_tributes.tmp.me[12])
+        p.unlocks.c3 = true;
+    if (n_tributes.tmp.me[13])
+        p.unlocks.c4 = true;
     if (p.bees > 0)
         p.unlocks.bees = true;
     if (p.pollen >= 1)
@@ -321,6 +337,10 @@ const updateUnlocks = () => {
         p.unlocks.jelly2 = true;
 };
 const updateDisplay = () => {
+    if (p.unlocks.c1)
+        d.godsTabButton.style.display = "";
+    else
+        d.godsTabButton.style.display = "none";
     p.settings.sacrificeConfirmation = d.sacrificeConfirmation.checked;
     p.settings.exchangeConfirmation = d.exchangeConfirmation.checked;
     p.settings.toggleHoneyOfflineTime = d.toggleHoneyOfflineTime.checked;
@@ -605,8 +625,6 @@ var n_resources;
         d.nectarPS.innerHTML = `(${format(rt5(n_resources.tmp.nectarProd - n_resources.tmp.nectarCons * n_resources.tmp.nectarEff))}/s)`;
         d.honeyPS.innerHTML = `(${format(rt5(n_resources.tmp.honeyProd * n_resources.tmp.nectarEff - n_resources.tmp.honeyCons))}/s)`;
         d.moneyPS.innerHTML = `(${format(rt5(n_resources.tmp.moneyProd))}/s)`;
-        // until 0
-        //TODO:
     };
 })(n_resources || (n_resources = {}));
 // todo:  make n_bees?
@@ -911,23 +929,23 @@ var n_sacrifices;
         d.sacrificeToFlowerGod.title = `1.03 ^ ${format(fp, 1)} = ${format(n_sacrifices.tmp.flowerGodEffect)}`;
         d.sacrificeToCapitalistGod.title = `1.03 ^ ${format(cp, 1)} = ${format(n_sacrifices.tmp.capitalistGodEffect)}`;
         // required resource
-        if (n_gods.tmp.pollenGodMaxTributes <= p.pollenGodTributes)
+        if (n_gods.tmp.pollenGodMaxTributes <= p.pollenGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
             d.nextPollenGodTribute.innerHTML = "???";
         else
             d.nextPollenGodTribute.innerHTML = format(n_sacrifices.tmp.pollenForNext);
-        if (n_gods.tmp.nectarGodMaxTributes <= p.nectarGodTributes)
+        if (n_gods.tmp.nectarGodMaxTributes <= p.nectarGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
             d.nextNectarGodTribute.innerHTML = "???";
         else
             d.nextNectarGodTribute.innerHTML = format(n_sacrifices.tmp.nectarForNext);
-        if (n_gods.tmp.honeyGodMaxTributes <= p.honeyGodTributes)
+        if (n_gods.tmp.honeyGodMaxTributes <= p.honeyGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
             d.nextHoneyGodTribute.innerHTML = "???";
         else
             d.nextHoneyGodTribute.innerHTML = format(n_sacrifices.tmp.honeyForNext);
-        if (n_gods.tmp.flowerGodMaxTributes <= p.flowerGodTributes)
+        if (n_gods.tmp.flowerGodMaxTributes <= p.flowerGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
             d.nextFlowerGodTribute.innerHTML = "???";
         else
             d.nextFlowerGodTribute.innerHTML = format(n_sacrifices.tmp.flowersForNext);
-        if (n_gods.tmp.capitalistGodMaxTributes <= p.capitalistGodTributes)
+        if (n_gods.tmp.capitalistGodMaxTributes <= p.capitalistGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
             d.nextCapitalistGodTribute.innerHTML = "???";
         else
             d.nextCapitalistGodTribute.innerHTML = format(n_sacrifices.tmp.moneyForNext);
@@ -946,15 +964,15 @@ var n_sacrifices;
             d.nextFlowerGodTributeBees.innerHTML = "" + format(n_sacrifices.tmp.flowersBeesForNext) + " bees";
             d.nextCapitalistGodTributeBees.innerHTML = "" + format(n_sacrifices.tmp.moneyBeesForNext) + " bees";
         }
-        if (n_gods.tmp.pollenGodMaxTributes <= p.pollenGodTributes)
+        if (n_gods.tmp.pollenGodMaxTributes <= p.pollenGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
             d.nextPollenGodTributeBees.innerHTML = "??? bees";
-        if (n_gods.tmp.nectarGodMaxTributes <= p.nectarGodTributes)
+        if (n_gods.tmp.nectarGodMaxTributes <= p.nectarGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
             d.nextNectarGodTributeBees.innerHTML = "??? bees";
-        if (n_gods.tmp.honeyGodMaxTributes <= p.honeyGodTributes)
+        if (n_gods.tmp.honeyGodMaxTributes <= p.honeyGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
             d.nextHoneyGodTributeBees.innerHTML = "??? bees";
-        if (n_gods.tmp.flowerGodMaxTributes <= p.flowerGodTributes)
+        if (n_gods.tmp.flowerGodMaxTributes <= p.flowerGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
             d.nextFlowerGodTributeBees.innerHTML = "??? bees";
-        if (n_gods.tmp.capitalistGodMaxTributes <= p.capitalistGodTributes)
+        if (n_gods.tmp.capitalistGodMaxTributes <= p.capitalistGodTributes + n_sacrifices.tmp.pollenGodTributesToGet)
             d.nextCapitalistGodTributeBees.innerHTML = "??? bees";
         // tributes to get
         /*prettier-ignore*/ d.pollenGodTributesToGet.innerHTML = "" + n_sacrifices.tmp.pollenGodTributesToGet + " tribute" + (n_sacrifices.tmp.pollenGodTributesToGet == 1 ? '' : 's');
@@ -1006,14 +1024,7 @@ var n_sacrifices;
         let fhb = Math.floor(Math.min(frombees, fromhoney));
         let ffb = Math.floor(Math.min(frombees, fromflowers));
         let fmb = Math.floor(Math.min(frombees, frommoney));
-        // console.log(fromhoneyBees);
         //TODO put sacrifices to god in corrent positions
-        // todo:
-        /// eyJmbG93ZXJzIjoxMzA5Ljc5OTc2NzQ0MDAwMTIsInBvbGxlbiI6MTIxLjE4MDg2ODI4MzQyMjUzLCJuZWN0YXIiOjQ4LjE0NTI4MDAzMDc5MDA5LCJob25leSI6MC4xNDcwNTYwMTM2NjY3MzEyLCJtb25leSI6MjQuMjg5MDAyNDI4NDc5NjAyLCJoaWdoZXN0Zmxvd2VycyI6MTMwOS43OTk3Njc0NDAwMDEyLCJoaWdoZXN0cG9sbGVuIjoxMjEuMTgwODY4MjgzNDIyNTMsImhpZ2hlc3RuZWN0YXIiOjEwNiwiaGlnaGVzdGhvbmV5Ijo0NC40MTA3MDE5OTM5NjEyOSwiaGlnaGVzdG1vbmV5IjoyNC4yODkwMDI0Mjg0Nzk2MDIsInRvdGFsZmxvd2VycyI6MTA3NzAuNzQ3NjgxNzgyMDI0LCJ0b3RhbHBvbGxlbiI6MTY2My45MjAzOTYyMjQ5NTUzLCJ0b3RhbG5lY3RhciI6MTY3MS44MzAzNzM1MjE5MDIsInRvdGFsaG9uZXkiOjcyOC4xNjQxMzkyMjYyODEyLCJ0b3RhbG1vbmV5IjoyNTEyLjY1MzY0MTUzMTI5NCwiYmVlcyI6NCwiZnJlZUJlZXMiOjkuMzQ3MDQxMzc3MjI5MDEzLCJmb3JhZ2VyQmVlcyI6MCwiaG9uZXlCZWVzIjowLCJmbG93ZXJGaWVsZHMiOjEsImhpdmVzIjoxLCJ0b3RhbFNhY3JpZmljZXMiOjAsInBvbGxlbkdvZFRyaWJ1dGVzIjo0LCJuZWN0YXJHb2RUcmlidXRlcyI6MiwiaG9uZXlHb2RUcmlidXRlcyI6NywiZmxvd2VyR29kVHJpYnV0ZXMiOjEsImNhcGl0YWxpc3RHb2RUcmlidXRlcyI6NCwiYXV0b0FzaWduQmVlc1RvIjpbImZvcmFnZXIiLCJob25leSJdLCJwZ2UiOnRydWUsIm5nZSI6dHJ1ZSwiaGdlIjp0cnVlLCJmZ2UiOnRydWUsImNnZSI6dHJ1ZSwic2VsbGluZ0hvbmV5Ijp0cnVlLCJhdXRvc2F2ZXMiOmZhbHNlLCJ1bmxvY2tzIjp7ImJlZXMiOnRydWUsImZvcmFnZXJCZWVzIjp0cnVlLCJoaXZlIjp0cnVlLCJob25leUJlZXMiOnRydWUsInNhY3JpZmljaW5nIjp0cnVlLCJ0cmlidXRlcyI6dHJ1ZSwiamVsbHkiOmZhbHNlLCJqZWxseTIiOmZhbHNlfSwibGFzdFVwZGF0ZSI6MTY2NjkwNzkzNDE0MSwib2ZmbGluZVRpbWUiOjg4Ny40MzE5OTk5OTk5NDY4LCJSSiI6MCwiaGlnaGVzdFJKIjowLCJ0b3RhbFJKIjowLCJSSmJlZXMiOjAsIlJKZmxvd2VyRmllbGRzIjowLCJSSmhpdmVzIjowLCJSSlRyaWJ1dGVzIjowLCJ1bnVzZWRSSlRyaWJ1dGVzIjowLCJwb2xsZW5Hb2RSSlRyaWJ1dGVzIjowLCJuZWN0YXJHb2RSSlRyaWJ1dGVzIjowLCJob25leUdvZFJKVHJpYnV0ZXMiOjAsImZsb3dlckdvZFJKVHJpYnV0ZXMiOjAsImNhcGl0YWxpc3RHb2RSSlRyaWJ1dGVzIjowLCJ0YWIiOiJzZXR0aW5ncyIsImRhcmttb2RlIjp0cnVlLCJiaWdCdXR0b25zIjpmYWxzZSwiZGlzcGxheUV2ZXJ5dGhpbmciOmZhbHNlLCJleGNoYW5nZUNvbmZpcm1hdGlvbiI6dHJ1ZSwiaWNvbk1vdmUiOmZhbHNlfQ ==
-        // 3(9) 9 6(9) 6(8) 9 eyJmbG93ZXJzIjo1MTA4Ljc5MzI3OTIzMzE2NSwicG9sbGVuIjoxNjg1LjY1NTY0NjAxMjU0LCJuZWN0YXIiOjE5MS41ODM0MTU0ODYwMDUxMiwiaG9uZXkiOjc2Ny4yNzY2OTQzMjc3NDc4LCJtb25leSI6MjQuOTYzMDM2Mjg0OTgwNTE4LCJoaWdoZXN0Zmxvd2VycyI6NTEwOC43OTMyNzkyMzMxNjUsImhpZ2hlc3Rwb2xsZW4iOjE2ODUuNjU1NjQ2MDEyNTQsImhpZ2hlc3RuZWN0YXIiOjE5MS41ODM0MTU0ODYwMDUxMiwiaGlnaGVzdGhvbmV5Ijo3NjcuMjc2Njk0MzI3NzQ3OCwiaGlnaGVzdG1vbmV5IjoxNDguODM2Nzg1MTQ0NjYwMTgsInRvdGFsZmxvd2VycyI6NTI2MzYuMTc0MTc0MzM5ODgsInRvdGFscG9sbGVuIjo0Nzc0LjMzODk1ODkzODY1LCJ0b3RhbG5lY3RhciI6Nzg3Mi4yNTkzMzYxODU4NDQsInRvdGFsaG9uZXkiOjUyNjEuODAxMTczMjIzODU3LCJ0b3RhbG1vbmV5Ijo5NzcuMTg0OTIxMjEwODQ1NywiYmVlcyI6MzAsImZyZWVCZWVzIjowLCJmb3JhZ2VyQmVlcyI6MjAuMzcsImhvbmV5QmVlcyI6MjMuNDM0NDE3ODcxNzAwMDIsImZsb3dlckZpZWxkcyI6MTMsImhpdmVzIjoxOSwidG90YWxTYWNyaWZpY2VzIjowLCJwb2xsZW5Hb2RUcmlidXRlcyI6MywibmVjdGFyR29kVHJpYnV0ZXMiOjksImhvbmV5R29kVHJpYnV0ZXMiOjYsImZsb3dlckdvZFRyaWJ1dGVzIjo2LCJjYXBpdGFsaXN0R29kVHJpYnV0ZXMiOjksImF1dG9Bc2lnbkJlZXNUbyI6WyJmb3JhZ2VyIiwiaG9uZXkiXSwicGdlIjp0cnVlLCJuZ2UiOnRydWUsImhnZSI6dHJ1ZSwiZmdlIjp0cnVlLCJjZ2UiOnRydWUsInNlbGxpbmdIb25leSI6ZmFsc2UsImF1dG9zYXZlcyI6dHJ1ZSwidW5sb2NrcyI6eyJiZWVzIjp0cnVlLCJmb3JhZ2VyQmVlcyI6dHJ1ZSwiaGl2ZSI6dHJ1ZSwiaG9uZXlCZWVzIjp0cnVlLCJzYWNyaWZpY2luZyI6dHJ1ZSwidHJpYnV0ZXMiOnRydWUsImplbGx5IjpmYWxzZSwiamVsbHkyIjpmYWxzZX0sImxhc3RVcGRhdGUiOjE2NjcxNDE0Njc0MjksIm9mZmxpbmVUaW1lIjo5OTIzOS44NTMwMDAwMjk3OSwiUkoiOjAsImhpZ2hlc3RSSiI6MCwidG90YWxSSiI6MCwiUkpiZWVzIjowLCJSSmZsb3dlckZpZWxkcyI6MCwiUkpoaXZlcyI6MCwiUkpUcmlidXRlcyI6MCwidW51c2VkUkpUcmlidXRlcyI6MCwicG9sbGVuR29kUkpUcmlidXRlcyI6MCwibmVjdGFyR29kUkpUcmlidXRlcyI6MCwiaG9uZXlHb2RSSlRyaWJ1dGVzIjowLCJmbG93ZXJHb2RSSlRyaWJ1dGVzIjowLCJjYXBpdGFsaXN0R29kUkpUcmlidXRlcyI6MCwidGFiIjoic2V0dGluZ3MiLCJkYXJrbW9kZSI6dHJ1ZSwiYmlnQnV0dG9ucyI6ZmFsc2UsImRpc3BsYXlFdmVyeXRoaW5nIjp0cnVlLCJleGNoYW5nZUNvbmZpcm1hdGlvbiI6dHJ1ZSwiaWNvbk1vdmUiOmZhbHNlLCJsYXN0Ukpmcm9tZmxvd2VycyI6MCwibGFzdFJKZnJvbXBvbGxlbiI6MCwibGFzdFJKZnJvbW5lY3RhciI6MCwibGFzdFJKZnJvbWhvbmV5IjowLCJsYXN0Ukpmcm9tbW9uZXkiOjB9
-        //// eyJmbG93ZXJzIjo1MDg2LjU0NzQ1NDI4ODI4OSwicG9sbGVuIjo3MTMuNzg3MzI2MzkyMDQyOCwibmVjdGFyIjo4OTAuMDMxMzY0MTI0Mzk1NCwiaG9uZXkiOjE1My42NjM0ODgwNzQ0NTI5LCJtb25leSI6OTQuMDMwMDYyNTgzMDcxMTYsImhpZ2hlc3RmbG93ZXJzIjo1MDg2LjU0NzQ1NDI4ODI4OSwiaGlnaGVzdHBvbGxlbiI6NzEzLjc4NzMyNjM5MjA0MjgsImhpZ2hlc3RuZWN0YXIiOjg5MC4wMzEzNjQxMjQzOTU0LCJoaWdoZXN0aG9uZXkiOjE1My42NjM0ODgwNzQ0NTI5LCJoaWdoZXN0bW9uZXkiOjk0LjAzMDA2MjU4MzA3MTE2LCJ0b3RhbGZsb3dlcnMiOjM1NDYwMi42NDU1ODc1OTc0LCJ0b3RhbHBvbGxlbiI6MTUzMDIuMTkzNDE0ODk3MzQ3LCJ0b3RhbG5lY3RhciI6MjM2ODAuNjM1MDk0NjU3NjMsInRvdGFsaG9uZXkiOjE4MzAyLjY3MTU3MDE4NTczLCJ0b3RhbG1vbmV5Ijo0MjA2LjI4NzQ4NTM0MzY1MSwiYmVlcyI6MTUsImZyZWVCZWVzIjowLCJmb3JhZ2VyQmVlcyI6MjguNzUsImhvbmV5QmVlcyI6OS41ODcxODcyNjAxNjIxNzMsImZsb3dlckZpZWxkcyI6MSwiaGl2ZXMiOjE1LCJ0b3RhbFNhY3JpZmljZXMiOjAsInBvbGxlbkdvZFRyaWJ1dGVzIjoxMSwibmVjdGFyR29kVHJpYnV0ZXMiOjksImhvbmV5R29kVHJpYnV0ZXMiOjExLCJmbG93ZXJHb2RUcmlidXRlcyI6MTUsImNhcGl0YWxpc3RHb2RUcmlidXRlcyI6OSwiYXV0b0FzaWduQmVlc1RvIjpbImZvcmFnZXIiLCJob25leSJdLCJwZ2UiOnRydWUsIm5nZSI6dHJ1ZSwiaGdlIjp0cnVlLCJmZ2UiOnRydWUsImNnZSI6dHJ1ZSwic2VsbGluZ0hvbmV5Ijp0cnVlLCJhdXRvc2F2ZXMiOnRydWUsInVubG9ja3MiOnsiYmVlcyI6dHJ1ZSwiZm9yYWdlckJlZXMiOnRydWUsImhpdmUiOnRydWUsImhvbmV5QmVlcyI6dHJ1ZSwic2FjcmlmaWNpbmciOnRydWUsInRyaWJ1dGVzIjp0cnVlLCJqZWxseSI6ZmFsc2UsImplbGx5MiI6ZmFsc2V9LCJsYXN0VXBkYXRlIjoxNjY3MTQyMjE2MDEwLCJvZmZsaW5lVGltZSI6OTY4NDIuNzc5MDAwMDI0NzUsIlJKIjowLCJoaWdoZXN0UkoiOjAsInRvdGFsUkoiOjAsIlJKYmVlcyI6MCwiUkpmbG93ZXJGaWVsZHMiOjAsIlJKaGl2ZXMiOjAsIlJKVHJpYnV0ZXMiOjAsInVudXNlZFJKVHJpYnV0ZXMiOjAsInBvbGxlbkdvZFJKVHJpYnV0ZXMiOjAsIm5lY3RhckdvZFJKVHJpYnV0ZXMiOjAsImhvbmV5R29kUkpUcmlidXRlcyI6MCwiZmxvd2VyR29kUkpUcmlidXRlcyI6MCwiY2FwaXRhbGlzdEdvZFJKVHJpYnV0ZXMiOjAsInRhYiI6InNldHRpbmdzIiwiZGFya21vZGUiOnRydWUsImJpZ0J1dHRvbnMiOmZhbHNlLCJkaXNwbGF5RXZlcnl0aGluZyI6dHJ1ZSwiZXhjaGFuZ2VDb25maXJtYXRpb24iOnRydWUsImljb25Nb3ZlIjpmYWxzZSwibGFzdFJKZnJvbWZsb3dlcnMiOjAsImxhc3RSSmZyb21wb2xsZW4iOjAsImxhc3RSSmZyb21uZWN0YXIiOjAsImxhc3RSSmZyb21ob25leSI6MCwibGFzdFJKZnJvbW1vbmV5IjowfQ==
-        ///// eyJmbG93ZXJzIjo1MzA1MzguNzY4MjM3MjE3MiwicG9sbGVuIjoxMTc0MTEuMzczOTk0Njk1NzQsIm5lY3RhciI6MTMzOTguODQwODQ4ODQ5OTcyLCJob25leSI6MTU0MDM5Ljc5OTU5MTkyNDg1LCJtb25leSI6MTA4NjA0Ljk1OTIyNTgzODA0LCJoaWdoZXN0Zmxvd2VycyI6NTMwNTM4Ljc2ODIzNzIxNzIsImhpZ2hlc3Rwb2xsZW4iOjExNzU5MC43NDA4ODkwNjcwNSwiaGlnaGVzdG5lY3RhciI6MTMzOTguODQwODQ4ODQ5OTcyLCJoaWdoZXN0aG9uZXkiOjE1NTg0MC4zMzE3NTM5MDUwOCwiaGlnaGVzdG1vbmV5IjoxMDg2MTAuNTgzOTU1NDMwMTgsInRvdGFsZmxvd2VycyI6MTc0MjM0Ny45OTYxODE1ODkzLCJ0b3RhbHBvbGxlbiI6MTQ2MjY2Ljc4NTE0Njk1OTcsInRvdGFsbmVjdGFyIjozNTExNDIuMzI1MTg3NDE3NzQsInRvdGFsaG9uZXkiOjMyMjkyOC4zNzk5MTIyNzE2MywidG90YWxtb25leSI6MTEzMTkxLjQyMTkxOTczMDY1LCJiZWVzIjo0MCwiZnJlZUJlZXMiOjAsImZvcmFnZXJCZWVzIjo0NS4wMzU0MjE2NjE2NDUwNiwiaG9uZXlCZWVzIjozMC4zODI2NTY2ODc2MTMyOCwiZmxvd2VyRmllbGRzIjo0LCJoaXZlcyI6MzAsInRvdGFsU2FjcmlmaWNlcyI6MCwicG9sbGVuR29kVHJpYnV0ZXMiOjExLCJuZWN0YXJHb2RUcmlidXRlcyI6MTUsImhvbmV5R29kVHJpYnV0ZXMiOjExLCJmbG93ZXJHb2RUcmlidXRlcyI6MTUsImNhcGl0YWxpc3RHb2RUcmlidXRlcyI6OSwiYXV0b0FzaWduQmVlc1RvIjpbImhvbmV5IiwiZm9yYWdlciJdLCJwZ2UiOnRydWUsIm5nZSI6dHJ1ZSwiaGdlIjp0cnVlLCJmZ2UiOnRydWUsImNnZSI6dHJ1ZSwic2VsbGluZ0hvbmV5IjpmYWxzZSwidW5sb2NrcyI6eyJiZWVzIjp0cnVlLCJmb3JhZ2VyQmVlcyI6dHJ1ZSwiaGl2ZSI6dHJ1ZSwiaG9uZXlCZWVzIjp0cnVlLCJzYWNyaWZpY2luZyI6dHJ1ZSwidHJpYnV0ZXMiOnRydWUsImplbGx5IjpmYWxzZSwiamVsbHkyIjpmYWxzZX0sImxhc3RVcGRhdGUiOjE2NjcxNjQ4NDg3OTYsIm9mZmxpbmVUaW1lIjoxMDM3NDguMDY5MDAwMDQyNTEsIlJKIjowLCJoaWdoZXN0UkoiOjAsInRvdGFsUkoiOjAsIlJKYmVlcyI6MCwiUkpmbG93ZXJGaWVsZHMiOjAsIlJKaGl2ZXMiOjAsIlJKVHJpYnV0ZXMiOjAsInVudXNlZFJKVHJpYnV0ZXMiOjAsInBvbGxlbkdvZFJKVHJpYnV0ZXMiOjAsIm5lY3RhckdvZFJKVHJpYnV0ZXMiOjAsImhvbmV5R29kUkpUcmlidXRlcyI6MCwiZmxvd2VyR29kUkpUcmlidXRlcyI6MCwiY2FwaXRhbGlzdEdvZFJKVHJpYnV0ZXMiOjAsInRhYiI6InNldHRpbmdzIiwibGFzdFJKZnJvbWZsb3dlcnMiOjAsImxhc3RSSmZyb21wb2xsZW4iOjAsImxhc3RSSmZyb21uZWN0YXIiOjAsImxhc3RSSmZyb21ob25leSI6MCwibGFzdFJKZnJvbW1vbmV5IjowLCJ2ZXJzaW9uIjowLjMsInNldHRpbmdzIjp7ImRhcmttb2RlIjp0cnVlLCJiaWdCdXR0b25zIjpmYWxzZSwiZGlzcGxheUV2ZXJ5dGhpbmciOnRydWUsImljb25Nb3ZlIjpmYWxzZSwic2FjcmlmaWNlQ29uZmlybWF0aW9uIjp0cnVlLCJleGNoYW5nZUNvbmZpcm1hdGlvbiI6dHJ1ZSwidG9nZ2xlSG9uZXlPZmZsaW5lVGltZSI6ZmFsc2UsInRvZ2dsZVNhY3JpZmljZU9mZmxpbmVUaW1lIjpmYWxzZSwidG9nZ2xlUkpPZmZsaW5lVGltZSI6dHJ1ZSwiYXV0b3NhdmVzIjp0cnVlfX0=
-        ////// 20 20 20 20 20 before RJ   eyJmbG93ZXJzIjoyNTAsInBvbGxlbiI6MCwibmVjdGFyIjowLCJob25leSI6MSwibW9uZXkiOjAsImhpZ2hlc3RmbG93ZXJzIjowLCJoaWdoZXN0cG9sbGVuIjowLCJoaWdoZXN0bmVjdGFyIjowLCJoaWdoZXN0aG9uZXkiOjEsImhpZ2hlc3Rtb25leSI6MCwidG90YWxmbG93ZXJzIjo2NDgxOTA0LjU1ODYyMTA5OCwidG90YWxwb2xsZW4iOjM2NjYxOS40MDI1NTA1NDA0NiwidG90YWxuZWN0YXIiOjkyNDg4OC40NjEyNTk5ODQ5LCJ0b3RhbGhvbmV5Ijo2Nzk3NTYuNDA1MzYyODA5NywidG90YWxtb25leSI6ODEwNzM2LjM4Mjc2NjM4MTgsImJlZXMiOjAsImZyZWVCZWVzIjo1NS40MTg1MjU2NTg4MzkzMiwiZm9yYWdlckJlZXMiOjAsImhvbmV5QmVlcyI6MCwiZmxvd2VyRmllbGRzIjoxLCJoaXZlcyI6MSwidG90YWxTYWNyaWZpY2VzIjowLCJwb2xsZW5Hb2RUcmlidXRlcyI6MjAsIm5lY3RhckdvZFRyaWJ1dGVzIjoyMCwiaG9uZXlHb2RUcmlidXRlcyI6MjAsImZsb3dlckdvZFRyaWJ1dGVzIjoyMCwiY2FwaXRhbGlzdEdvZFRyaWJ1dGVzIjoyMCwiYXV0b0FzaWduQmVlc1RvIjpbImhvbmV5IiwiZm9yYWdlciJdLCJwZ2UiOnRydWUsIm5nZSI6dHJ1ZSwiaGdlIjp0cnVlLCJmZ2UiOnRydWUsImNnZSI6dHJ1ZSwic2VsbGluZ0hvbmV5IjpmYWxzZSwidW5sb2NrcyI6eyJiZWVzIjp0cnVlLCJmb3JhZ2VyQmVlcyI6dHJ1ZSwiaGl2ZSI6dHJ1ZSwiaG9uZXlCZWVzIjp0cnVlLCJzYWNyaWZpY2luZyI6dHJ1ZSwidHJpYnV0ZXMiOnRydWUsImplbGx5Ijp0cnVlLCJqZWxseTIiOmZhbHNlfSwibGFzdFVwZGF0ZSI6MTY2NzIxNjIxMjg0MCwib2ZmbGluZVRpbWUiOjE0OTk3NS44OTQwMDAwNDQyLCJSSiI6MCwiaGlnaGVzdFJKIjowLCJ0b3RhbFJKIjowLCJSSmJlZXMiOjAsIlJKZmxvd2VyRmllbGRzIjowLCJSSmhpdmVzIjowLCJSSlRyaWJ1dGVzIjowLCJ1bnVzZWRSSlRyaWJ1dGVzIjowLCJwb2xsZW5Hb2RSSlRyaWJ1dGVzIjowLCJuZWN0YXJHb2RSSlRyaWJ1dGVzIjowLCJob25leUdvZFJKVHJpYnV0ZXMiOjAsImZsb3dlckdvZFJKVHJpYnV0ZXMiOjAsImNhcGl0YWxpc3RHb2RSSlRyaWJ1dGVzIjowLCJ0YWIiOiJzZXR0aW5ncyIsImxhc3RSSmZyb21mbG93ZXJzIjowLCJsYXN0Ukpmcm9tcG9sbGVuIjowLCJsYXN0Ukpmcm9tbmVjdGFyIjowLCJsYXN0Ukpmcm9taG9uZXkiOjAsImxhc3RSSmZyb21tb25leSI6MCwidmVyc2lvbiI6MC4zLCJzZXR0aW5ncyI6eyJkYXJrbW9kZSI6dHJ1ZSwiYmlnQnV0dG9ucyI6ZmFsc2UsImRpc3BsYXlFdmVyeXRoaW5nIjpmYWxzZSwiaWNvbk1vdmUiOmZhbHNlLCJzYWNyaWZpY2VDb25maXJtYXRpb24iOmZhbHNlLCJleGNoYW5nZUNvbmZpcm1hdGlvbiI6ZmFsc2UsInRvZ2dsZUhvbmV5T2ZmbGluZVRpbWUiOnRydWUsInRvZ2dsZVNhY3JpZmljZU9mZmxpbmVUaW1lIjp0cnVlLCJ0b2dnbGVSSk9mZmxpbmVUaW1lIjp0cnVlLCJhdXRvc2F2ZXMiOnRydWV9fQ==
         n_sacrifices.tmp.pollenGodTributesToGet = Math.max(0, Math.min(frompollen, fpb) - p.pollenGodTributes);
         n_sacrifices.tmp.nectarGodTributesToGet = Math.max(0, Math.min(fromnectar, fnb) - p.nectarGodTributes);
         n_sacrifices.tmp.honeyGodTributesToGet = Math.max(0, Math.min(fromhoney, fhb) - p.honeyGodTributes);
@@ -1024,32 +1035,16 @@ var n_sacrifices;
         let nextht = Math.min(n_gods.tmp.honeyGodMaxTributes, p.honeyGodTributes + n_sacrifices.tmp.honeyGodTributesToGet + 1);
         let nextft = Math.min(n_gods.tmp.flowerGodMaxTributes, p.flowerGodTributes + n_sacrifices.tmp.flowerGodTributesToGet + 1);
         let nextmt = Math.min(n_gods.tmp.capitalistGodMaxTributes, p.capitalistGodTributes + n_sacrifices.tmp.capitalistGodTributesToGet + 1);
-        n_sacrifices.tmp.pollenGodTributesToGet =
-            Math.min(n_gods.tmp.pollenGodMaxTributes, p.pollenGodTributes + n_sacrifices.tmp.pollenGodTributesToGet) - p.pollenGodTributes;
-        n_sacrifices.tmp.nectarGodTributesToGet =
-            Math.min(n_gods.tmp.nectarGodMaxTributes, p.nectarGodTributes + n_sacrifices.tmp.nectarGodTributesToGet) - p.nectarGodTributes;
-        n_sacrifices.tmp.honeyGodTributesToGet =
-            Math.min(n_gods.tmp.honeyGodMaxTributes, p.honeyGodTributes + n_sacrifices.tmp.honeyGodTributesToGet) - p.honeyGodTributes;
-        n_sacrifices.tmp.flowerGodTributesToGet =
-            Math.min(n_gods.tmp.flowerGodMaxTributes, p.flowerGodTributes + n_sacrifices.tmp.flowerGodTributesToGet) - p.flowerGodTributes;
-        n_sacrifices.tmp.capitalistGodTributesToGet =
-            Math.min(n_gods.tmp.capitalistGodMaxTributes, p.capitalistGodTributes + n_sacrifices.tmp.capitalistGodTributesToGet) - p.capitalistGodTributes;
-        // console.log(
-        //   " from resources:\n",
-        //   `${Math.min(frompollen)} -> ${getNextsmallGodTribute(frompollen)} [${pt} -> ${getNextsmallGodTribute(pt)}]\n`,
-        //   `${Math.min(fromnectar)} -> ${getNextsmallGodTribute(fromnectar)} [${nt} -> ${getNextsmallGodTribute(nt)}]\n`,
-        //   `${Math.min(fromhoney)} -> ${getNextsmallGodTribute(fromhoney)} [${ht} -> ${getNextsmallGodTribute(ht)}]\n`,
-        //   `${Math.min(fromflowers)} -> ${getNextsmallGodTribute2(fromflowers)} [${ft} -> ${getNextsmallGodTribute2(ft)}]\n`,
-        //   `${Math.min(frommoney)} -> ${getNextsmallGodTribute(frommoney)} [${mt} -> ${getNextsmallGodTribute(mt)}]\n\n`,
-        //   "from bees\n",
-        //   fpb + " -> " + stepwise2(3, fpb) + " [" + pt + " -> " + stepwise2(3, pt) + "]" + "\n",
-        //   fnb + " -> " + stepwise2(3, fnb) + " [" + nt + " -> " + stepwise2(3, nt) + "]" + "\n",
-        //   fhb + " -> " + stepwise2(3, fhb) + " [" + ht + " -> " + stepwise2(3, ht) + "]" + "\n",
-        //   ffb + " -> " + stepwise2(3, ffb) + " [" + ft + " -> " + stepwise2(3, ft) + "]" + "\n",
-        //   fmb + " -> " + stepwise2(3, fmb) + " [" + mt + " -> " + stepwise2(3, mt) + "]"
-        // );
-        // actual tributes to get
-        // console.log(fromnectar, fromnectarBees, p.nectarGodTributes);
+        /*prettier-ignore*/ n_sacrifices.tmp.pollenGodTributesToGet =
+            Math.max(0, Math.min(n_gods.tmp.pollenGodMaxTributes, p.pollenGodTributes + n_sacrifices.tmp.pollenGodTributesToGet) - p.pollenGodTributes);
+        /*prettier-ignore*/ n_sacrifices.tmp.nectarGodTributesToGet =
+            Math.max(0, Math.min(n_gods.tmp.nectarGodMaxTributes, p.nectarGodTributes + n_sacrifices.tmp.nectarGodTributesToGet) - p.nectarGodTributes);
+        /*prettier-ignore*/ n_sacrifices.tmp.honeyGodTributesToGet =
+            Math.max(0, Math.min(n_gods.tmp.honeyGodMaxTributes, p.honeyGodTributes + n_sacrifices.tmp.honeyGodTributesToGet) - p.honeyGodTributes);
+        /*prettier-ignore*/ n_sacrifices.tmp.flowerGodTributesToGet =
+            Math.max(0, Math.min(n_gods.tmp.flowerGodMaxTributes, p.flowerGodTributes + n_sacrifices.tmp.flowerGodTributesToGet) - p.flowerGodTributes);
+        /*prettier-ignore*/ n_sacrifices.tmp.capitalistGodTributesToGet =
+            Math.max(0, Math.min(n_gods.tmp.capitalistGodMaxTributes, p.capitalistGodTributes + n_sacrifices.tmp.capitalistGodTributesToGet) - p.capitalistGodTributes);
         // next from resource / bees
         n_sacrifices.tmp.pollenForNext = getNextsmallGodTribute(Math.max(nextpt));
         n_sacrifices.tmp.nectarForNext = getNextsmallGodTribute(Math.max(nextnt));
@@ -1124,7 +1119,7 @@ var n_tributes;
         () => "unlocked",
         () => "unlocked",
         () => "unlocked",
-        () => "unlocked", // 14 challenges
+        () => "current end of content", // 14 challenges
     ];
     n_tributes.tmp = {
         sacrificeTributes: 0,
@@ -1134,6 +1129,7 @@ var n_tributes;
     };
     n_tributes.text = () => {
         var _a, _b;
+        // todo make it show that rj or combining gods is unlocked without it meeting required tributes
         // total tributes
         d.totalTributes.innerHTML = `${n_tributes.tmp.sacrificeTributes}`;
         if (n_tributes.tmp.me[5] > 1)
@@ -1157,7 +1153,7 @@ var n_tributes;
             if (i != 0 && ((_a = tributes[i]) === null || _a === void 0 ? void 0 : _a.unlockAt) > n_tributes.tmp.totalTributes && ((_b = tributes[i - 1]) === null || _b === void 0 ? void 0 : _b.unlockAt) <= n_tributes.tmp.totalTributes)
                 d.m[i - 1].innerHTML = "└";
         }
-        if (tributes[tributes.length - 1].displayAt <= n_tributes.tmp.totalTributes)
+        if (tributes[tributes.length - 1].unlockAt <= n_tributes.tmp.totalTributes)
             d.m[tributes.length - 1].innerHTML = "└";
     };
     n_tributes.calc = () => {
@@ -1375,12 +1371,14 @@ var n_stats;
         RJFromtotalhoney: 0,
         RJFromtotalmoney: 0,
     };
-    n_stats.text = () => {
+    n_stats.calc = () => {
         n_stats.tmp.RJFromtotalflowers = Math.log10(Math.max(1, p.totalflowers));
         n_stats.tmp.RJFromtotalpollen = Math.log10(Math.max(1, p.totalpollen));
         n_stats.tmp.RJFromtotalnectar = Math.log10(Math.max(1, p.totalnectar));
         n_stats.tmp.RJFromtotalhoney = Math.log10(Math.max(1, p.totalhoney));
         n_stats.tmp.RJFromtotalmoney = Math.log10(Math.max(1, p.totalmoney));
+    };
+    n_stats.text = () => {
         d.RJfromflowers.innerHTML = format(n_stats.tmp.RJFromtotalflowers, 1) + " RJ";
         d.RJfrompollen.innerHTML = format(n_stats.tmp.RJFromtotalpollen, 1) + " RJ";
         d.RJfromnectar.innerHTML = format(n_stats.tmp.RJFromtotalnectar, 1) + " RJ";
@@ -1428,8 +1426,78 @@ var n_gods;
         honeyGodMaxTributes: 20,
         flowerGodMaxTributes: 20,
         capitalistGodMaxTributes: 20,
+        godsToCombine: [],
+        combinedGods: {
+            flower: [],
+            pollen: [],
+            nectar: [],
+            honey: [],
+            money: [],
+        },
+        connections: [],
+        cursor: 0,
+        gods: ["pollen", "nectar", "flower", "honey", "money"],
+        gods2: { pollen: "PG", nectar: "NG", flower: "FG", honey: "HG", money: "CG" },
     };
-    n_gods.calc = () => { };
+    n_gods.calc = (diff) => {
+        n_gods.tmp.cursor += diff;
+        // set god caps
+        n_gods.tmp.connections.forEach((a) => {
+            a.map((b, _, ar) => { var _a; return (n_gods.tmp[`${b}GodMaxTributes`] = 20 + ((_a = ar.length * 2) !== null && _a !== void 0 ? _a : 0)); });
+        });
+    };
+    n_gods.text = () => {
+        // TODO: add on reset or on sacrifice etc
+        let totalCombinations = n_tributes.tmp.me[10] + n_tributes.tmp.me[11] + n_tributes.tmp.me[12] + n_tributes.tmp.me[13];
+        let usedCombinations = n_gods.tmp.connections.length
+            ? n_gods.tmp.connections.map((a) => a.length).reduce((a, b) => a + b) - n_gods.tmp.connections.length
+            : 0;
+        if (totalCombinations - usedCombinations <= 0)
+            d.combinationsLeft.style.display = "none";
+        else
+            d.combinationsLeft.style.display = "";
+        d.combinationsLeft.innerHTML = "" + (totalCombinations - usedCombinations) + " left";
+        if (n_gods.tmp.godsToCombine.length == 2)
+            d.combineConfirm.style.display = "";
+        else
+            d.combineConfirm.style.display = "none";
+        n_gods.tmp.gods.forEach((god) => {
+            if (n_gods.tmp.godsToCombine[0] == god)
+                d[`combine${god}Button`].disabled = true;
+            else
+                d[`combine${god}Button`].disabled = false;
+        });
+        n_gods.tmp.gods.forEach((god) => {
+            if (n_gods.tmp.godsToCombine[1] == god)
+                d[`combine${god}Button`].disabled = true;
+        });
+        if (n_gods.tmp.godsToCombine[0])
+            n_gods.tmp.combinedGods[n_gods.tmp.godsToCombine[0]].forEach((god) => {
+                d[`combine${god}Button`].disabled = true;
+            });
+        d.combinedGods.innerHTML = n_gods.tmp.connections
+            .map((a) => a.map((b) => n_gods.tmp.gods2[b]).join("x") + ` (+${a.length * 2} tribute cap)`)
+            .join(" ");
+        if (totalCombinations - usedCombinations <= 0 || p.combinedGods.length >= n_gods.tmp.gods.length - 1) {
+            d.combinepollenButton.disabled = true;
+            d.combinenectarButton.disabled = true;
+            d.combineflowerButton.disabled = true;
+            d.combinehoneyButton.disabled = true;
+            d.combinemoneyButton.disabled = true;
+        }
+        if (n_gods.tmp.godsToCombine[0]) {
+            d.combineA.innerHTML = (n_gods.tmp.godsToCombine[0] == "money" ? "Capitalist" : toTitleCase(n_gods.tmp.godsToCombine[0])) + " God";
+            d.combineWith.style.visibility = "visible";
+        }
+        else {
+            d.combineWith.style.visibility = "hidden";
+        }
+        if (n_gods.tmp.godsToCombine[1])
+            d.combineB.innerHTML = (n_gods.tmp.godsToCombine[1] == "money" ? "Capitalist" : toTitleCase(n_gods.tmp.godsToCombine[1])) + " God?";
+        else {
+            d.combineB.innerHTML = n_gods.tmp.cursor % 1.8 > 0.9 ? "_" : "";
+        }
+    };
 })(n_gods || (n_gods = {}));
 const GameLoop = () => {
     var _a;
@@ -1442,7 +1510,6 @@ const GameLoop = () => {
     // TODO: add pentagram like - connection for connected god
     // pentagram and u can chose which gods u want to connect
     // can be in form of buttons for now // idk about all this
-    d.godsTabButton.style.display = "none";
     beeCost.level = p.bees;
     beeCost.offset = getBeePriceMult();
     hiveCost.level = p.hives;
@@ -1450,12 +1517,16 @@ const GameLoop = () => {
     flowerFieldCost.level = p.flowerFields;
     flowerFieldCost.offset = getFlowerFieldPriceMult();
     diff = (_a = updateOfflineTicks(diff)) !== null && _a !== void 0 ? _a : 0;
+    n_gods.calc(diff);
     n_jelly.calc();
     n_tributes.calc();
     n_sacrifices.calc();
     n_structures.calc();
     n_resources.calc(diff);
+    n_stats.calc();
     n_structures.autobuy();
+    if (p.tab == "gods")
+        n_gods.text();
     if (p.tab == "jelly")
         n_jelly.text();
     if (p.tab == "main") {

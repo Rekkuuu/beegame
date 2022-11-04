@@ -125,6 +125,15 @@ let fix = (save: t_player) => {
 
     save["version"] = v;
   }
+  v = [0, 3, 0, 0];
+  if (save["version"] < v) {
+    if (save["combinedGods"] == undefined) save["combinedGods"] = [];
+    if (save["unlocks"]["c1"] == undefined) save["unlocks"]["c1"] = false;
+    if (save["unlocks"]["c2"] == undefined) save["unlocks"]["c2"] = false;
+    if (save["unlocks"]["c3"] == undefined) save["unlocks"]["c3"] = false;
+    if (save["unlocks"]["c4"] == undefined) save["unlocks"]["c4"] = false;
+    save["version"] = v;
+  }
   return save;
 };
 

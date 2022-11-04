@@ -110,6 +110,22 @@ const d = {
     14: $("m14"),
   },
 
+  m0c: $("m0c"),
+  m1c: $("m1c"),
+  m2c: $("m2c"),
+  m3c: $("m3c"),
+  m4c: $("m4c"),
+  m5c: $("m5c"),
+  m6c: $("m6c"),
+  m7c: $("m7c"),
+  m8c: $("m8c"),
+  m9c: $("m9c"),
+  m10c: $("m10c"),
+  m11c: $("m11c"),
+  m12c: $("m12c"),
+  m13c: $("m13c"),
+  m14c: $("m14c"),
+
   m0e: $("m0e"),
   m1e: $("m1e"),
   m2e: $("m2e"),
@@ -354,12 +370,6 @@ const d = {
   nextFlowerGodTributeBees: $("nextFlowerGodTributeBees"),
   nextCapitalistGodTributeBees: $("nextCapitalistGodTributeBees"),
 
-  combinePGButton: $("combinePGButton") as HTMLButtonElement,
-  combineNGButton: $("combineNGButton") as HTMLButtonElement,
-  combineFGButton: $("combineFGButton") as HTMLButtonElement,
-  combineHGButton: $("combineHGButton") as HTMLButtonElement,
-  combineCGButton: $("combineCGButton") as HTMLButtonElement,
-
   confirmCombine: $("confirmCombine") as HTMLButtonElement,
 
   hardreset: $("hardreset") as HTMLButtonElement,
@@ -425,5 +435,22 @@ const d = {
   autohiveButtonWrapper: $("autohiveButtonWrapper"),
 
   version: $("version"),
+
+  combinedGods: $("combinedGods"),
+
+  combinepollenButton: $("combinepollenButton") as HTMLButtonElement,
+  combinenectarButton: $("combinenectarButton") as HTMLButtonElement,
+  combineflowerButton: $("combineflowerButton") as HTMLButtonElement,
+  combinehoneyButton: $("combinehoneyButton") as HTMLButtonElement,
+  combinemoneyButton: $("combinemoneyButton") as HTMLButtonElement,
+
+  combineWith: $("combineWith"),
+  combineA: $("combineA"),
+  combineB: $("combineB"),
+  combineConfirm: $("combineConfirm") as HTMLButtonElement,
+  combineCancel: $("combineCancel") as HTMLButtonElement,
+
+  resetCombinedGods: $("resetCombinedGods") as HTMLButtonElement,
+  combinationsLeft: $("combinationsLeft"),
 };
 //todo shorten these names?

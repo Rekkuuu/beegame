@@ -73,6 +73,18 @@ body.dark-mode {
   }
 }
 
+#exchangeForRJ {
+  background-color: #ffcc11;
+  border-color: #ccbb22;
+  text-shadow: #ffffaabb 0 0 4px;
+  background: linear-gradient(211deg, #ff6411, #ffcc11), linear-gradient(161deg, #ee5025f5, #ffcc11);
+  box-shadow: #ffa8 0 0 4px;
+  &:hover {
+    border-color: #9c7a00;
+    background-color: #efbf0f;
+    background: linear-gradient(211deg, #ee5400, #ddc000), linear-gradient(161deg, #d54525f5, #ddcc11);
+  }
+}
 body.dark-mode {
   #exchangeForRJ {
     background-color: #ffcc11;

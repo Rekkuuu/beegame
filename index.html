@@ -339,9 +339,9 @@
               <div class="lighttext">each autobuyer will try to buy a structure every tick</div>
             </div>
 
-            <table class="biggap">
+            <table>
               <tr>
-                <td colspan="2" style="padding-bottom: 10px">pernament structures</td>
+                <td colspan="2" style="padding-bottom: 10px">permanent structures</td>
               </tr>
               <tr>
                 <td style="text-align: right; padding-right: 10px">flower fields</td>
@@ -366,8 +366,10 @@
                   <!-- <button class="btn" id="RJsellhives">sell one for <span id="RJfromsellhives"></span> RJ</button> -->
                 </td>
               </tr>
+            </table>
+            <table class="biggap">
               <tr>
-                <td colspan="2" class="lighttext">each structures count as 2 structures towards it's structure effects</td>
+                <td class="lighttext">each structures count as 2 structures towards it's structure effects</td>
               </tr>
             </table>
             <div class="smallgap">
@@ -434,7 +436,7 @@
       </div>
       <div id="godsTabContent">
         <div class="tabs-container">
-          <button id="combineTabButton">combine</button> <button id="challengesTabButton">challenges</button>
+          <button class="btn" id="combineTabButton">combine</button> <button class="btn" id="challengesTabButton">challenges</button>
         </div>
         <div id="combineTabContent">
           <div class="lighttext smallgap">+2 to tribute cap for each combined god</div>
@@ -442,17 +444,22 @@
           <div>
             <div class="smallgap">
               choose god to combine:
-              <button id="combinePGButton">PG</button>
-              <button id="combineNGButton">NG</button>
-              <button id="combineFGButton">FG</button>
-              <button id="combineHGButton">HG</button>
-              <button id="combineCGButton">CG</button>
+              <button class="btn" id="combinepollenButton">PG</button>
+              <button class="btn" id="combinenectarButton">NG</button>
+              <button class="btn" id="combineflowerButton">FG</button>
+              <button class="btn" id="combinehoneyButton">HG</button>
+              <button class="btn" id="combinemoneyButton">CG</button>
+              <span class="lighttext" id="combinationsLeft"></span>
             </div>
-            <div class="biggap">
-              combine PG with _?
-              <button id="confirmCombine">confirm</button>
+            <div class="mediumgap" id="combineWith">
+              <div class="smallgap">
+                combine <span id="combineA"></span> with <span id="combineB"></span>
+                <button class="btn" id="combineConfirm" style="margin-top: -1px; margin-bottom: -2px">confirm</button>
+              </div>
+              <button class="btn" id="combineCancel">cancel</button>
             </div>
-            <button id="resetCombinedGods">reset combined gods</button>
+            <div class="smallgap">resetting gods also performs RJ reset</div>
+            <button class="btn" id="resetCombinedGods">reset combined gods</button>
           </div>
         </div>
         <div id="challengesTabContent">TBA in v0.4</div>

@@ -60,6 +60,10 @@ type t_player = {
     tributes: boolean;
     jelly: boolean;
     jelly2: boolean;
+    c1: boolean;
+    c2: boolean;
+    c3: boolean;
+    c4: boolean;
   };
   lastUpdate: number;
   offlineTime: number;
@@ -80,7 +84,7 @@ type t_player = {
   flowerGodRJTributes: number;
   capitalistGodRJTributes: number;
 
-  combinedGods: t_gods[];
+  combinedGods: [t_gods, t_gods][];
 
   tab: t_tabs1;
   tab2: t_tabs2;
@@ -182,6 +186,10 @@ const newEmptyPlayer = (): t_player => {
       tributes: false,
       jelly: false,
       jelly2: false,
+      c1: false,
+      c2: false,
+      c3: false,
+      c4: false,
     },
     lastUpdate: Date.now(),
     offlineTime: 1, // so generous

@@ -137,6 +137,20 @@ let fix = (save) => {
             save["autobuy"]["structures"] = newEmptyPlayer().autobuy.structures;
         save["version"] = v;
     }
+    v = [0, 3, 0, 0];
+    if (save["version"] < v) {
+        if (save["combinedGods"] == undefined)
+            save["combinedGods"] = [];
+        if (save["unlocks"]["c1"] == undefined)
+            save["unlocks"]["c1"] = false;
+        if (save["unlocks"]["c2"] == undefined)
+            save["unlocks"]["c2"] = false;
+        if (save["unlocks"]["c3"] == undefined)
+            save["unlocks"]["c3"] = false;
+        if (save["unlocks"]["c4"] == undefined)
+            save["unlocks"]["c4"] = false;
+        save["version"] = v;
+    }
     return save;
 };
 // eyJmbG93ZXJzIjo1MTUyNi40MTA1MDEwMjY5MSwicG9sbGVuIjo5NTkyLjgxNDMxOTQ4NjgxNSwibmVjdGFyIjoxMjc2LjQ2MzQ1NjY0Nzg1NDQsImhvbmV5IjoyNjEyLjcwMzgyMDY3ODM2MTQsIm1vbmV5IjoxNzQxNC4wNzk4NzY5NjUzNSwiaGlnaGVzdGZsb3dlcnMiOjUxNTI2LjQxMDUwMTAyNjkxLCJoaWdoZXN0cG9sbGVuIjo5NTkyLjgxNDMxOTQ4NjgxNSwiaGlnaGVzdG5lY3RhciI6MTI3Ni40NjM0NTY2NDc4NTQ0LCJoaWdoZXN0aG9uZXkiOjE1NDQ2Ljg5OTM3MjEwNjUsImhpZ2hlc3Rtb25leSI6MTc0MTQuMDc5ODc2OTY1MzUsInRvdGFsZmxvd2VycyI6NjYzNTk5Ljk5NjU1Mzg3MTUsInRvdGFscG9sbGVuIjozODExNy45ODY1MTI0MjIyOCwidG90YWxuZWN0YXIiOjcwNTI0LjI4OTE3NzM4ODM3LCJ0b3RhbGhvbmV5Ijo0NzMzNi41MzI1OTQ1NDcxNCwidG90YWxtb25leSI6MjE5OTQuOTE3ODQxMjY1ODc3LCJiZWVzIjozNywiZnJlZUJlZXMiOjAsImZvcmFnZXJCZWVzIjozMS4wNDg3MjM1MjAyODA1MDQsImhvbmV5QmVlcyI6NDAuMjE2NjUzMjE2ODA0NSwiZmxvd2VyRmllbGRzIjozLCJoaXZlcyI6MjksInRvdGFsU2FjcmlmaWNlcyI6MCwicG9sbGVuR29kVHJpYnV0ZXMiOjExLCJuZWN0YXJHb2RUcmlidXRlcyI6MTUsImhvbmV5R29kVHJpYnV0ZXMiOjExLCJmbG93ZXJHb2RUcmlidXRlcyI6MTUsImNhcGl0YWxpc3RHb2RUcmlidXRlcyI6OSwiYXV0b0FzaWduQmVlc1RvIjpbImhvbmV5IiwiZm9yYWdlciJdLCJwZ2UiOnRydWUsIm5nZSI6dHJ1ZSwiaGdlIjp0cnVlLCJmZ2UiOnRydWUsImNnZSI6dHJ1ZSwic2VsbGluZ0hvbmV5Ijp0cnVlLCJhdXRvc2F2ZXMiOnRydWUsInVubG9ja3MiOnsiYmVlcyI6dHJ1ZSwiZm9yYWdlckJlZXMiOnRydWUsImhpdmUiOnRydWUsImhvbmV5QmVlcyI6dHJ1ZSwic2FjcmlmaWNpbmciOnRydWUsInRyaWJ1dGVzIjp0cnVlLCJqZWxseSI6ZmFsc2UsImplbGx5MiI6ZmFsc2V9LCJsYXN0VXBkYXRlIjoxNjY3MTQyNzMyNzg3LCJvZmZsaW5lVGltZSI6OTQ4NTUuMjQwMDAwMDMyODIsIlJKIjowLCJoaWdoZXN0UkoiOjAsInRvdGFsUkoiOjAsIlJKYmVlcyI6MCwiUkpmbG93ZXJGaWVsZHMiOjAsIlJKaGl2ZXMiOjAsIlJKVHJpYnV0ZXMiOjAsInVudXNlZFJKVHJpYnV0ZXMiOjAsInBvbGxlbkdvZFJKVHJpYnV0ZXMiOjAsIm5lY3RhckdvZFJKVHJpYnV0ZXMiOjAsImhvbmV5R29kUkpUcmlidXRlcyI6MCwiZmxvd2VyR29kUkpUcmlidXRlcyI6MCwiY2FwaXRhbGlzdEdvZFJKVHJpYnV0ZXMiOjAsInRhYiI6InNldHRpbmdzIiwiZGFya21vZGUiOnRydWUsImJpZ0J1dHRvbnMiOmZhbHNlLCJkaXNwbGF5RXZlcnl0aGluZyI6dHJ1ZSwiZXhjaGFuZ2VDb25maXJtYXRpb24iOnRydWUsImljb25Nb3ZlIjpmYWxzZSwibGFzdFJKZnJvbWZsb3dlcnMiOjAsImxhc3RSSmZyb21wb2xsZW4iOjAsImxhc3RSSmZyb21uZWN0YXIiOjAsImxhc3RSSmZyb21ob25leSI6MCwibGFzdFJKZnJvbW1vbmV5IjowfQ==

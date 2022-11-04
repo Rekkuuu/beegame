@@ -196,6 +196,7 @@ const sacrificeToGod = () => {
     if (p.capitalistGodTributes > 0)
         p.cge = true;
     p.totalSacrifices++;
+    return true;
 };
 const tributesFromSacrifice = (maxTributes, tributes, highestResource) => {
     let tributesToGet = Math.max(0, Math.min(maxTributes - tributes, Math.max(0, getSmallGodTribute(highestResource) - tributes)));
@@ -303,7 +304,7 @@ const exchangeProgress = () => {
     }
     let rjToGet = RJToGet();
     if (p.settings.exchangeConfirmation && !confirm(`are you sure you want to reset all your progress for ${format(rjToGet, 1)} royal jelly`))
-        return;
+        return false;
     p.RJ += rjToGet;
     p.totalRJ += rjToGet;
     p.highestRJ = Math.max(p.highestRJ, p.RJ);
@@ -339,6 +340,7 @@ const exchangeProgress = () => {
     n_jelly.tmp.tmpRJhoneyGodTributes = 0;
     n_jelly.tmp.tmpRJflowerGodTributes = 0;
     n_jelly.tmp.tmpRJcapitalistGodTributes = 0;
+    return true;
 };
 d.exchangeForRJ.addEventListener("click", exchangeProgress);
 const e_buyMaxFlowerFields = () => {
@@ -542,12 +544,14 @@ const e_import = () => {
     try {
         if (save.length > 1500) {
             p = fix(JSON.parse(atob(save)));
+            afterLoad();
             e_switchTab1("main");
             return;
         }
     }
     catch (e) {
         window.alert("loading save failed");
+        console.log(e);
         return;
     }
     return window.alert("loading save failed");
@@ -614,13 +618,14 @@ const clamp = (min, num, max) => {
 };
 const getV = (el) => {
     try {
+        console.log(el.value);
         //@ts-ignore
         let a = el.value / 1;
         //@ts-ignore
-        if (Number.isNaN(a))
+        if (Number.isNaN(a) || el.value == "")
             el.value = "" + el.placeholder;
         //@ts-ignore
-        let v = clamp(0, el.value / 1, 100);
+        let v = clamp(0, a, 100);
         el.value = "" + v;
     }
     catch (e) {
@@ -635,7 +640,7 @@ const strAutobuyerChange = (e, type) => {
     setInputWidth(el);
 };
 const setInputWidth = (el) => {
-    el.style.width = "" + Math.max(4, 1 + el.value.length) + "ch";
+    el.style.width = "" + clamp(4, 1 + el.value.length, 20) + "ch";
 };
 d.autoflowerBuyPercent.addEventListener("change", (e) => strAutobuyerChange(e, "flower"));
 d.autobeeBuyPercent.addEventListener("change", (e) => strAutobuyerChange(e, "bee"));
@@ -685,4 +690,86 @@ d.autohiveButton.addEventListener("click", () => {
         return;
     p.autobuy.structures.hive = true;
     p.RJ -= 5;
+});
+const addGodToCombine = (god) => {
+    if (n_gods.tmp.godsToCombine.length == 2)
+        n_gods.tmp.godsToCombine[1] = god;
+    else
+        n_gods.tmp.godsToCombine.push(god);
+    n_gods.tmp.cursor = 0;
+};
+d.combinepollenButton.addEventListener("click", () => {
+    addGodToCombine("pollen");
+});
+d.combinenectarButton.addEventListener("click", () => {
+    addGodToCombine("nectar");
+});
+d.combineflowerButton.addEventListener("click", () => {
+    addGodToCombine("flower");
+});
+d.combinehoneyButton.addEventListener("click", () => {
+    addGodToCombine("honey");
+});
+d.combinemoneyButton.addEventListener("click", () => {
+    addGodToCombine("money");
+});
+d.combineConfirm.addEventListener("click", () => {
+    if (n_gods.tmp.godsToCombine.length == 2) {
+        p.combinedGods.push(n_gods.tmp.godsToCombine);
+        n_gods.tmp.godsToCombine = [];
+        afterCombineGods();
+    }
+});
+d.combineCancel.addEventListener("click", () => {
+    n_gods.tmp.godsToCombine = [];
+});
+const afterCombineGods = () => {
+    let a = {
+        flower: [],
+        pollen: [],
+        nectar: [],
+        honey: [],
+        money: [],
+    };
+    p.combinedGods.forEach(([g1, g2]) => {
+        a[g1].push(g2);
+        a[g2].push(g1);
+        a[g1].forEach((g) => {
+            a[g] = [...new Set([...a[g1], ...a[g2]])];
+        });
+        a[g2].forEach((g) => {
+            a[g] = [...new Set([...a[g1], ...a[g2]])];
+        });
+    });
+    Object.keys(a).forEach((k) => {
+        a[k] = [...new Set(a[k])];
+    });
+    n_gods.tmp.combinedGods = a;
+    let r1 = [];
+    let checked = [];
+    n_gods.tmp.gods.forEach((god) => {
+        if (checked.some((a) => a == god) || a[god].length) {
+            r1.push([god, ...a[god]]);
+            checked.push(god, ...a[god]);
+        }
+    });
+    r1 = r1.map((a) => {
+        return [...new Set(a)];
+    });
+    n_gods.tmp.connections = [
+        ...new Set(r1.map((a) => {
+            return JSON.stringify(a.sort());
+        })),
+    ].map((a) => JSON.parse(a));
+};
+d.resetCombinedGods.addEventListener("click", () => {
+    if (exchangeProgress()) {
+        p.combinedGods = [];
+        afterCombineGods();
+        n_gods.tmp.pollenGodMaxTributes = 20;
+        n_gods.tmp.nectarGodMaxTributes = 20;
+        n_gods.tmp.honeyGodMaxTributes = 20;
+        n_gods.tmp.flowerGodMaxTributes = 20;
+        n_gods.tmp.capitalistGodMaxTributes = 20;
+    }
 });
