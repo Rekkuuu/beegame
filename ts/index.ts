@@ -254,7 +254,7 @@ let tributes: TupleOf<t_tribute, 15> = [
   {unlockAt: 110, showAt: 110, displayAt: 100, description: "combine a pair of gods"},
   {unlockAt: 120, showAt: 120, displayAt: 110, description: "combine another pair of gods"},
   {unlockAt: 135, showAt: 130, displayAt: 120, description: "combine another pair of gods"},
-  {unlockAt: 160, showAt: 140, displayAt: 130, description: "combine another pair of gods"},
+  {unlockAt: 155, showAt: 140, displayAt: 130, description: "combine another pair of gods"},
   {unlockAt: 180, showAt: 160, displayAt: 140, description: "challenges"},
 ];
 const getConnectedTo = (god: t_gods): t_gods[] => {
