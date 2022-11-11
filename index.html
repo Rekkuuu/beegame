@@ -11,35 +11,45 @@
     <script defer src="js/saving.js"></script>
     <script defer src="js/player.js"></script>
     <script defer src="js/index.js"></script>
-    <script defer src="js/clickevents.js"></script>
+    <script defer src="js/challenges.js"></script>
+    <script defer src="js/tributes.js"></script>
+    <script defer src="js/events.js"></script>
     <script defer src="js/init.js"></script>
     <link rel="stylesheet" href="style.css" />
     <title>bee game</title>
   </head>
-  <body class="dark-mode big-buttons">
-    <div id="main" style="padding: 8px; padding-top: 16px; width: calc(100vw - 17px)">
-      <div class="tabs-container">
+  <body class="bgc dark-mode big-buttons">
+    <div class="bgc" id="header">
+      <div id="challenges-info" class="smallgap">
+        <span>Currently inside challenge <span id="challengeCurrent">I + II</span></span
+        ><br />
+        <span id="challengeCompletion">tributes 35/100</span>
+
+        <button class="btn" id="challengeExit" style="margin-top: 2px">exit challenge</button>
+      </div>
+      <div class="smallgap top">
+        <span id="flowerswrapper"
+          >flowers: <span id="flowers"></span> <span id="flowersPS"></span>
+          <button class="btn" id="slowBuyFlowerField" title="certainly not a quicker way to buy a flower field">+</button><br
+        /></span>
+        <span id="pollenwrapper">pollen: <span id="pollen"></span> <span id="pollenPS"></span><br /></span>
+        <span id="nectarwrapper">nectar: <span id="nectar"></span> <span id="nectarPS"></span><br /></span>
+        <span id="honeywrapper">honey: <span id="honey"></span> <span id="honeyPS"></span><br /></span>
+        <span id="moneywrapper" title="you sell 1% of your current honey per second"
+          >money: <span id="money"></span> <span id="moneyPS"></span><input id="honeyCheckBox" type="checkbox" title="sell honey" />
+        </span>
+      </div>
+
+      <div class="tabs-container" id="tabs-container1">
         <button class="btn" id="mainTabButton">main</button>
         <button class="btn" id="jellyTabButton">royal jelly</button>
         <button class="btn" id="godsTabButton">gods</button>
         <button class="btn" id="statshelpTabButton">stats / help</button>
         <button class="btn" id="settingsTabButton">settings</button>
       </div>
-
+    </div>
+    <div id="main">
       <div id="mainTabContent">
-        <div class="smallgap">
-          <span id="flowerswrapper"
-            >flowers: <span id="flowers"></span> <span id="flowersPS"></span>
-            <button class="btn" id="slowBuyFlowerField" title="certainly not a quicker way to buy a flower field">+</button><br
-          /></span>
-          <span id="pollenwrapper">pollen: <span id="pollen"></span> <span id="pollenPS"></span><br /></span>
-          <span id="nectarwrapper">nectar: <span id="nectar"></span> <span id="nectarPS"></span><br /></span>
-          <span id="honeywrapper">honey: <span id="honey"></span> <span id="honeyPS"></span><br /></span>
-          <span id="moneywrapper" title="you sell 1% of your current honey per second"
-            >money: <span id="money"></span> <span id="moneyPS"></span
-            ><input id="honeyCheckBox" type="checkbox" title="sell honey" /> </span
-          ><br />
-        </div>
         <div id="beeswrapper" class="mediumgap">
           free bees: <span id="freeBees"></span> <button class="btn" id="quickBuyBee" title="quick buy bee">+</button
           ><span id="quickbuyhivewrapper">/<button class="btn" id="quickBuyHive" title="quick buy hive">+</button></span><br />
@@ -84,14 +94,16 @@
             each flower field multiplies flower and pollen production by 1.01x
           </div></span
         >
-        <button class="btn" id="buyBee">buy a bee for <span id="beePrice"></span> honey [<span id="bees"></span>]</button>
-        <button class="btn" id="buyMaxBee">
-          buy <span id="buyMaxBeeAmount"></span> bee<span id="buyMaxBeeS"></span> for <span id="buyMaxBeePrice"></span> honey
-        </button>
-        <input id="quickautobeeBuy" type="checkbox" /><br />
-        <div id="beesEffect" class="smallgap" title="2nd effect starts at 1 bee (gives worker space after buying first bee)">
-          each bee multiplies nectar production by 1.01x & every 5th also adds a worker space
-        </div>
+        <span id="beewrapper">
+          <button class="btn" id="buyBee">buy a bee for <span id="beePrice"></span> honey [<span id="bees"></span>]</button>
+          <button class="btn" id="buyMaxBee">
+            buy <span id="buyMaxBeeAmount"></span> bee<span id="buyMaxBeeS"></span> for <span id="buyMaxBeePrice"></span> honey
+          </button>
+          <input id="quickautobeeBuy" type="checkbox" /><br />
+          <div id="beesEffect" class="smallgap" title="2nd effect starts at 1 bee (gives worker space after buying first bee)">
+            each bee multiplies nectar production by 1.01x & every 5th also adds a worker space
+          </div>
+        </span>
         <span id="hivewrapper">
           <button class="btn" id="buyHive">expand hive for <span id="hivePrice"></span> pollen [<span id="hives"></span>]</button>
           <button class="btn" id="buyMaxHive">
@@ -167,102 +179,8 @@
           >
         </div>
         <div id="tributeswrapper">
-          <div>
-            tribute milestones [<span id="totalTributes"></span
-            ><span id="totalNamelessTributes"><!-- todo: make it nameless tributes + the ones from tribute eff  --></span>]:
-          </div>
-          <div id="m0t" title="~1.00662x per tribute">
-            <span id="m0c" class="w10">2</span><span id="m0"></span>
-            <span id="m0d">1.02x flower production for every 2 tributes</span>  <span id="m0e" class="lighttext"></span>
-          </div>
-          <div id="m1t" title="~1.00995x per tribute">
-            <span id="m1c" class="w10">5</span><span id="m1"></span>
-            <span id="m1d">bee price divided by 1.02x for every 2 tributes</span>  <span id="m1e" class="lighttext"></span>
-          </div>
-          <div id="m2t" title="~1.00662x per tribute, includes bees and other resources">
-            <span id="m2c" class="w10">10</span><span id="m2"></span>
-            <span id="m2d">sacrifice requirement divided by 1.02 for every 2 tributes</span>  <span id="m2e" class="lighttext"></span>
-          </div>
-          <div id="m3t" title="free bees also get multiplied by honey god tribute">
-            <span id="m3c" class="w10">15</span><span id="m3"></span> <span id="m3d">1 bee for every 5 tributes</span>  <span
-              id="m3e"
-              class="lighttext"
-            ></span>
-          </div>
-          <div id="m4t" title="sweet!">
-            <span id="m4c" class="w10">20</span><span id="m4"></span> <span id="m4d">1.02x honey production per tribute</span>  <span
-              id="m4e"
-              class="lighttext"
-            ></span>
-          </div>
-          <!-- <div>
-            <span class="w10">20</span><span></span> <span>1.02x honey production per tribute</span>  <span></span
-            >
-          </div> -->
-          <div id="m5t" title="multiplies itself&#10;bonus tributes don't count towards bees required to sacrifice & tribute milesotnes">
-            <span id="m5c" class="w10">30</span><span id="m5"></span>
-            <span id="m5d">1.02x tribute efficiency for every 10 tributes</span>  <span id="m5e" class="lighttext"></span>
-          </div>
-          <div id="m6t" title="">
-            <span id="m6c" class="w10">45</span><span id="m6"></span>
-            <span id="m6d">1.02x nectar production for every 2 tributes</span>  <span id="m6e" class="lighttext"></span>
-          </div>
-          <div id="m7t" title="~1.00662x per tribute">
-            <span id="m7c" class="w10">60</span><span id="m7"></span>
-            <span id="m7d">1.02x honey price multiplier for every 3 tributes</span>  <span id="m7e" class="lighttext"></span>
-          </div>
-          <div id="m8t" title="~1.00396x per tribute">
-            <span id="m8c" class="w10">75</span><span id="m8"></span>
-            <span id="m8d">1.02x time speed multiplier for every 5 tributes</span>  <span id="m8e" class="lighttext"></span>
-          </div>
-          <div id="m9t" title="get royal jelly based on total produced resources">
-            <span id="m9c" class="w10">100</span><span id="m9"></span> <span id="m9d">unlocks royal jelly</span>  <span
-              id="m9e"
-              class="lighttext"
-            ></span>
-          </div>
-          <div
-            id="m10t"
-            title="get all combined god's tributes when sacrificing to either one&#10;their max increase by 2 for each combined god"
-          >
-            <span id="m10c" class="w10">110</span><span id="m10"></span> <span id="m10d">combine a pair of gods</span>  <span
-              id="m10e"
-              class="lighttext"
-            ></span>
-          </div>
-          <div
-            id="m11t"
-            title="get all combined god's tributes when sacrificing to either one&#10;their max increase by 2 for each combined god"
-          >
-            <span id="m11c" class="w10">130</span><span id="m11"></span> <span id="m11d">combine another pair of gods</span>  <span
-              id="m11e"
-              class="lighttext"
-            ></span>
-          </div>
-          <div
-            id="m12t"
-            title="get all combined god's tributes when sacrificing to either one&#10;their max increase by 2 for each combined god"
-          >
-            <span id="m12c" class="w10">150</span><span id="m12"></span> <span id="m12d">combine another pair of gods</span>  <span
-              id="m12e"
-              class="lighttext"
-            ></span>
-          </div>
-          <div
-            id="m13t"
-            title="get all combined god's tributes when sacrificing to either one&#10;their max increase by 2 for each combined god"
-          >
-            <span id="m13c" class="w10">170</span><span id="m13"></span> <span id="m13d">combine another pair of gods</span>  <span
-              id="m13e"
-              class="lighttext"
-            ></span>
-          </div>
-          <div id="m14t" title="">
-            <span id="m14c" class="w10">180</span><span id="m14"></span> <span id="m14d">challenges</span>  <span
-              id="m14e"
-              class="lighttext"
-            ></span>
-          </div>
+          <div>tribute milestones [<span id="totalTributes"></span>]:</div>
+          <div id="tributeMilestones"></div>
         </div>
       </div>
       <div id="jellyTabContent">
@@ -341,7 +259,7 @@
 
             <table>
               <tr>
-                <td colspan="2" style="padding-bottom: 10px">permanent structures</td>
+                <td colspan="2" style="padding-bottom: 10px">royal structures</td>
               </tr>
               <tr>
                 <td style="text-align: right; padding-right: 10px">flower fields</td>
@@ -369,11 +287,11 @@
             </table>
             <table class="biggap">
               <tr>
-                <td class="lighttext">each structures count as 2 structures towards it's structure effects</td>
+                <td class="lighttext">each counts as 2 structures towards it's structure effects and takes up no space</td>
               </tr>
             </table>
-            <div class="smallgap">
-              nameless tributes: <span id="RJTributes">0</span>/30<span class="lighttext"> <span id="tmpunusedRJTributes"></span></span>
+            <div class="">
+              royal tributes: <span id="RJTributes">0</span>/30<span class="lighttext"> <span id="tmpunusedRJTributes"></span></span>
             </div>
             <div class="smallgap">
               <button class="btn" id="buyTribute">
@@ -459,11 +377,16 @@
               </div>
               <button class="btn" id="combineCancel">cancel</button>
             </div>
-            <div class="smallgap">resetting gods also performs RJ reset</div>
+            <div class="smallgap">resetting gods performs RJ reset</div>
             <button class="btn" id="resetCombinedGods">reset combined gods</button>
           </div>
         </div>
-        <div id="challengesTabContent">TBA in v0.4</div>
+        <div id="challengesTabContent">
+          <div id="challengesWrapper">
+            <div id="challengesContainer" style="width: fit-content; text-align: center" class="fc2"></div>
+          </div>
+        </div>
+        <div class="smallgap">entering a challenge performs RJ reset</div>
       </div>
       <div id="statshelpTabContent">
         <div class="tabs-container"><button class="btn" id="statsTabButton">stats</button> <button id="helpTabButton">help</button></div>
@@ -554,7 +477,11 @@
           <div class="smallgap" id="pernamentTributeEffectsLabel">permanent first tribute effects</div>
           <div class="biggap" id="pernamentTributeEffects">permanent first tribute effects</div>
         </div>
-        <div id="helpTabContent">TBA, feel free to suggest some tips / advice</div>
+        <div class="biggap" id="helpTabContent">TBA, feel free to suggest some tips / advice</div>
+        <div>
+          bugs/contact via <a style="color: #5865f2" href="https://discord.gg/hS6ssMCDaB">discord</a> or
+          <a style="color: #ff4500" href="https://www.reddit.com/user/ReQgamePlay">reddit DMs</a>
+        </div>
       </div>
       <div id="settingsTabContent">
         <div class="fc">
@@ -562,13 +489,15 @@
             <div>display</div>
             <div>toggle dark mode <input id="toggleDarkmode" checked="true" type="checkbox" /></div>
             <div>big buttons <input id="toggleBigButtons" type="checkbox" /></div>
-            <div>display everything <input id="disaplyeverything" type="checkbox" /></div>
+            <div style="display: none">display everything <input id="disaplyeverything" type="checkbox" /></div>
+            <!-- <div>more contrast <input id="moreContrast" type="checkbox" /></div> -->
             <div title="websites icon starts moving">flying bee <input id="iconMove" type="checkbox" /></div>
           </div>
           <div>
             <div>gameplay</div>
             <div>confirm sacrifices <input id="sacrificeConfirmation" type="checkbox" /></div>
             <div>confirm RJ exchanges <input id="exchangeConfirmation" type="checkbox" /></div>
+            <div>confirm entering challenges <input id="challengeConfirmation" type="checkbox" /></div>
           </div>
           <div>
             <div>offline time</div>
@@ -591,32 +520,23 @@
           <input id="offlineTicksSpeed5" type="checkbox" title="use 5x more offline time" /> 10x
           <input id="offlineTicksSpeed10" type="checkbox" title="use 10x more offline time" />
         </div>
-        <div
-          id="aboveaboveFooter"
-          style="position: fixed; right: 3px; bottom: 47px; text-align: right; width: max-content; padding-left: 3px"
-        ></div>
-        <div id="aboveFooter" style="position: fixed; right: 3px; bottom: 21px; text-align: right; width: max-content; padding-left: 3px">
-            autosaves <input id="autosaves" type="checkbox" /> 
+        <div class="footer bgc" id="aboveFooter" style="bottom: 21px">
+          autosaves <input id="autosaves" type="checkbox" /> 
           <button class="btn" style="padding-left: 5px; padding-right: 5px" id="saveButton">save</button>  
           <button class="btn" style="padding-left: 5px; padding-right: 5px" id="loadButton">load</button>
           <!-- <span >end of "new" content after ~30 tributes</span> -->
         </div>
-        <div id="footer" style="position: fixed; right: 3px; bottom: 3px; text-align: right; width: max-content; padding-left: 3px">
+        <div class="footer bgc" id="footer" style="bottom: 3px">
           <!-- <button class="btn" id="sacrificeForNothing">sacrifice yourself for nothing</button>  -->
-          bugs/contact via <a style="color: #5865f2" href="https://discord.gg/hS6ssMCDaB">discord</a> or
-          <a style="color: #ff4500" href="https://www.reddit.com/user/ReQgamePlay">reddit DMs</a> 
           <span
-            title="v0.0.1&#9;added bees, resources and buildings&#10;v0.0.2&#9;added sacrifices&#10;v0.0.3&#9;added tribute milestones&#10;v0.1&#9;&#9;bug fixes,more polished and playable version of above features&#10;v0.1.1&#9;added 4 more tribute milestones, milestones rebalance&#10;v0.1.5&#9;even more bug, typo and display fixes&#10;v0.2&#9;&#9;added royal jelly&#10;v0.2.5&#9;big rewrite, sacrifice/tributes/royal jelly rebalance and changes, bugfixed & QoL changes&#10;v0.3&#9;&#9;added combining gods"
+            title="v0.0.1&#9;added bees, resources and buildings&#10;v0.0.2&#9;added sacrifices&#10;v0.0.3&#9;added tribute milestones&#10;v0.1&#9;&#9;bug fixes,more polished and playable version of above features&#10;v0.1.1&#9;added 4 more tribute milestones, milestones rebalance&#10;v0.1.5&#9;even more bug, typo and display fixes&#10;v0.2&#9;&#9;added royal jelly&#10;v0.2.5&#9;big rewrite, sacrifice/tributes/royal jelly rebalance and changes, bugfixes & QoL changes&#10;v0.3&#9;&#9;added combining gods&#10;v0.4&#9;&#9;added challenges, UI changes"
             >changelog</span
           >  alpha v<span id="version"></span>
         </div>
-      </div>
-      <div style="display: none">
-        <textarea id="saveExport" style="width: 100px; height: 60px"></textarea>
+        <div style="display: none">
+          <textarea id="saveExport" style="width: 100px; height: 60px"></textarea>
+        </div>
       </div>
     </div>
   </body>
 </html>
-<!-- v.2 start of new content eyJmbG93ZXJzIjo5ODc3Mjc2NDYuNDE5NTc5NCwicG9sbGVuIjozMDE4MTk3MC45ODY0OTg2NDMsIm5lY3RhciI6MzQ5Mzc3MTIuNzMzMzgxNDEsImhvbmV5IjozOTI0OTAwLjI1MTQ4MTkzOTYsIm1vbmV5IjoxOTEzOTUxNTAuODkzODU0NTYsImhpZ2hlc3RmbG93ZXJzIjo5ODc3Mjc2NDYuNDE5NTc5NCwiaGlnaGVzdHBvbGxlbiI6MzAxODE5NzAuOTg2NDk4NjQzLCJoaWdoZXN0bmVjdGFyIjozNDkzNzcxMi43MzMzODE0MSwiaGlnaGVzdGhvbmV5Ijo1MzcxMjI3Ni41MzY2OTA5LCJoaWdoZXN0bW9uZXkiOjE5MTM5NTE1MC44OTM4NTQ1NiwidG90YWxmbG93ZXJzIjoyODIwODU3Mzg0Mi44ODM3MTcsInRvdGFscG9sbGVuIjo2NzY3Njk3MTE0NDkuNjMwNiwidG90YWxuZWN0YXIiOjM4OTEyODY0MS40NzQ4Mjk0LCJ0b3RhbGhvbmV5Ijo2MTAwNjc1NjYuNzM4MzQ0NiwidG90YWxtb25leSI6ODE3NzA0NzkwMzEuMzkwOTUsImJlZXMiOjc1LCJmcmVlQmVlcyI6MCwiZm9yYWdlckJlZXMiOjEyNi4yMjU0MzkwMjg0MTg5NSwiaG9uZXlCZWVzIjo2NC42NTE0MjkyMzA2MjY1MiwiZmxvd2VyRmllbGRzIjo1OCwiaGl2ZXMiOjYyLCJ0b3RhbFNhY3JpZmljZXMiOjAsInBvbGxlbkdvZFRyaWJ1dGVzIjoyMCwibmVjdGFyR29kVHJpYnV0ZXMiOjIwLCJob25leUdvZFRyaWJ1dGVzIjoyMCwiZmxvd2VyR29kVHJpYnV0ZXMiOjIwLCJjYXBpdGFsaXN0R29kVHJpYnV0ZXMiOjE5LCJhdXRvQXNpZ25CZWVzVG8iOltdLCJwZ2UiOnRydWUsIm5nZSI6dHJ1ZSwiaGdlIjp0cnVlLCJmZ2UiOnRydWUsImNnZSI6dHJ1ZSwic2VsbGluZ0hvbmV5IjpmYWxzZSwiYXV0b3NhdmVzIjp0cnVlLCJ1bmxvY2tzIjp7ImJlZXMiOnRydWUsImZvcmFnZXJCZWVzIjp0cnVlLCJoaXZlIjp0cnVlLCJob25leUJlZXMiOnRydWUsInNhY3JpZmljaW5nIjp0cnVlLCJ0cmlidXRlcyI6dHJ1ZSwiamVsbHkiOmZhbHNlLCJqZWxseTIiOmZhbHNlfSwibGFzdFVwZGF0ZSI6MTY2NjEwOTU3NDc3NSwib2ZmbGluZVRpY2tzIjoxMTU3Mjc1LjM4NCwib2ZmbGluZVRpbWUiOjEwNjc2LjYwMTUxMDAxMzAwOCwiZGFya21vZGUiOnRydWUsImJpZ0J1dHRvbnMiOmZhbHNlLCJSSiI6MCwiaGlnaGVzdFJKIjowLCJ0b3RhbFJKIjowLCJSSmJlZXMiOjAsIlJKZmxvd2VyRmllbGRzIjowLCJSSmhpdmVzIjowLCJSSlRyaWJ1dGVzIjowLCJ0YWIiOiJzZXR0aW5ncyIsImRpc3BsYXlFdmVyeXRoaW5nIjpmYWxzZSwiaGFyZGVyVHJpYnV0ZXMiOnRydWUsImV4Y2hhbmdlQ29uZmlybWF0aW9uIjp0cnVlLCJ1bnVzZWRSSlRyaWJ1dGVzIjowLCJwb2xsZW5Hb2RSSlRyaWJ1dGVzIjowLCJuZWN0YXJHb2RSSlRyaWJ1dGVzIjowLCJob25leUdvZFJKVHJpYnV0ZXMiOjAsImZsb3dlckdvZFJKVHJpYnV0ZXMiOjAsImNhcGl0YWxpc3RHb2RSSlRyaWJ1dGVzIjowfQ== -->
-<!-- v.2.5? 55 eyJmbG93ZXJzIjo1MDg2LjU0NzQ1NDI4ODI4OSwicG9sbGVuIjo3MTMuNzg3MzI2MzkyMDQyOCwibmVjdGFyIjo4OTAuMDMxMzY0MTI0Mzk1NCwiaG9uZXkiOjE1My42NjM0ODgwNzQ0NTI5LCJtb25leSI6OTQuMDMwMDYyNTgzMDcxMTYsImhpZ2hlc3RmbG93ZXJzIjo1MDg2LjU0NzQ1NDI4ODI4OSwiaGlnaGVzdHBvbGxlbiI6NzEzLjc4NzMyNjM5MjA0MjgsImhpZ2hlc3RuZWN0YXIiOjg5MC4wMzEzNjQxMjQzOTU0LCJoaWdoZXN0aG9uZXkiOjE1My42NjM0ODgwNzQ0NTI5LCJoaWdoZXN0bW9uZXkiOjk0LjAzMDA2MjU4MzA3MTE2LCJ0b3RhbGZsb3dlcnMiOjM1NDYwMi42NDU1ODc1OTc0LCJ0b3RhbHBvbGxlbiI6MTUzMDIuMTkzNDE0ODk3MzQ3LCJ0b3RhbG5lY3RhciI6MjM2ODAuNjM1MDk0NjU3NjMsInRvdGFsaG9uZXkiOjE4MzAyLjY3MTU3MDE4NTczLCJ0b3RhbG1vbmV5Ijo0MjA2LjI4NzQ4NTM0MzY1MSwiYmVlcyI6MTUsImZyZWVCZWVzIjowLCJmb3JhZ2VyQmVlcyI6MjguNzUsImhvbmV5QmVlcyI6OS41ODcxODcyNjAxNjIxNzMsImZsb3dlckZpZWxkcyI6MSwiaGl2ZXMiOjE1LCJ0b3RhbFNhY3JpZmljZXMiOjAsInBvbGxlbkdvZFRyaWJ1dGVzIjoxMSwibmVjdGFyR29kVHJpYnV0ZXMiOjksImhvbmV5R29kVHJpYnV0ZXMiOjExLCJmbG93ZXJHb2RUcmlidXRlcyI6MTUsImNhcGl0YWxpc3RHb2RUcmlidXRlcyI6OSwiYXV0b0FzaWduQmVlc1RvIjpbImZvcmFnZXIiLCJob25leSJdLCJwZ2UiOnRydWUsIm5nZSI6dHJ1ZSwiaGdlIjp0cnVlLCJmZ2UiOnRydWUsImNnZSI6dHJ1ZSwic2VsbGluZ0hvbmV5Ijp0cnVlLCJhdXRvc2F2ZXMiOnRydWUsInVubG9ja3MiOnsiYmVlcyI6dHJ1ZSwiZm9yYWdlckJlZXMiOnRydWUsImhpdmUiOnRydWUsImhvbmV5QmVlcyI6dHJ1ZSwic2FjcmlmaWNpbmciOnRydWUsInRyaWJ1dGVzIjp0cnVlLCJqZWxseSI6ZmFsc2UsImplbGx5MiI6ZmFsc2V9LCJsYXN0VXBkYXRlIjoxNjY3MTQyMjE2MDEwLCJvZmZsaW5lVGltZSI6OTY4NDIuNzc5MDAwMDI0NzUsIlJKIjowLCJoaWdoZXN0UkoiOjAsInRvdGFsUkoiOjAsIlJKYmVlcyI6MCwiUkpmbG93ZXJGaWVsZHMiOjAsIlJKaGl2ZXMiOjAsIlJKVHJpYnV0ZXMiOjAsInVudXNlZFJKVHJpYnV0ZXMiOjAsInBvbGxlbkdvZFJKVHJpYnV0ZXMiOjAsIm5lY3RhckdvZFJKVHJpYnV0ZXMiOjAsImhvbmV5R29kUkpUcmlidXRlcyI6MCwiZmxvd2VyR29kUkpUcmlidXRlcyI6MCwiY2FwaXRhbGlzdEdvZFJKVHJpYnV0ZXMiOjAsInRhYiI6InNldHRpbmdzIiwiZGFya21vZGUiOnRydWUsImJpZ0J1dHRvbnMiOmZhbHNlLCJkaXNwbGF5RXZlcnl0aGluZyI6dHJ1ZSwiZXhjaGFuZ2VDb25maXJtYXRpb24iOnRydWUsImljb25Nb3ZlIjpmYWxzZSwibGFzdFJKZnJvbWZsb3dlcnMiOjAsImxhc3RSSmZyb21wb2xsZW4iOjAsImxhc3RSSmZyb21uZWN0YXIiOjAsImxhc3RSSmZyb21ob25leSI6MCwibGFzdFJKZnJvbW1vbmV5IjowfQ== -->
-<!-- v. -->

@@ -64,6 +64,12 @@ type t_player = {
     c2: boolean;
     c3: boolean;
     c4: boolean;
+    challenges: boolean;
+    c12: boolean;
+    c23: boolean;
+    c34: boolean;
+    c45: boolean;
+    c51: boolean;
   };
   lastUpdate: number;
   offlineTime: number;
@@ -96,8 +102,9 @@ type t_player = {
     displayEverything: boolean;
     iconMove: boolean;
 
-    sacrificeConfirmation: boolean;
+    sacrificeConfirmation: boolean; // todo make it into confirmations object
     exchangeConfirmation: boolean;
+    challengeConfirmation: boolean;
 
     toggleHoneyOfflineTime: boolean;
     toggleSacrificeOfflineTime: boolean;
@@ -122,6 +129,22 @@ type t_player = {
       hive: boolean; // bought
     };
   };
+
+  challenge: string;
+  challengeCompletions: {
+    c1: number;
+    c12: number;
+    c2: number;
+    c23: number;
+    c3: number;
+    c34: number;
+    c4: number;
+    c45: number;
+    c5: number;
+    c51: number;
+  };
+  RJTime: number;
+
   version: [number, number, number, number];
 };
 
@@ -174,7 +197,7 @@ const newEmptyPlayer = (): t_player => {
     cge: false,
 
     sellingHoney: false,
-    // bees -> foragerBees -> honeyBees -> sacrificing -> tributes -> jelly -> jelly2
+    // bees -> foragerBees -> honeyBees -> sacrificing -> tributes -> jelly -> jelly2 -> c1..c4 -> challenges -> c12..c51
     //              └> hive at 1 pollen         └> money
     // buy bee, get forager bee, get honey bee, unlock money from tributes, at least 50 of pollen etc and 1k flowers, at least one tribute
     unlocks: {
@@ -182,14 +205,20 @@ const newEmptyPlayer = (): t_player => {
       foragerBees: false,
       hive: false,
       honeyBees: false,
-      sacrificing: false,
-      tributes: false,
-      jelly: false,
-      jelly2: false,
-      c1: false,
+      sacrificing: false, // unlocked sacrificing
+      tributes: false, // sacrificed
+      jelly: false, // unlocked RJ
+      jelly2: false, // had RJ
+      c1: false, // combining gods
       c2: false,
       c3: false,
       c4: false,
+      challenges: false, // challenges
+      c12: false, // ch I + II
+      c23: false, // etc
+      c34: false,
+      c45: false,
+      c51: false,
     },
     lastUpdate: Date.now(),
     offlineTime: 1, // so generous
@@ -224,6 +253,7 @@ const newEmptyPlayer = (): t_player => {
 
       sacrificeConfirmation: true,
       exchangeConfirmation: true,
+      challengeConfirmation: true,
 
       toggleHoneyOfflineTime: false,
       toggleSacrificeOfflineTime: true,
@@ -246,6 +276,22 @@ const newEmptyPlayer = (): t_player => {
         hive: false,
       },
     },
+
+    challenge: "",
+    challengeCompletions: {
+      c1: 0,
+      c2: 0,
+      c3: 0,
+      c4: 0,
+      c5: 0,
+      c12: 0,
+      c23: 0,
+      c34: 0,
+      c45: 0,
+      c51: 0,
+    },
+    RJTime: 0,
+
     version: [0, 2, 5, 3],
   };
 };

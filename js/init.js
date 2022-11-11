@@ -8,17 +8,21 @@ let beeCost;
 let hiveCost;
 let RJTributeCost;
 const init = () => {
-    loop = setInterval(GameLoop, 30);
     load();
+    setupTributes();
+    setupChallenges();
+    setupClickEvents();
+    loop = setInterval(GameLoop, 30);
     afterLoad();
 };
 const afterLoad = () => {
     d.version.innerHTML = p.version.join(".");
-    // costs todo move all this to n_structures
-    flowerFieldCost = new Linear.Cost(c, p.flowerFields, getFlowerFieldPriceMult(), -1);
-    beeCost = new Linear.Cost(c, p.bees, getBeePriceMult(), 0);
-    hiveCost = new Linear.Cost(c, p.hives, getHivePriceMult(), -1);
-    RJTributeCost = new Linear.Cost(c, p.RJTributes);
+    // costs todo move all this to n_structures?
+    let base = Math.pow(10, (1 / 12 + p.challengeCompletions.c5));
+    flowerFieldCost = new Linear.Cost(base, p.flowerFields, getFlowerFieldPriceMult(), -1);
+    beeCost = new Linear.Cost(base, p.bees, getBeePriceMult(), 0);
+    hiveCost = new Linear.Cost(base, p.hives, getHivePriceMult(), -1);
+    RJTributeCost = new Linear.Cost(base, p.RJTributes);
     // settings
     d.toggleDarkmode.checked = p.settings.darkmode;
     d.toggleBigButtons.checked = p.settings.bigButtons;
@@ -49,17 +53,6 @@ const afterLoad = () => {
     e_switchTab2(p.tab2);
     e_switchTab3(p.tab3);
     // tribute milestones todo idk if needed here
-    for (let i = 0; i < 10; i++) {
-        if (tributes[i].unlockAt < getTotalSacrificeTributes()) {
-            d.m[i].innerHTML = "├";
-        }
-        else {
-            d.m[i].innerHTML = " ";
-        }
-        if (i)
-            if (tributes[i].unlockAt > getTotalSacrificeTributes() && tributes[i - 1].unlockAt < getTotalSacrificeTributes())
-                d.m[i - 1].innerHTML = "└";
-    }
     // autosaves / icon loop
     if (p.settings.autosaves)
         saveLoop = setInterval(save, 10000);
@@ -68,19 +61,18 @@ const afterLoad = () => {
         iconMoveLoop = setInterval(moveIcon, 1000);
     d.iconMove.checked = p.settings.iconMove;
     // tributes efficiency
-    if (n_tributes.tmp.totalTributes >= tributes[5].unlockAt) {
-        n_tributes.tmp.me[5] = n_tributes.formula[5]();
-        n_tributes.tmp.me[5] = n_tributes.formula[5]();
-        n_tributes.tmp.me[5] = n_tributes.formula[5]();
-        n_tributes.tmp.me[5] = n_tributes.formula[5]();
-        n_tributes.tmp.me[5] = n_tributes.formula[5]();
+    if (n_tributes.tmp.totalTributes >= n_tributes.tributes[5].unlockAt) {
+        n_tributes.tmp.me[5] = n_tributes.tributes[5].formula();
+        n_tributes.tmp.me[5] = n_tributes.tributes[5].formula();
+        n_tributes.tmp.me[5] = n_tributes.tributes[5].formula();
+        n_tributes.tmp.me[5] = n_tributes.tributes[5].formula();
+        n_tributes.tmp.me[5] = n_tributes.tributes[5].formula();
     }
-    // milestones costs
-    tributes.forEach(({ unlockAt }, i) => {
-        d[`m${i}c`].innerHTML = "" + unlockAt;
-    });
     // gods
     afterCombineGods();
+    TMP.totalBees = getTotalBees();
+    e_onresize();
+    e_onscroll();
 };
 const moveIcon = () => {
     leftIcon = !leftIcon;

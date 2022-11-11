@@ -1,5 +1,9 @@
+const canExchange = () => {
+  return n_tributes.tmp.totalTributes >= n_tributes.tributes[9].unlockAt;
+};
+
 const RJToGet = () => {
-  if (n_tributes.tmp.totalTributes < tributes[9].unlockAt) return 0;
+  if (!canExchange()) return 0;
 
   let RJToGet =
     n_stats.tmp.RJFromtotalflowers +
@@ -8,7 +12,7 @@ const RJToGet = () => {
     n_stats.tmp.RJFromtotalnectar +
     n_stats.tmp.RJFromtotalpollen;
 
-  return RJToGet * n_jelly.tmp.totalRJBonus;
+  return RJToGet * n_jelly.tmp.totalRJBonus * n_tributes.tmp.me[14];
 };
 
 const getRJBonus = (rj: number) => {

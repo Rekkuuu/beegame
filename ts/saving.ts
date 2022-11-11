@@ -125,6 +125,7 @@ let fix = (save: t_player) => {
 
     save["version"] = v;
   }
+
   v = [0, 3, 0, 1];
   if (save["version"] < v) {
     if (save["combinedGods"] == undefined) save["combinedGods"] = [];
@@ -134,6 +135,45 @@ let fix = (save: t_player) => {
     if (save["unlocks"]["c4"] == undefined) save["unlocks"]["c4"] = false;
     save["version"] = v;
   }
+
+  v = [0, 3, 1, 0];
+  save["version"] = v;
+
+  // if (save["version"] < v) {
+  if (true) {
+    if (save["challenge"] == undefined) save["challenge"] = "";
+    if (save["challengeCompletions"] == undefined) save["challengeCompletions"] = newEmptyPlayer().challengeCompletions;
+    if (save["RJTime"] == undefined) save["RJTime"] = 0;
+
+    if (save["unlocks"]["challenges"] == undefined) save["unlocks"]["challenges"] = false;
+    if (save["unlocks"]["c12"] == undefined) save["unlocks"]["c12"] = false;
+    if (save["unlocks"]["c23"] == undefined) save["unlocks"]["c23"] = false;
+    if (save["unlocks"]["c34"] == undefined) save["unlocks"]["c34"] = false;
+    if (save["unlocks"]["c45"] == undefined) save["unlocks"]["c45"] = false;
+    if (save["unlocks"]["c51"] == undefined) save["unlocks"]["c51"] = false;
+
+    if (save["settings"]["challengeConfirmation"] == undefined) save["settings"]["challengeConfirmation"] = false;
+    save["version"] = v;
+  }
+
+  if (Number.isNaN(p.honey)) p.honey = 0;
+  if (Number.isNaN(p.highesthoney)) p.highesthoney = 0;
+  if (Number.isNaN(p.totalhoney)) p.totalhoney = 0;
+  if (Number.isNaN(p.money)) p.money = 0;
+  if (Number.isNaN(p.highestmoney)) p.highestmoney = 0;
+  if (Number.isNaN(p.totalmoney)) p.totalmoney = 0;
+  if (Number.isNaN(p.flowers)) p.flowers = 0;
+  if (Number.isNaN(p.highestflowers)) p.highestflowers = 0;
+  if (Number.isNaN(p.totalflowers)) p.totalflowers = 0;
+  if (Number.isNaN(p.pollen)) p.pollen = 0;
+  if (Number.isNaN(p.highestpollen)) p.highestpollen = 0;
+  if (Number.isNaN(p.totalpollen)) p.totalpollen = 0;
+  if (Number.isNaN(p.nectar)) p.nectar = 0;
+  if (Number.isNaN(p.highestnectar)) p.highestnectar = 0;
+  if (Number.isNaN(p.totalnectar)) p.totalnectar = 0;
+  if (Number.isNaN(p.totalRJ)) p.totalRJ = 100; //? idk
+  if (Number.isNaN(p.RJ)) p.RJ = 100; //? idk
+
   return save;
 };
 

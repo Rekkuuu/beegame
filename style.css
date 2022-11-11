@@ -1,7 +1,18 @@
+:root {
+  --ticksWidth: 40vw;
+  --headerPadding: 0px;
+}
+
 body {
   margin: 0;
-  width: 100vw;
+  width: calc(100vw - 1px);
+  padding: 0;
   overflow-x: hidden;
+}
+
+#main {
+  padding: 8px;
+  padding-bottom: 22px;
 }
 
 * {
@@ -67,12 +78,19 @@ a {
   padding-right: 3px;
 }
 
+body:not(.dark-mode).bgc,
+body:not(.dark-mode) *.bgc {
+  background-color: white;
+}
 body:not(.dark-mode) input[type=text] {
   background-color: #fff;
   color: black;
   border: 0;
   text-align: right;
   font-family: monospace;
+}
+body:not(.dark-mode) input[type=text]:focus-within {
+  background-color: #eee;
 }
 body:not(.dark-mode) button:not(:disabled) .recomended {
   color: #f00;
@@ -82,8 +100,11 @@ body:not(.dark-mode) button:disabled .recomended {
 }
 
 body.dark-mode {
-  background-color: #222;
   color: white;
+}
+body.dark-mode.bgc,
+body.dark-mode *.bgc {
+  background-color: #222;
 }
 body.dark-mode input[type=text] {
   background-color: #222;
@@ -91,6 +112,9 @@ body.dark-mode input[type=text] {
   border: 0;
   text-align: right;
   font-family: monospace;
+}
+body.dark-mode input[type=text]:focus-within {
+  background-color: #333;
 }
 body.dark-mode .lighttext {
   color: #999;
@@ -102,6 +126,10 @@ body.dark-mode button:disabled .recomended {
   color: #f55;
 }
 
+#absolute-container {
+  z-index: 123;
+}
+
 #offlineTicks {
   top: 0px;
   right: 0px;
@@ -110,19 +138,8 @@ body.dark-mode button:disabled .recomended {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
-  background-color: rgba(34, 34, 34, 0.6666666667);
-  box-shadow: 0 0 2px #222;
   padding: 3px;
-}
-
-body.dark-mode #offlineTicks {
-  background-color: rgba(34, 34, 34, 0.6666666667);
-  box-shadow: 0 0 2px #222;
-}
-
-body:not(.dark-mode) #offlineTicks {
-  background-color: rgba(255, 255, 255, 0.6666666667);
-  box-shadow: 0 0 2px #fff;
+  z-index: 123;
 }
 
 .btn {
@@ -218,11 +235,12 @@ body.dark-mode #exchangeForRJ:hover {
 
 .line {
   border-top: 1px solid silver;
-  margin-top: -1px;
+  margin-top: 3px;
+  padding-bottom: 3px;
 }
 
 .tabs-container {
-  max-width: 60vw;
+  width: calc(100vw - 200px);
   margin-bottom: 0px;
 }
 
@@ -230,7 +248,7 @@ div[id*=TabContent] {
   margin-top: 8px;
 }
 div[id*=TabContent] div[class*=tabs-container] {
-  margin-top: -5px;
+  margin-top: -3px;
 }
 
 div[class*=tabs-container] button {
@@ -348,4 +366,181 @@ table.tmr tr td:nth-child(1) {
 #quickautobeeBuy,
 #quickautohiveBuy {
   margin-left: 10px;
+}
+
+.fc2 {
+  max-width: 1600px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.fc2 .wrapper {
+  text-align: center;
+  width: 270px;
+  max-width: 280px;
+  height: 165px;
+  margin: 3px;
+  padding: 5px;
+  position: relative;
+}
+.fc2 .up span {
+  float: right;
+}
+.fc2 .down {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
+}
+.fc2 .btn {
+  padding: 4px;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+body.big-buttons .fc2 .btn {
+  padding: 6px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+@media only screen and (max-width: 1396px) {
+  .fc2 {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+@media only screen and (max-width: 578px) {
+  .fc2 {
+    margin-right: -20px;
+  }
+  .fc2 .wrapper {
+    max-width: none;
+    width: calc(90% + 5px);
+    height: 145px;
+    margin-bottom: 1px;
+  }
+}
+#mainTabContent {
+  padding-right: 8px;
+}
+
+body:not(.dark-mode) #header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+body:not(.dark-mode) body:not(.more-contrast) .wrapper {
+  background-color: rgba(34, 34, 34, 0.1333333333);
+}
+body:not(.dark-mode) body:not(.more-contrast) .wrapper .up span {
+  color: gray;
+}
+body:not(.dark-mode) body:not(.more-contrast) .wrapper.d {
+  background-color: rgba(34, 34, 133, 0.2078431373);
+}
+body:not(.dark-mode) body:not(.more-contrast) .wrapper.d .line {
+  border-color: rgba(51, 51, 153, 0.3333333333);
+}
+body:not(.dark-mode) body:not(.more-contrast) .wrapper.d .up span {
+  color: #77a;
+}
+body:not(.dark-mode) body.more-contrast .lighttext {
+  color: #ddd;
+}
+body:not(.dark-mode) body.more-contrast .line {
+  border-color: rgba(0, 0, 0, 0.6);
+}
+body:not(.dark-mode) body.more-contrast .wrapper {
+  background-color: rgba(34, 34, 34, 0.1333333333);
+}
+body:not(.dark-mode) body.more-contrast .wrapper .up span {
+  color: #444;
+}
+body:not(.dark-mode) body.more-contrast .wrapper.d {
+  background-color: rgba(34, 34, 133, 0.2078431373);
+}
+body:not(.dark-mode) body.more-contrast .wrapper.d .up span {
+  color: #353565;
+}
+
+body.dark-mode #header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+body.dark-mode:not(.more-contrast) .wrapper {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+body.dark-mode:not(.more-contrast) .wrapper .up span {
+  color: #fff;
+}
+body.dark-mode:not(.more-contrast) .wrapper.d {
+  background-color: rgba(34, 34, 133, 0.2078431373);
+}
+body.dark-mode:not(.more-contrast) .wrapper.d .line {
+  border-color: rgba(187, 187, 187, 0.2);
+}
+body.dark-mode:not(.more-contrast) .wrapper.d .up span {
+  color: #77a;
+}
+body.dark-mode.more-contrast .lighttext {
+  color: #777;
+}
+body.dark-mode.more-contrast .line {
+  border-color: rgba(187, 187, 187, 0.3333333333);
+}
+body.dark-mode.more-contrast .wrapper {
+  background-color: rgba(34, 34, 34, 0.1333333333);
+}
+body.dark-mode.more-contrast .wrapper .up span {
+  color: #ccc;
+}
+body.dark-mode.more-contrast .wrapper.d {
+  background-color: rgba(34, 34, 133, 0.2078431373);
+}
+body.dark-mode.more-contrast .wrapper.d .up span {
+  color: #353565;
+}
+
+#header {
+  width: 100%;
+  padding-left: 8px;
+  padding-top: 5px;
+  z-index: 123;
+  min-height: 47px;
+}
+
+#header > #top {
+  margin-top: -8px;
+}
+
+#header > #challenges-info {
+  margin-top: -8px;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+}
+
+#header.sticky + #main {
+  padding-top: 5px;
+}
+
+#challenges-info {
+  width: calc(100% - var(--ticksWidth));
+  min-width: 120px;
+}
+
+#challengeCompletion,
+#challengeCurrent,
+#sacrificeWrapper span.lighttext {
+  display: inline-block;
+}
+
+.footer {
+  position: fixed;
+  right: 3px;
+  text-align: right;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  padding-left: 3px;
 }/*# sourceMappingURL=style.css.map */

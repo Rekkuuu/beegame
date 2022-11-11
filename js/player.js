@@ -40,7 +40,7 @@ const newEmptyPlayer = () => {
         fge: false,
         cge: false,
         sellingHoney: false,
-        // bees -> foragerBees -> honeyBees -> sacrificing -> tributes -> jelly -> jelly2
+        // bees -> foragerBees -> honeyBees -> sacrificing -> tributes -> jelly -> jelly2 -> c1..c4 -> challenges -> c12..c51
         //              └> hive at 1 pollen         └> money
         // buy bee, get forager bee, get honey bee, unlock money from tributes, at least 50 of pollen etc and 1k flowers, at least one tribute
         unlocks: {
@@ -56,6 +56,12 @@ const newEmptyPlayer = () => {
             c2: false,
             c3: false,
             c4: false,
+            challenges: false,
+            c12: false,
+            c23: false,
+            c34: false,
+            c45: false,
+            c51: false,
         },
         lastUpdate: Date.now(),
         offlineTime: 1,
@@ -84,6 +90,7 @@ const newEmptyPlayer = () => {
             iconMove: false,
             sacrificeConfirmation: true,
             exchangeConfirmation: true,
+            challengeConfirmation: true,
             toggleHoneyOfflineTime: false,
             toggleSacrificeOfflineTime: true,
             toggleRJOfflineTime: true,
@@ -103,6 +110,20 @@ const newEmptyPlayer = () => {
                 hive: false,
             },
         },
+        challenge: "",
+        challengeCompletions: {
+            c1: 0,
+            c2: 0,
+            c3: 0,
+            c4: 0,
+            c5: 0,
+            c12: 0,
+            c23: 0,
+            c34: 0,
+            c45: 0,
+            c51: 0,
+        },
+        RJTime: 0,
         version: [0, 2, 5, 3],
     };
 };

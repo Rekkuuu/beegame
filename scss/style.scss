@@ -1,7 +1,17 @@
+:root {
+  --ticksWidth: 40vw;
+  --headerPadding: 0px;
+}
+
 body {
   margin: 0;
-  width: 100vw;
+  width: calc(100vw - 1px);
+  padding: 0;
   overflow-x: hidden;
+}
+#main {
+  padding: 8px;
+  padding-bottom: 22px;
 }
 * {
   box-sizing: border-box;
@@ -61,8 +71,15 @@ a {
 }
 
 body:not(.dark-mode) {
+  &.bgc,
+  *.bgc {
+    background-color: white;
+  }
   input[type="text"] {
     background-color: #fff;
+    &:focus-within {
+      background-color: #eee;
+    }
     color: black;
     border: 0;
     text-align: right;
@@ -84,9 +101,15 @@ body:not(.dark-mode) {
 }
 
 body.dark-mode {
-  background-color: #222;
+  &.bgc,
+  *.bgc {
+    background-color: #222;
+  }
   input[type="text"] {
     background-color: #222;
+    &:focus-within {
+      background-color: #333;
+    }
     color: white;
     border: 0;
     text-align: right;
@@ -110,6 +133,9 @@ body.dark-mode {
     }
   }
 }
+#absolute-container {
+  z-index: 123;
+}
 
 #offlineTicks {
   top: 0px;
@@ -117,22 +143,8 @@ body.dark-mode {
   text-align: right;
   position: fixed;
   width: fit-content;
-  background-color: #222a;
-  box-shadow: 0 0 2px #222;
   padding: 3px;
-}
-
-body.dark-mode {
-  #offlineTicks {
-    background-color: #222a;
-    box-shadow: 0 0 2px #222;
-  }
-}
-body:not(.dark-mode) {
-  #offlineTicks {
-    background-color: #fffa;
-    box-shadow: 0 0 2px #fff;
-  }
+  z-index: 123;
 }
 
 @import "button";
@@ -250,4 +262,196 @@ table.tmr {
 #quickautobeeBuy,
 #quickautohiveBuy {
   margin-left: 10px;
+}
+
+.fc2 {
+  max-width: 1600px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  .wrapper {
+    text-align: center;
+    width: 270px;
+    max-width: 280px;
+    height: 165px;
+    margin: 3px;
+    padding: 5px;
+    position: relative;
+  }
+  .up {
+    span {
+      float: right;
+    }
+  }
+  .down {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+  }
+  .btn {
+    padding: 4px;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}
+
+body.big-buttons .fc2 .btn {
+  padding: 6px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+@media only screen and (max-width: (1380px + 16px)) {
+  .fc2 {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+@media only screen and (max-width: (578px)) {
+  .fc2 {
+    margin-right: -20px;
+    .wrapper {
+      max-width: none;
+      width: calc(90% + 5px);
+      height: 145px;
+      margin-bottom: 1px;
+    }
+  }
+}
+// ^  i still have no idea what im doing
+
+#mainTabContent {
+  padding-right: 8px;
+}
+
+body:not(.dark-mode) {
+  #header {
+    border-bottom: 1px solid #0003;
+  }
+  body:not(.more-contrast) {
+    .wrapper {
+      background-color: #2222;
+      .up span {
+        color: gray;
+      }
+    }
+    .wrapper.d {
+      .line {
+        border-color: #3395;
+      }
+      background-color: #22228535;
+      .up span {
+        color: #77a;
+      }
+    }
+  }
+
+  body.more-contrast {
+    .lighttext {
+      color: #ddd;
+    }
+  }
+
+  body.more-contrast {
+    .line {
+      border-color: #0009;
+    }
+    .wrapper {
+      background-color: #2222;
+      // background-color: #2224;
+      .up span {
+        color: #444;
+      }
+    }
+    .wrapper.d {
+      background-color: #22228535;
+      .up span {
+        color: #353565;
+      }
+    }
+  }
+}
+body.dark-mode {
+  #header {
+    border-bottom: 1px solid #fff3;
+  }
+  &:not(.more-contrast) {
+    .wrapper {
+      background-color: #fff6;
+      .up span {
+        color: #fff;
+      }
+    }
+    .wrapper.d {
+      .line {
+        border-color: #bbb3;
+      }
+      background-color: #22228535;
+      .up span {
+        color: #77a;
+      }
+    }
+  }
+
+  &.more-contrast {
+    .lighttext {
+      color: #777;
+    }
+    .line {
+      border-color: #bbb5;
+    }
+    .wrapper {
+      background-color: #2222;
+      // background-color: #2224;
+      .up span {
+        color: #ccc;
+      }
+    }
+    .wrapper.d {
+      background-color: #22228535;
+      .up span {
+        color: #353565;
+      }
+    }
+  }
+}
+#header {
+  width: 100%;
+  padding-left: 8px;
+  padding-top: 5px;
+  z-index: 123;
+  min-height: 47px;
+}
+#header > #top {
+  margin-top: -8px;
+}
+#header > #challenges-info {
+  margin-top: -8px;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+}
+#header.sticky + #main {
+  padding-top: 5px;
+}
+
+#challenges-info {
+  width: calc(100% - var(--ticksWidth));
+  min-width: 120px;
+}
+#challengeCompletion,
+#challengeCurrent,
+#sacrificeWrapper span.lighttext {
+  display: inline-block;
+}
+.footer {
+  position: fixed;
+  right: 3px;
+  text-align: right;
+  width: max-content;
+  padding-left: 3px;
 }

@@ -1,6 +1,7 @@
-let tmp = {
+let TMP = {
   gameSpeedFormTicks: 1,
   usedTime: 1,
+  totalBees: 0,
 };
 
 type t_gods = "flower" | "pollen" | "nectar" | "honey" | "money";
@@ -35,10 +36,8 @@ const format = (x: number, p = 0): string => {
 const ft2 = (x: number): number => Math.floor(x * 100) / 100;
 const rt5 = (x: number): number => Math.round(x * 100000) / 100000;
 
-const c = 10 ** (1 / 12);
-
 const getBeePrice = (): number => {
-  let a = c ** p.bees;
+  let a = n_structures.tmp.base ** p.bees;
   let price = 1 * a;
   price /= n_tributes.tmp.me[1];
   return price;
@@ -50,7 +49,7 @@ const getBeePriceMult = (): number => {
 };
 
 const getHivePrice = (): number => {
-  let a = c ** (p.hives - 1);
+  let a = n_structures.tmp.base ** (p.hives - 1);
   let price = 2 * a;
   price /= n_sacrifices.tmp.capitalistGodEffect;
   return price;
@@ -62,7 +61,7 @@ const getHivePriceMult = (): number => {
 };
 
 const getFlowerFieldPrice = (): number => {
-  let a = c ** (p.flowerFields - 1);
+  let a = n_structures.tmp.base ** (p.flowerFields - 1);
   let price = 5 * a;
   price /= n_sacrifices.tmp.capitalistGodEffect;
   return price;
@@ -105,7 +104,7 @@ const getFlowerProduction = (
   prod *= 1.01 ** (p.RJflowerFields * 2);
   prod *= 1.03 ** ((p.flowerGodTributes + p.flowerGodRJTributes) * n_tributes.tmp.me[5]);
   prod *= n_tributes.tmp.me[0];
-  prod *= tmp.gameSpeedFormTicks;
+  prod *= TMP.gameSpeedFormTicks;
   prod *= n_jelly.tmp.RJBonus;
   return prod;
 };
@@ -117,7 +116,7 @@ const getPollenProduction = (foragerBees = p.foragerBees): number => {
   prod *= 1.03 ** ((p.pollenGodTributes + p.pollenGodRJTributes) * n_tributes.tmp.me[5]);
   prod *= p.pge ? 2 : 1;
   prod *= n_tributes.tmp.me[8];
-  prod *= tmp.gameSpeedFormTicks;
+  prod *= TMP.gameSpeedFormTicks;
   prod *= n_jelly.tmp.RJBonus;
   return prod;
 };
@@ -130,24 +129,20 @@ const getHoneyProduction = (honeyBees = p.honeyBees): number => {
   prod *= p.nge ? 2 : 1;
   prod *= n_tributes.tmp.me[4];
   prod *= n_tributes.tmp.me[8];
-  prod *= tmp.gameSpeedFormTicks;
+  prod *= TMP.gameSpeedFormTicks;
   prod *= n_jelly.tmp.RJBonus;
   return prod;
 };
 
-let percentOfHoneySold = {
-  1: 1 - 0.99 ** 1,
-  2: 1 - 0.99 ** 2,
-  5: 1 - 0.99 ** 5,
-  10: 1 - 0.99 ** 10,
-  20: 1 - 0.99 ** 20,
-  50: 1 - 0.99 ** 50,
-  100: 1 - 0.99 ** 100,
-};
+let percentTimeSpeed = {};
+for (let i = 1; i <= 100; i++) {
+  percentTimeSpeed[`${i}`] = 0.99 ** i;
+}
 
-const getHoneyToSell = (honeyToSell = p.honey * (percentOfHoneySold[tmp.usedTime] ?? 0.01)): number => {
-  if (p.honey < 1 / (getHoneyWorth() * 10)) return 0;
-  return honeyToSell;
+const getHoneyToSell = (honeyToSell = p.honey): number => {
+  if (TMP.totalBees == 0) honeyToSell = p.honey - beeCost.costFunction();
+  if (honeyToSell < 0.1) return 0;
+  return honeyToSell * (1 - percentTimeSpeed[TMP.usedTime] || 0.01);
 };
 const getHoneyWorth = (): number => {
   let worth = n_tributes.tmp.me[7];
@@ -188,7 +183,7 @@ const getTotalSacrificeTributes = (): number => {
 };
 const getTotalTributes = (): number => getTotalSacrificeTributes() + getTotalRJTributes();
 
-const totalBees = () => {
+const getTotalBees = () => {
   return p.freeBees + p.foragerBees + p.honeyBees;
 };
 const floor = (x: number) => Math.floor(x);
@@ -226,9 +221,11 @@ const getPS = (what: string, x: number) => {
 };
 type t_tribute = {
   unlockAt: number;
-  showAt: number;
-  displayAt: number;
   description: string;
+  title: string;
+  default: number;
+  formula: (x?: number) => number;
+  getText: () => string;
 };
 
 const getSGTBees = (tributes: number) => {
@@ -239,24 +236,6 @@ const getNSGTBees = (bees: number) => {
   return reversedstepwise2(3, bees * n_tributes.tmp.me[2]);
 };
 
-// prettier-ignore
-let tributes: TupleOf<t_tribute, 15> = [
-  {unlockAt: 2  , showAt: 1  , displayAt: 0  , description: "1.02x flower production for every 2 free bee and for every 2 tributes"},
-  {unlockAt: 5  , showAt: 2  , displayAt: 1  , description: "bee price divided by 1.02x for every 2 tributes"},
-  {unlockAt: 10 , showAt: 5  , displayAt: 2  , description: "sacrifice requirement divided by 1.02 for every 2 tributes"},
-  {unlockAt: 15 , showAt: 10 , displayAt: 5  , description: "1 bee for every 5 tributes"},
-  {unlockAt: 20 , showAt: 15 , displayAt: 10 , description: "1.02x honey production per tribute"},
-  {unlockAt: 30 , showAt: 20 , displayAt: 15 , description: "1.02x tribute efficiency for every 10 tributes"},
-  {unlockAt: 45 , showAt: 30 , displayAt: 20 , description: "1.02x nectar production for every 2 tributes"},
-  {unlockAt: 60 , showAt: 40 , displayAt: 25 , description: "1.02x honey price multiplier per 3 tributes"},
-  {unlockAt: 75 , showAt: 50 , displayAt: 30 , description: "1.02x time speed multiplier per 5 tributes"},
-  {unlockAt: 100, showAt: 100, displayAt: 75 , description: "unlocks royal jelly"},
-  {unlockAt: 110, showAt: 110, displayAt: 100, description: "combine a pair of gods"},
-  {unlockAt: 120, showAt: 120, displayAt: 110, description: "combine another pair of gods"},
-  {unlockAt: 135, showAt: 130, displayAt: 120, description: "combine another pair of gods"},
-  {unlockAt: 155, showAt: 140, displayAt: 130, description: "combine another pair of gods"},
-  {unlockAt: 180, showAt: 160, displayAt: 140, description: "challenges"},
-];
 const getConnectedTo = (god: t_gods): t_gods[] => {
   let r = n_gods.tmp.connections.filter((a) => a.some((a) => a == god))[0];
   if (r) return r;
@@ -290,13 +269,13 @@ const ft = (x: number): string => {
 let gameSpeed = 1;
 const getForagerBeeConsumption = () => (11.85185185185185 * getNectarProduction(1) * getPollenProduction(1)) ** 0.5;
 
-const updateOfflineTicks = (diff: number) => {
+const updateOfflineTime = (diff: number) => {
   if (diff > 5) {
     p.offlineTime += diff - 5;
     diff = 5;
   }
 
-  if (p.offlineTime > 2) {
+  if (p.offlineTime > 1) {
     d.ticksLeft.innerHTML = `offline time: ${ft(p.offlineTime)}`;
     d.offlineTicks.style.display = "";
   } else {
@@ -304,23 +283,21 @@ const updateOfflineTicks = (diff: number) => {
   }
 
   if (p.offlineTime > 1) {
-    let ticksLeft = Math.max(0, Math.min(tmp.usedTime, p.offlineTime));
-    p.offlineTime -= Math.max(0, ticksLeft - 1) * diff;
-    tmp.gameSpeedFormTicks = Math.max(1, ticksLeft);
+    let ticksLeft = Math.max(0, Math.min(TMP.usedTime, p.offlineTime));
+    p.offlineTime -= Math.max(0, Math.max(0, ticksLeft - 1) * diff);
+    TMP.gameSpeedFormTicks = Math.max(1, ticksLeft);
   } else {
-    tmp.gameSpeedFormTicks = 1;
+    TMP.gameSpeedFormTicks = 1;
   }
   return diff;
 };
 const updateTmp = () => {
-  tmp.usedTime = 1;
-  if (d.offlineTicksSpeed2.checked) tmp.usedTime *= 2;
-  if (d.offlineTicksSpeed5.checked) tmp.usedTime *= 5;
-  if (d.offlineTicksSpeed10.checked) tmp.usedTime *= 10;
-  if (!d.offlineTicksSpeed2.checked && !d.offlineTicksSpeed5.checked && !d.offlineTicksSpeed10.checked) tmp.usedTime = 1;
-  tmp.usedTime = Math.max(0, Math.min(p.offlineTime, tmp.usedTime));
-  if (tmp.usedTime < 1) tmp.usedTime = 0; // ouch
-  if (p.offlineTime < 1) p.offlineTime = 0; // ouch
+  TMP.usedTime = 1;
+  if (d.offlineTicksSpeed2.checked) TMP.usedTime *= 2;
+  if (d.offlineTicksSpeed5.checked) TMP.usedTime *= 5;
+  if (d.offlineTicksSpeed10.checked) TMP.usedTime *= 10;
+  if (!d.offlineTicksSpeed2.checked && !d.offlineTicksSpeed5.checked && !d.offlineTicksSpeed10.checked) TMP.usedTime = 1;
+  TMP.usedTime = Math.floor(Math.max(1, Math.min(p.offlineTime, TMP.usedTime)));
 };
 
 const updateUnlocks = () => {
@@ -334,15 +311,22 @@ const updateUnlocks = () => {
   if (p.foragerBees > 0) p.unlocks.foragerBees = true;
   if (p.honeyBees > 0) p.unlocks.honeyBees = true;
   if (
-    totalBees() >= 3 &&
+    TMP.totalBees >= 3 &&
     (p.highestpollen >= 35 || p.highestnectar >= 35 || p.highesthoney >= 35 || p.highestflowers >= 700 || p.highestmoney >= 35)
   )
     p.unlocks.sacrificing = true;
   if (n_tributes.tmp.totalTributes > 0) {
     p.unlocks.tributes = true;
   }
-  if (n_tributes.tmp.totalTributes >= tributes[9].unlockAt) p.unlocks.jelly = true;
+  if (canExchange()) p.unlocks.jelly = true;
   if (p.RJ > 0) p.unlocks.jelly2 = true;
+
+  if (n_tributes.tmp.me[15]) p.unlocks.challenges = true;
+  if (p.challengeCompletions[1] && p.challengeCompletions[2]) p.unlocks.c12 = true;
+  if (p.challengeCompletions[2] && p.challengeCompletions[3]) p.unlocks.c23 = true;
+  if (p.challengeCompletions[3] && p.challengeCompletions[4]) p.unlocks.c34 = true;
+  if (p.challengeCompletions[4] && p.challengeCompletions[5]) p.unlocks.c45 = true;
+  if (p.challengeCompletions[5] && p.challengeCompletions[1]) p.unlocks.c51 = true;
 };
 
 const updateDisplay = () => {
@@ -371,6 +355,11 @@ const updateDisplay = () => {
     d.moneyPS.classList.add("lighttext");
   }
 
+  // if (d.moreContrast.checked) {
+  //   d.body.classList.add("more-contrast");
+  // } else {
+  //   d.body.classList.remove("more-contrast");
+  // }
   if (d.toggleDarkmode.checked) {
     d.body.classList.add("dark-mode");
     p.settings.darkmode = true;
@@ -460,12 +449,12 @@ const updateDisplay = () => {
   else d.recomendedFlowers.style.display = "none";
 
   if (p.settings.displayEverything || p.fge) {
-    d.moneywrapper.style.visibility = "visible";
+    d.moneywrapper.style.display = "";
     d.flowerfieldwrapper.style.display = "";
     d.quickBuyFlowerField.style.display = "";
     d.honeystatwrapper.style.display = "";
   } else {
-    d.moneywrapper.style.visibility = "hidden";
+    d.moneywrapper.style.display = "none";
     d.flowerfieldwrapper.style.display = "none";
     d.quickBuyFlowerField.style.display = "none";
     d.honeystatwrapper.style.display = "none";
@@ -520,7 +509,7 @@ const getNectarProduction = (foragerBees = p.foragerBees) => {
   prod *= 1.01 ** (p.RJbees * 2);
   prod *= 1.03 ** (p.nectarGodTributes * n_tributes.tmp.me[5] + p.nectarGodRJTributes);
   prod *= n_tributes.tmp.me[6];
-  prod *= tmp.gameSpeedFormTicks;
+  prod *= TMP.gameSpeedFormTicks;
   prod *= n_jelly.tmp.RJBonus;
   return prod;
 };
@@ -558,7 +547,8 @@ namespace n_resources {
     tmp.nectarCons = getHoneyProduction() ?? 0;
 
     tmp.nectarEff = 0;
-    if (p.nectar + tmp.nectarProd != 0 && tmp.nectarCons != 0) tmp.nectarEff = Math.min(1, (p.nectar + tmp.nectarProd) / tmp.nectarCons);
+    if (p.nectar + tmp.nectarProd != 0 && tmp.nectarCons != 0)
+      tmp.nectarEff = Math.min(1, (p.nectar + tmp.nectarProd) / tmp.nectarCons) ?? 0;
     tmp.honeyProd *= tmp.nectarEff;
 
     p.nectar += (tmp.nectarProd - tmp.nectarCons * tmp.nectarEff) * diff;
@@ -635,11 +625,14 @@ namespace n_structures {
     hivePrice: 1,
 
     flowerFieldsToBuy: 0,
-    flowerFieldsPrice: 1 / 0,
     beesToBuy: 0,
-    beesPrice: 1 / 0,
     hivesToBuy: 0,
-    hivesPrice: 1 / 0,
+
+    flowerFieldsPrice: 1 / 0,
+    beesPrice: 1 / 0,
+    hivesPrice: 1 / 0, // why though
+
+    base: 10 ** (1 / 12),
   };
   export const text = () => {
     // flower fields
@@ -653,15 +646,15 @@ namespace n_structures {
     // bees
     d.beePrice.innerHTML = format(tmp.beePrice);
     d.bees.innerHTML = p.bees.toFixed(0);
-    if (n_tributes.tmp.totalTributes >= tributes[3].unlockAt) d.bees.innerHTML += " + " + format(n_tributes.tmp.me[3]);
+    if (n_tributes.tmp.totalTributes >= n_tributes.tributes[3].unlockAt) d.bees.innerHTML += " + " + format(n_tributes.tmp.me[3]);
     if (p.RJbees > 0) d.bees.innerHTML += ` + <span class='rjtext'> ${p.RJbees.toFixed(0)}</span>`;
 
     if (p.honeyGodTributes + p.honeyGodRJTributes == 0 && p.capitalistGodTributes + p.capitalistGodRJTributes == 0) {
-      d.freeBees.innerHTML = "" + rt5(p.freeBees).toFixed(0) + "/" + totalBees().toFixed(0);
+      d.freeBees.innerHTML = "" + rt5(p.freeBees).toFixed(0) + "/" + TMP.totalBees.toFixed(0);
       d.foragerBees.innerHTML = "" + p.foragerBees.toFixed(0) + "/" + tmp.maxForagerBees.toFixed(0);
       d.honeyBees.innerHTML = "" + p.honeyBees.toFixed(0) + "/" + tmp.maxHoneyBees.toFixed(0);
     } else {
-      d.freeBees.innerHTML = "" + format(rt5(p.freeBees)) + "/" + format(totalBees());
+      d.freeBees.innerHTML = "" + format(rt5(p.freeBees)) + "/" + format(TMP.totalBees);
       d.foragerBees.innerHTML = "" + format(p.foragerBees) + "/" + format(tmp.maxForagerBees);
       d.honeyBees.innerHTML = "" + format(p.honeyBees) + "/" + format(tmp.maxHoneyBees);
     }
@@ -753,6 +746,8 @@ namespace n_structures {
     }
   };
   export const calc = () => {
+    tmp.base = 10 ** (1 / (12 + n_challenges.tmp.c5));
+
     // max bees
     tmp.maxForagerBees = getMaxForagerBees();
     tmp.maxHoneyBees = getMaxHoneyBees();
@@ -839,8 +834,6 @@ namespace n_structures {
     let [btb, bp] = beeCost.maxFunction((p.honey / 100) * a.beeBuyPercent);
     let [htb, hp] = hiveCost.maxFunction((p.pollen / 100) * a.hiveBuyPercent);
 
-    // console.log(flowerFieldsToBuy, beesToBuy, hivesToBuy);
-
     if (a.on) {
       if (a.flower && a.flowerBuy) {
         p.money -= fp;
@@ -851,9 +844,7 @@ namespace n_structures {
         p.bees += btb;
         if (btb > 0) {
           let beesLeft = btb * n_sacrifices.tmp.honeyGodEffect;
-          if (p.autoAsignBeesTo[0] != undefined) beesLeft = assignBeesTo(p.autoAsignBeesTo[0], beesLeft);
-          if (p.autoAsignBeesTo[1] != undefined) beesLeft = assignBeesTo(p.autoAsignBeesTo[1], beesLeft);
-          assignBeesTo("free", beesLeft);
+          autoAssignBees(beesLeft);
         }
       }
       if (a.hive && a.hiveBuy) {
@@ -996,7 +987,7 @@ namespace n_sacrifices {
     // TODO:!!!!!!!!!!!!!!!!!!!!
     // from resource bees
 
-    let frombees = getNSGTBees(totalBees());
+    let frombees = getNSGTBees(TMP.totalBees);
     let fpb = Math.floor(Math.min(frombees, frompollen));
     let fnb = Math.floor(Math.min(frombees, fromnectar));
     let fhb = Math.floor(Math.min(frombees, fromhoney));
@@ -1056,58 +1047,151 @@ namespace n_sacrifices {
 }
 
 namespace n_tributes {
-  /*prettier-ignore*/
-  export let def:TupleOf< number, 15>=[
-    1, 1, 1, 0, 1,
-    1, 1, 1, 1, 0,
-    0, 0, 0, 0, 0,
-  ]
+  export const tributes: TupleOf<t_tribute, 16> = [
+    {
+      unlockAt: 2, // 0 flowers mult
+      description: "1.02x flower production for every 2 free bee and for every 2 tributes",
+      title: `~${(1.02 ** 0.5).toFixed(5)}x per tribute`,
+      default: 1,
+      formula: (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** (x / 2),
+      getText: () => `${format(tmp.me[0])}x`,
+    },
+    {
+      unlockAt: 5, // 1 bees price
+      description: "bee price divided by 1.02x for every 2 tributes",
+      title: `~${(1.02 ** 0.5).toFixed(5)}x per tribute`,
+      default: 1,
+      formula: (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** (x / 2),
+      getText: () => `${format(tmp.me[1])}x`,
+    },
+    {
+      unlockAt: 10, // 2 tribute div
+      description: "sacrifice requirement divided by 1.02 for every 2 tributes",
+      title: `~${(1.02 ** 0.5).toFixed(5)}x per tribute, includes bees and other resources`,
+      default: 1,
+      formula: (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** (x / 2),
+      getText: () => `${format(tmp.me[2])}x`,
+    },
+    {
+      unlockAt: 15, // 3 +bees
+      description: "1 bee for every 5 tributes",
+      title: "free bees also get multiplied by honey god tribute",
+      default: 1,
+      formula: (x = tmp.totalTributes * tmp.me[5]) => x / 5,
+      getText: () => `+${format(tmp.me[3])}`,
+    },
+    {
+      unlockAt: 20, // 4 honey prod
+      description: "1.02x honey production per tribute",
+      title: "sweet!",
+      default: 1,
+      formula: (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** x,
+      getText: () => `${format(tmp.me[4])}x`,
+    },
+    {
+      unlockAt: 30, // 5 tribute eff
+      description: "1.02x tribute efficiency for every 10 tributes",
+      title:
+        `~${(1.02 ** 0.1).toFixed(5)} per tribute, multiplies itself\n` +
+        `bonus tributes don't count towards bees required to sacrifice & tribute milesotnes`,
+      default: 1,
+      formula: (x = tmp.totalTributes * tmp.me[5]) => Math.min(2, 1.02 ** (x / 10)),
+      getText: () => (tmp.me[5] == 2 ? "2.00x (capped)" : `${format(tmp.me[5])}x`),
+    },
+    {
+      unlockAt: 45, // 6 nectar prod
+      description: "1.02x nectar production for every 2 tributes",
+      title: `~${(1.02 ** 0.5).toFixed(5)} per tribute`,
+      default: 1,
+      formula: (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** (x / 2),
+      getText: () => `${format(tmp.me[6])}x`,
+    },
+    {
+      unlockAt: 60, // 7 honey price
+      description: "1.02x honey price multiplier per 3 tributes",
+      title: `~${(1.02 ** (1 / 3)).toFixed(5)} per tribute`,
+      default: 1,
+      formula: (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** (x / 3),
+      getText: () => `${format(tmp.me[7])}x`,
+    },
+    {
+      unlockAt: 75, // 8 time speed
+      description: "1.02x time speed multiplier per 5 tributes",
+      title: `~${(1.02 ** (1 / 5)).toFixed(5)} per tribute`,
+      default: 1,
+      formula: (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** (x / 5),
+      getText: () => `${format(tmp.me[8])}x`,
+    },
+    {
+      unlockAt: 100, // 9 rj
+      description: "unlocks royal jelly",
+      title: `get royal jelly based on total produced resources"`,
+      default: 1,
+      formula: () => 1,
+      getText: () => "unlocked",
+    },
+    {
+      unlockAt: 110, // 10 combine
+      description: "combine a pair of gods",
+      title: "get all combined god's tributes when sacrificing to either one\n" + "their tribute cap increases by 2 for each combined god",
+      default: 1,
+      formula: () => 1,
+      getText: () => "unlocked",
+    },
+    {
+      unlockAt: 120, // 11 combine
+      description: "combine another pair of gods",
+      title: "get all combined god's tributes when sacrificing to either one\n" + "their tribute cap increases by 2 for each combined god",
+      default: 1,
+      formula: () => 1,
+      getText: () => "unlocked",
+    },
+    {
+      unlockAt: 135, // 12 combine
+      description: "combine another pair of gods",
+      title: "get all combined god's tributes when sacrificing to either one\n" + "their tribute cap increases by 2 for each combined god",
+      default: 1,
+      formula: () => 1,
+      getText: () => "unlocked",
+    },
+    {
+      unlockAt: 155, // 13 combine
+      description: "combine another pair of gods",
+      title: "get all combined god's tributes when sacrificing to either one\n" + "their tribute cap increases by 2 for each combined god",
+      default: 1,
+      formula: () => 1,
+      getText: () => "unlocked",
+    },
+    {
+      unlockAt: 160, // 14 RJ per tribute
+      description: "1.02x RJ per royal tribute",
+      title: "",
+      default: 1,
+      formula: () => 1.02 ** tmp.RJTributes,
+      getText: () => `${format(tmp.me[14])}x`,
+    },
+    {
+      unlockAt: 180, // 14 challenges
+      description: "challenges",
+      title: "they are located in gods tab",
+      default: 1,
+      formula: () => 1,
+      getText: () => "current end of content (not implemented yet)",
+    },
+  ];
 
-  export let formula: TupleOf<(x?: number) => number, 15> = [
-    (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** (x / 2), // 0 flowers mult
-    (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** (x / 2), // 1 bees price
-    (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** (x / 2), // 2 tribute div
-    (x = tmp.totalTributes * tmp.me[5]) => x / 5, // 3 +bees
-    (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** x, // 4 honey prod
-    (x = tmp.totalTributes * tmp.me[5]) => Math.min(2, 1.02 ** (x / 10)), // 5 tribute eff capped at 9
-    (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** (x / 2), // 6 nectar prod
-    (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** (x / 3), // 7 honey price
-    (x = tmp.totalTributes * tmp.me[5]) => 1.02 ** (x / 5), // 8 time speed
-    () => 1, // 9 rj
-    () => 1, // 10 combine
-    () => 1, // 11 combine
-    () => 1, // 12 combine
-    () => 1, // 13 combine
-    () => 1, // 14 challenges
-  ];
-  export let getText: TupleOf<() => string, 15> = [
-    () => `${format(tmp.me[0])}x`, // 0 flowers mult
-    () => `${format(tmp.me[1])}x`, // 1 bees price
-    () => `${format(tmp.me[2])}x`, // 2 tribute div
-    () => `+${format(tmp.me[3])}`, // 3 +bees
-    () => `${format(tmp.me[4])}x`, // 4 honey prod
-    () => (tmp.me[5] == 2 ? "2.00x (capped)" : `${format(tmp.me[5])}x`), // 5 tribute eff
-    () => `${format(tmp.me[6])}x`, // 6 nectar prod
-    () => `${format(tmp.me[7])}x`, // 7 honey price
-    () => `${format(tmp.me[8])}x`, // 8 time speed
-    () => "unlocked", // 9 rj
-    () => "unlocked", // 10 combine
-    () => "unlocked", // 11 combine
-    () => "unlocked", // 12 combine
-    () => "unlocked", // 13 combine
-    () => "current end of content", // 14 challenges
-  ];
   export let tmp: {
     sacrificeTributes: number;
     RJTributes: number;
     totalTributes: number;
-    me: TupleOf<number, 15>;
+    me: TupleOf<number, 16>;
   } = {
     sacrificeTributes: 0,
     RJTributes: 0,
     totalTributes: 0,
-    me: def,
+    me: tributes.map((a) => a.default) as TupleOf<number, typeof tributes.length>,
   };
+
   export const text = () => {
     // todo make it show that rj or combining gods is unlocked without it meeting required tributes
     // total tributes
@@ -1121,19 +1205,19 @@ namespace n_tributes {
     // tributes unlock
     for (let i = 0; i < tributes.length; i++)
       if (tmp.totalTributes < tributes[i]!.unlockAt) d[`m${i}e`].innerHTML = "";
-      else d[`m${i}e`].innerHTML = getText[i]!();
+      else d[`m${i}e`].innerHTML = tributes[i]?.getText!() || "";
 
     // cool tree
     for (let i = 0; i < tributes.length; i++) {
       if (tributes[i]!.unlockAt < tmp.totalTributes && i != tributes.length) {
-        d.m[i].innerHTML = "├";
+        d[`m${i}`].innerHTML = "├";
       } else {
-        d.m[i].innerHTML = " ";
+        d[`m${i}`].innerHTML = " ";
       }
       if (i != 0 && tributes[i]?.unlockAt! > tmp.totalTributes && tributes[i - 1]?.unlockAt! <= tmp.totalTributes)
-        d.m[i - 1].innerHTML = "└";
+        d[`m${i - 1}`].innerHTML = "└";
     }
-    if (tributes[tributes.length - 1]!.unlockAt <= tmp.totalTributes) d.m[tributes.length - 1].innerHTML = "└";
+    if (tributes[tributes.length - 1]!.unlockAt <= tmp.totalTributes) d[`m${tributes.length - 1}`].innerHTML = "└";
   };
   export const calc = () => {
     tmp.sacrificeTributes = getTotalSacrificeTributes();
@@ -1142,9 +1226,9 @@ namespace n_tributes {
 
     let tr = tmp.totalTributes * tmp.me[5];
 
-    for (let i = 0; i < 15; i++) {
-      if (tmp.totalTributes < tributes[i]!.unlockAt) tmp.me[i] = n_tributes.def[i]!;
-      else tmp.me[i] = formula[i]!(tr);
+    for (let i = 0; i < tributes.length; i++) {
+      if (tmp.totalTributes < tributes[i]!.unlockAt) tmp.me[i] = tributes[i]?.default!;
+      else tmp.me[i] = tributes[i]?.formula(tr)!;
     }
   };
 }
@@ -1333,7 +1417,9 @@ namespace n_stats {
     RJFromtotalmoney: 0,
   };
 
-  export const calc = () => {
+  export const calc = (diff: number) => {
+    p.RJTime += diff * TMP.gameSpeedFormTicks;
+
     tmp.RJFromtotalflowers = Math.log10(Math.max(1, p.totalflowers));
     tmp.RJFromtotalpollen = Math.log10(Math.max(1, p.totalpollen));
     tmp.RJFromtotalnectar = Math.log10(Math.max(1, p.totalnectar));
@@ -1424,8 +1510,8 @@ namespace n_gods {
     });
   };
   export const text = () => {
-    // TODO: add on reset or on sacrifice etc
-    let totalCombinations = n_tributes.tmp.me[10] + n_tributes.tmp.me[11] + n_tributes.tmp.me[12] + n_tributes.tmp.me[13];
+    // TODO: add on reset or on sacrifice etc // make it not be here
+    let totalCombinations = (p.unlocks.c1 ? 1 : 0) + (p.unlocks.c2 ? 1 : 0) + (p.unlocks.c3 ? 1 : 0) + (p.unlocks.c4 ? 1 : 0);
     let usedCombinations = n_gods.tmp.connections.length
       ? n_gods.tmp.connections.map((a) => a.length).reduce((a, b) => a + b) - n_gods.tmp.connections.length
       : 0;
@@ -1476,40 +1562,151 @@ namespace n_gods {
   };
 }
 
+namespace n_challenges {
+  export let tmp = {
+    c1: 1,
+    c2: 1,
+    c3: 0,
+    c4: 1,
+    c5: 0,
+    c12: 1,
+    c23: 1,
+    c34: 1,
+    c45: 1,
+    c51: 1,
+  };
+  export const tributecap = {
+    0: 0,
+    1: 2,
+    2: 4,
+    3: 6,
+    4: 8,
+    5: 10,
+    6: 12,
+    7: 15,
+  };
+  export const keys = ["c1", "c2", "c3", "c4", "c5", "c12", "c23", "c34", "c45", "c51"];
+  export const text = () => {
+    // todo eg if u beat I and II display I+II
+    if (p.settings.displayEverything || p.unlocks.c12) d["CHc12Wrapper"].style.display = "";
+    else d["CHc12Wrapper"].style.display = "none";
+    if (p.settings.displayEverything || p.unlocks.c23) d["CHc23Wrapper"].style.display = "";
+    else d["CHc23Wrapper"].style.display = "none";
+    if (p.settings.displayEverything || p.unlocks.c34) d["CHc34Wrapper"].style.display = "";
+    else d["CHc34Wrapper"].style.display = "none";
+    if (p.settings.displayEverything || p.unlocks.c45) d["CHc45Wrapper"].style.display = "";
+    else d["CHc45Wrapper"].style.display = "none";
+    if (p.settings.displayEverything || p.unlocks.c51) d["CHc51Wrapper"].style.display = "";
+    else d["CHc51Wrapper"].style.display = "none";
+
+    keys.forEach((key) => {
+      d[`CH${key}Completions`].innerHTML = "completions: " + p.challengeCompletions[key] + "/7";
+      d[`CH${key}Effect`].innerHTML = "Reward: " + challenges[key]?.effect();
+      d[`CH${key}Desc`].innerHTML = challenges[key]?.desc();
+      d[`CH${key}Eff`].innerHTML = challenges[key]?.eff(tmp[key]);
+      if (p.challenge != "") {
+        if (p.challenge == key) {
+          d[`CH${key}Button`].innerHTML = "running";
+          (d[`CH${key}Button`] as HTMLButtonElement).disabled = false;
+        } else {
+          d[`CH${key}Button`].innerHTML = "start";
+          (d[`CH${key}Button`] as HTMLButtonElement).disabled = true;
+        }
+      } else {
+        d[`CH${key}Button`].innerHTML = "start";
+        (d[`CH${key}Button`] as HTMLButtonElement).disabled = false;
+      }
+    });
+  };
+  export const calc = () => {
+    if (p.challengeCompletions.c1) tmp.c1 = blog(9 - p.challengeCompletions.c1, Math.max(1, p.money)); // forage capitalist
+    else tmp.c1 = 1; // forager prod
+    if (p.challengeCompletions.c2) tmp.c2 = blog(9 - p.challengeCompletions.c2, Math.max(1, TMP.totalBees));
+    else tmp.c2 = 1; // space mult
+    if (p.challengeCompletions.c3) tmp.c3 = tributecap[p.challengeCompletions.c3] ?? 15;
+    else tmp.c3 = 0; // tribute cap
+    if (p.challengeCompletions.c4) tmp.c4 = blog(9 - p.challengeCompletions.c4, Math.max(1, p.RJTime));
+    else tmp.c4 = 1; // time speed per time spent in rj
+    if (p.challengeCompletions.c5) tmp.c5 = p.challengeCompletions.c5;
+    else tmp.c5 = 0; // structure price
+    if (p.challengeCompletions.c12) tmp.c12 = blog(9 - p.challengeCompletions.c12, Math.max(1, p.pollen));
+    else tmp.c12 = 1; // cheaper hives
+    if (p.challengeCompletions.c23) tmp.c23 = blog(9 - p.challengeCompletions.c23, Math.max(1, p.honey));
+    else tmp.c23 = 1; //
+    if (p.challengeCompletions.c34) tmp.c34 = blog(9 - p.challengeCompletions.c34, Math.max(1, p.flowers));
+    else tmp.c34 = 1;
+    if (p.challengeCompletions.c45)
+      tmp.c45 = blog(9 - p.challengeCompletions.c45, Math.max(1, p.flowers * p.pollen * p.nectar * p.honey * p.money));
+    else tmp.c45 = 1;
+    if (p.challengeCompletions.c51)
+      tmp.c51 = blog(
+        9 - p.challengeCompletions.c51,
+        Math.max(
+          1,
+          p.flowerFields * Math.min(1, p.RJflowerFields * 2) * p.bees * Math.min(1, p.RJbees * 2) * p.hives * Math.min(1, p.RJhives * 2)
+        )
+      );
+    else tmp.c51 = 1;
+
+    if (p.challenge.includes("c4") || p.challenge.includes("c34") || p.challenge.includes("c45")) {
+      p.freeBees *= percentTimeSpeed[TMP.usedTime];
+      p.foragerBees *= percentTimeSpeed[TMP.usedTime];
+      p.honeyBees *= percentTimeSpeed[TMP.usedTime];
+
+      p.bees *= percentTimeSpeed[TMP.usedTime];
+      p.hives *= percentTimeSpeed[TMP.usedTime];
+      p.flowerFields *= percentTimeSpeed[TMP.usedTime];
+    }
+    if (p.challenge.includes("c5") || p.challenge.includes("c45")) {
+      p.flowers *= percentTimeSpeed[TMP.usedTime];
+      p.pollen *= percentTimeSpeed[TMP.usedTime];
+      p.nectar *= percentTimeSpeed[TMP.usedTime];
+      p.honey *= percentTimeSpeed[TMP.usedTime];
+      p.money *= percentTimeSpeed[TMP.usedTime];
+    }
+  };
+}
+
 const GameLoop = () => {
   let now = Date.now();
   let diff = ((now - p.lastUpdate) / 1000) * gameSpeed;
 
   updateTmp();
-  //prettier-ignore
-  // eyJmbG93ZXJzIjo1NTcuNTMwMjcyMTU3NTAxNCwicG9sbGVuIjoxMy4xMzg1Nzg1MzIyMzcyLCJuZWN0YXIiOjIuNzM0MzU2OTI3ODQ0MTQwNiwiaG9uZXkiOjIuOTMyMTEyNDkxODQ1ODgxLCJtb25leSI6MC43MzI4NTg5NTczMzIwNTUyLCJoaWdoZXN0Zmxvd2VycyI6NTU4Ljk3MjQ1Nzk5MTEyNTEsImhpZ2hlc3Rwb2xsZW4iOjEzLjEzODU3ODUzMjIzNzIsImhpZ2hlc3RuZWN0YXIiOjIuNzM0MzU2OTI3ODQ0MTQwNiwiaGlnaGVzdGhvbmV5IjozLjYwOTAxMTMzNDU0NjYxNCwiaGlnaGVzdG1vbmV5IjowLjczMjg1ODk1NzMzMjA1NTIsInRvdGFsZmxvd2VycyI6OTY3OS41MTAwNDIzNTQ4MzcsInRvdGFscG9sbGVuIjoxNTU1Ljg3ODEwNjQ3MzgxOTYsInRvdGFsbmVjdGFyIjoxNTgyLjEwMDM1MDg3MDUyNywidG90YWxob25leSI6NjgzLjg0NTAzOTY3Nzc5MTgsInRvdGFsbW9uZXkiOjI0ODkuMDk3NDk4MDYwMTU4LCJiZWVzIjo0LCJmcmVlQmVlcyI6MCwiZm9yYWdlckJlZXMiOjUuMDc3MDQxMzc3MjI5MDE0LCJob25leUJlZXMiOjQuMjcsImZsb3dlckZpZWxkcyI6MSwiaGl2ZXMiOjEsInRvdGFsU2FjcmlmaWNlcyI6MCwicG9sbGVuR29kVHJpYnV0ZXMiOjQsIm5lY3RhckdvZFRyaWJ1dGVzIjoyLCJob25leUdvZFRyaWJ1dGVzIjo3LCJmbG93ZXJHb2RUcmlidXRlcyI6MSwiY2FwaXRhbGlzdEdvZFRyaWJ1dGVzIjo0LCJhdXRvQXNpZ25CZWVzVG8iOlsiZm9yYWdlciIsImhvbmV5Il0sInBnZSI6dHJ1ZSwibmdlIjp0cnVlLCJoZ2UiOnRydWUsImZnZSI6dHJ1ZSwiY2dlIjp0cnVlLCJzZWxsaW5nSG9uZXkiOmZhbHNlLCJhdXRvc2F2ZXMiOmZhbHNlLCJ1bmxvY2tzIjp7ImJlZXMiOnRydWUsImZvcmFnZXJCZWVzIjp0cnVlLCJoaXZlIjp0cnVlLCJob25leUJlZXMiOnRydWUsInNhY3JpZmljaW5nIjp0cnVlLCJ0cmlidXRlcyI6dHJ1ZSwiamVsbHkiOmZhbHNlLCJqZWxseTIiOmZhbHNlfSwibGFzdFVwZGF0ZSI6MTY2NjkwNjc0Mzk1MSwib2ZmbGluZVRpbWUiOjEwOC4zNjU5OTk5OTk5NDY4NywiUkoiOjAsImhpZ2hlc3RSSiI6MCwidG90YWxSSiI6MCwiUkpiZWVzIjowLCJSSmZsb3dlckZpZWxkcyI6MCwiUkpoaXZlcyI6MCwiUkpUcmlidXRlcyI6MCwidW51c2VkUkpUcmlidXRlcyI6MCwicG9sbGVuR29kUkpUcmlidXRlcyI6MCwibmVjdGFyR29kUkpUcmlidXRlcyI6MCwiaG9uZXlHb2RSSlRyaWJ1dGVzIjowLCJmbG93ZXJHb2RSSlRyaWJ1dGVzIjowLCJjYXBpdGFsaXN0R29kUkpUcmlidXRlcyI6MCwidGFiIjoic2V0dGluZ3MiLCJkYXJrbW9kZSI6dHJ1ZSwiYmlnQnV0dG9ucyI6ZmFsc2UsImRpc3BsYXlFdmVyeXRoaW5nIjpmYWxzZSwiZXhjaGFuZ2VDb25maXJtYXRpb24iOnRydWUsImljb25Nb3ZlIjpmYWxzZX0=
-  // use it and add x or + to me
-  // TODO: add pentagram like - connection for connected god
-  // pentagram and u can chose which gods u want to connect
-  // can be in form of buttons for now // idk about all this
 
   beeCost.level = p.bees;
+  beeCost.base = n_structures.tmp.base;
   beeCost.offset = getBeePriceMult();
 
   hiveCost.level = p.hives;
+  hiveCost.base = n_structures.tmp.base;
   hiveCost.offset = getHivePriceMult();
 
   flowerFieldCost.level = p.flowerFields;
+  flowerFieldCost.base = n_structures.tmp.base;
   flowerFieldCost.offset = getFlowerFieldPriceMult();
 
-  diff = updateOfflineTicks(diff) ?? 0;
+  diff = updateOfflineTime(diff) ?? 0;
 
+  // if (p.challenge == "") d["challenges-info"].style.display = "none";
+  // else d["challenges-info"].style.display = "";
+  d["challenges-info"].style.display = "none";
+  d["challengesTabButton"].style.display = "none";
+
+  n_challenges.calc();
   n_gods.calc(diff);
   n_jelly.calc();
   n_tributes.calc();
   n_sacrifices.calc();
   n_structures.calc();
   n_resources.calc(diff);
-  n_stats.calc();
+  n_stats.calc(diff);
 
   n_structures.autobuy();
 
-  if (p.tab == "gods") n_gods.text();
+  if (p.tab == "gods") {
+    if (p.tab2 == "combine") n_gods.text();
+    if (p.tab2 == "challenges") n_challenges.text();
+  }
 
   if (p.tab == "jelly") n_jelly.text();
 
@@ -1518,8 +1715,8 @@ const GameLoop = () => {
     n_sacrifices.text();
     n_structures.display();
     n_structures.text();
-    n_resources.text();
   }
+  n_resources.text();
   if (p.tab == "statshelp") n_stats.text();
 
   updateUnlocks();

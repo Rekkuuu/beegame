@@ -1,13 +1,16 @@
 "use strict";
+const canExchange = () => {
+    return n_tributes.tmp.totalTributes >= n_tributes.tributes[9].unlockAt;
+};
 const RJToGet = () => {
-    if (n_tributes.tmp.totalTributes < tributes[9].unlockAt)
+    if (!canExchange())
         return 0;
     let RJToGet = n_stats.tmp.RJFromtotalflowers +
         n_stats.tmp.RJFromtotalhoney +
         n_stats.tmp.RJFromtotalmoney +
         n_stats.tmp.RJFromtotalnectar +
         n_stats.tmp.RJFromtotalpollen;
-    return RJToGet * n_jelly.tmp.totalRJBonus;
+    return RJToGet * n_jelly.tmp.totalRJBonus * n_tributes.tmp.me[14];
 };
 const getRJBonus = (rj) => {
     return Math.pow(1.06, Math.log2(Math.max(1, 1 + rj)));
