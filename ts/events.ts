@@ -140,6 +140,8 @@ const sacrificeToGod = () => {
   if (p.capitalistGodTributes > 0) p.cge = true;
 
   p.totalSacrifices++;
+  TMP.totalBees = getTotalBees();
+
   return true;
 };
 
