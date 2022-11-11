@@ -555,7 +555,6 @@ const setupClickEvents = () => {
     d.buyHive.addEventListener("click", buyHive);
     d.quickBuyHive.addEventListener("click", buyHive);
     d.buyFlowerField.addEventListener("click", buyFlowerField);
-    d.quickBuyFlowerField.addEventListener("click", buyFlowerField);
     // bees underline??? todo idk maybe remove this
     d.foragerbeestextunderline.addEventListener("click", () => {
         if (p.autoAsignBeesTo[0] == "forager")

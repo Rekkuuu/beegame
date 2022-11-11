@@ -15,7 +15,6 @@ const d = {
     flowerFields: $("flowerFields"),
     flowerFieldPrice: $("flowerFieldPrice"),
     buyFlowerField: $("buyFlowerField"),
-    quickBuyFlowerField: $("slowBuyFlowerField"),
     bees: $("bees"),
     beePrice: $("beePrice"),
     buyBee: $("buyBee"),

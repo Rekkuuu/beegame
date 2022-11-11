@@ -18,7 +18,6 @@ const d = {
   flowerFields: $("flowerFields"),
   flowerFieldPrice: $("flowerFieldPrice"),
   buyFlowerField: $("buyFlowerField") as HTMLButtonElement,
-  quickBuyFlowerField: $("slowBuyFlowerField") as HTMLButtonElement,
   bees: $("bees"),
   beePrice: $("beePrice"),
   buyBee: $("buyBee") as HTMLButtonElement,

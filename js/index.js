@@ -381,11 +381,9 @@ const updateDisplay = () => {
     else
         p.settings.exchangeConfirmation = false;
     if (p.money < getFlowerFieldPrice()) {
-        d.quickBuyFlowerField.disabled = true;
         d.buyFlowerField.disabled = true;
     }
     else {
-        d.quickBuyFlowerField.disabled = false;
         d.buyFlowerField.disabled = false;
     }
     if (p.honey < getBeePrice()) {
@@ -457,13 +455,11 @@ const updateDisplay = () => {
     if (p.settings.displayEverything || p.fge) {
         d.moneywrapper.style.display = "";
         d.flowerfieldwrapper.style.display = "";
-        d.quickBuyFlowerField.style.display = "";
         d.honeystatwrapper.style.display = "";
     }
     else {
         d.moneywrapper.style.display = "none";
         d.flowerfieldwrapper.style.display = "none";
-        d.quickBuyFlowerField.style.display = "none";
         d.honeystatwrapper.style.display = "none";
     }
     if (p.settings.displayEverything || p.unlocks.sacrificing) {
@@ -1150,7 +1146,7 @@ var n_tributes;
             unlockAt: 100,
             description: "unlocks royal jelly",
             title: `get royal jelly based on total produced resources"`,
-            default: 1,
+            default: 0,
             formula: () => 1,
             getText: () => "unlocked",
         },
@@ -1158,7 +1154,7 @@ var n_tributes;
             unlockAt: 110,
             description: "combine a pair of gods",
             title: "get all combined god's tributes when sacrificing to either one\n" + "their tribute cap increases by 2 for each combined god",
-            default: 1,
+            default: 0,
             formula: () => 1,
             getText: () => "unlocked",
         },
@@ -1166,7 +1162,7 @@ var n_tributes;
             unlockAt: 120,
             description: "combine another pair of gods",
             title: "get all combined god's tributes when sacrificing to either one\n" + "their tribute cap increases by 2 for each combined god",
-            default: 1,
+            default: 0,
             formula: () => 1,
             getText: () => "unlocked",
         },
@@ -1174,7 +1170,7 @@ var n_tributes;
             unlockAt: 135,
             description: "combine another pair of gods",
             title: "get all combined god's tributes when sacrificing to either one\n" + "their tribute cap increases by 2 for each combined god",
-            default: 1,
+            default: 0,
             formula: () => 1,
             getText: () => "unlocked",
         },
@@ -1182,7 +1178,7 @@ var n_tributes;
             unlockAt: 155,
             description: "combine another pair of gods",
             title: "get all combined god's tributes when sacrificing to either one\n" + "their tribute cap increases by 2 for each combined god",
-            default: 1,
+            default: 0,
             formula: () => 1,
             getText: () => "unlocked",
         },
@@ -1198,7 +1194,7 @@ var n_tributes;
             unlockAt: 180,
             description: "challenges",
             title: "they are located in gods tab",
-            default: 1,
+            default: 0,
             formula: () => 1,
             getText: () => "current end of content (not implemented yet)",
         },
